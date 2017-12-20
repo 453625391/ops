@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <% include ../commonHead.html %>
+    <title>帮助-领了么</title>
+    <link rel="stylesheet" type="text/css" href="/css/payback.css">
+</head>
+<body>
+    <div class="title">
+        “领了么”是每天惠集团携手线下实体店资源与淘宝、京东等线上商家资源合作打造的专业导购平台，会员凭金币获取参与商家活动的资格，购买超级实惠甚至免费的商品，商家根据有效订单发放推广费用，会员账户资金可以前去实体店消费，一份钱两份花。
+    </div>
+    <ul class="txt-list">
+        <li>
+            <div>金币有什么用？<em></em></div>
+            <p>金币是会员积分价值的体现，也是参与优惠活动的资格要求。会员凭金币才能享受优惠活动，如领了么、金币兑等。金币不能转让、继承和提现。</p>
+        </li>
+        <li>
+            <div>金币不足怎么办？<em></em></div>
+            <p>会员没有金币的情况下可以继续参与一次优惠活动；通过线上充值和线下消费，平台会按比例赠送金币，会员和商家互惠共赢。</p>
+        </li>
+        <li>
+            <div>订单取消，金币为什么不退？<em></em></div>
+            <p>为保证商家促销活动的正常进行，平台使用金币作为会员参与活动的有效凭证。会员按照规则在指定时间内取消订单，金币会自动退还；不付款也不取消，金币将会被扣除；因平台原因导致不能完成付款而金币被扣，可以联系客服申诉，要求返还金币。</p>
+        </li>
+        <li>
+            <div>订单未返款怎么办？<em></em></div>
+            <p>一般情况下，订单会在48小时内完成返款，可能因节假日顺延。如果不符合商家活动规则，平台将不会返款。</p>
+        </li>
+        <li>
+            <div>商品不满意怎么办？<em></em></div>
+            <p>官方自营商品，联系平台客服协助退换货；第三方合作商家，可以直接联系商家客服，一般是7天无理由退换货，如有困难，联系平台客服协助处理。</p>
+        </li>
+    </ul>
+</body>
+<script>
+$(function(){
+    FastClick.attach(document.body);
+    $('.txt-list li div').click(function(){
+        if($(this).siblings('p').is(":hidden")) {
+            $('.txt-list li div').children('em').removeClass('but-on');
+            $('.txt-list li div').siblings('p').slideUp(300);
+            $(this).siblings('p').slideDown(300);
+            $(this).children('em').addClass('but-on');
+        } else {
+            $(this).siblings('p').slideUp(300);
+            $(this).children('em').removeClass('but-on');
+        }
+    });
+});
+</script>
+</html>

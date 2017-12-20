@@ -1,0 +1,19 @@
+<template name="singleGoods">
+	<navigator url="/pages/detail/detail?goods_id={{goods_id}}">
+		<view class="single-goods">
+			<view class="left-box">
+				<image class="goods-pic" src="{{pic_info_url}}"></image>
+			</view>
+			<view class="right-box">
+				<view class="tit"><text class="tag tb">淘宝</text>{{title}}</view>
+				<view class="price-wrap">
+					<view class="final-price-wrap">到手价<text class="unit">¥</text><text class="final-price">{{discount_price}}</text></view>
+					<view class="other-price">
+						<text class="original-price">预付 ¥{{market_price}}</text>
+						<text class="refund">返还 ¥{{refund}}</text>
+					</view>
+				</view>
+			</view>
+		</view>
+	</navigator>
+</template>

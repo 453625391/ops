@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.meitianhui.member.dao.AssistantApplicationDao">
+
+	<select id="selectAssistantApplicationList" parameterType="Map" resultType="Map">
+		<![CDATA[
+		SELECT
+			ms.name,
+			ms.nick_name,
+			ms.contact_tel,
+			ms.sex_key,
+			ms.area_id,
+			ms.id_card,
+			ma.path,
+			ms.salesman_id,
+			maa.application_id,
+			maa.stores_id,
+			maa.assistant_id,
+			maa.audit_status,
+			maa.created_date,
+			maa.remark,
+			mss.stores_name,
+			mss.contact_person mss_contact_person,
+			mss.contact_tel mss_contact_tel
+		FROM
+			md_assistant_application maa	
+			INNER JOIN md_salesman ms ON maa.assistant_id = ms.salesman_id	
+			LEFT JOIN md_area ma ON ms.area_id = ma.area_id
+			LEFT JOIN md_stores mss ON maa.stores_id = mss.stores_id
+		]]>	
+		<where>
+			1=1
+			<if test="audit_status_in != null">
+				AND maa.audit_status in
+				<foreach item="item" index="index" collection="audit_status_in"
+					open="(" separator="," close=")">
+					#{item}
+				</foreach>
+			</if>
+			<if test="search_input !=null and search_input !=''">
+				AND (ms.name like concat('%',#{search_input},'%') or
+					ms.contact_tel like concat('%',#{search_input},'%') or
+					mss.stores_name like concat('%',#{search_input},'%') or
+					ms.id_card like concat('%',#{search_input},'%')) 
+			</if>
+		</where>	
+		ORDER BY maa.created_date DESC
+	</select>
+	
+	<select id="selectAssistantApplicationLogList" parameterType="Map" resultType="Map">
+		<![CDATA[
+		SELECT
+			maal.log_id,
+			maal.tracked_date,
+			maal.event_desc,
+			maal.application_id,
+			maal.category
+		FROM
+			md_assistant_application_log maal	
+		]]>	
+		<where>
+			1=1
+			<if test="application_id !=null and application_id !=''">
+				AND maal.application_id = #{application_id}
+			</if>
+			
+		</where>	
+		ORDER BY maal.tracked_date DESC
+	</select>
+	
+	<select id="selectAssistantApplication" parameterType="Map" resultType="Map">
+		<![CDATA[
+			SELECT
+			     maa.application_id
+				,maa.stores_id
+				,maa.assistant_id
+				,maa.audit_status
+				,maa.created_date
+				,maa.modified_date
+				,maa.remark
+				,mss.stores_no
+				,mss.stores_name
+				,mss.business_type_key
+				,mss.area_id
+				,mss.contact_person
+				,mss.contact_tel
+				,ma.path
+				,mss.address
+			FROM
+				md_assistant_application maa 
+			LEFT JOIN md_stores mss ON maa.stores_id = mss.stores_id	
+			LEFT JOIN md_area ma ON mss.area_id = ma.area_code
+		]]>
+		<where>
+			1=1
+			<if test="application_id != null and application_id != ''">
+				AND maa.application_id = #{application_id}
+			</if>
+			<if test="assistant_id != null and assistant_id != ''">
+				AND maa.assistant_id = #{assistant_id}
+			</if>
+			<if test="stores_id != null and stores_id != ''">
+				AND maa.stores_id = #{stores_id}
+			</if>
+			<if test="audit_status_in != null">
+				AND maa.audit_status in
+				<foreach item="item" index="index" collection="audit_status_in"
+					open="(" separator="," close=")">
+					#{item}
+				</foreach>
+			</if>
+		</where>	
+	</select>
+	
+	<update id="updateAssistantApplication" parameterType="Map">
+		UPDATE md_assistant_application SET 
+		<trim suffixOverrides=",">
+			modified_date = SYSDATE(),
+			<if test="audit_status != null and audit_status != ''">
+				audit_status = #{audit_status},
+			</if>
+			<if test="remark != null and remark != ''">
+				remark = #{remark},
+			</if>
+		</trim>	
+		<where>
+			<if test="application_id != null and application_id != ''">
+				application_id = #{application_id}
+			</if>
+			<if test="stores_id != null and stores_id != ''">
+				stores_id = #{stores_id}
+			</if>
+		</where>
+	</update>
+	
+	<insert id="insertAssistantApplication" parameterType="MDAssistantApplication">
+		INSERT INTO
+		md_assistant_application(
+			application_id,
+			stores_id,
+			assistant_id,
+			audit_status,
+			created_date,
+			modified_date,
+			remark
+		)VALUES(
+			#{application_id},
+			#{stores_id},
+			#{assistant_id},
+			#{audit_status},
+			#{created_date},
+			#{modified_date},
+			#{remark}
+		)
+	</insert>
+	
+	<insert id="insertAssistantApplicationLog" parameterType="Map">
+		INSERT INTO
+		md_assistant_application_log (
+		log_id
+		,application_id
+		,category
+		,tracked_date
+		,event_desc
+		)
+		VALUES (
+		#{log_id}
+		,#{application_id}
+		,#{category}
+		,#{tracked_date}
+		,#{event_desc}
+		)
+	</insert>
+	
+</mapper>

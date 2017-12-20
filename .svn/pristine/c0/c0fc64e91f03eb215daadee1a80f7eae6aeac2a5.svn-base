@@ -1,0 +1,94 @@
+<import src="../template/singleGoods.wxml" />
+<import src="../template/doubleGoods.wxml" />
+
+<!-- 推荐 -->
+<block wx:if="{{currentRoute == 'all'}}">
+	<!-- banner -->
+	<swiper class="banner" indicator-dots="true" indicator-active-color="#ff0000" autoplay="true" interval="3000">
+		<block wx:for="{{banner.list}}">
+			<swiper-item>
+				<image class="banner-img" src="{{banner.doc_url[item.path_id]}}"></image>
+			</swiper-item>
+		</block>
+	</swiper>
+	<!-- 推荐商品 -->
+	<view class="double-goods-list">
+		<block wx:for="{{recommendGoodsList}}">
+			<template is="doubleGoods" data="{{...item}}"></template>
+		</block>
+	</view>
+	<view class="all-goods-bar">
+		<image class="all-goods-bar" src="https://appportal.meitianhui.com/image/wxapp/more-recommend.png"></image>
+	</view>
+	<!-- 全部商品 -->
+	<view class="single-goods-list">
+		<block wx:for="{{all.goodsList}}">
+			<template is="singleGoods" data="{{...item}}" />
+		</block>
+	</view>
+</block>
+<!-- 上新 -->
+<block wx:if="{{currentRoute == 'new'}}">
+	<view class="double-goods-list">
+		<block wx:for="{{new.goodsList}}">
+			<template is="doubleGoods" data="{{...item}}" />
+		</block>
+	</view>
+</block>
+<!-- 分类 -->
+<block wx:if="{{currentRoute == 'category'}}">
+	<view class="single-goods-list">
+		<block wx:for="{{category.goodsList}}">
+			<template is="singleGoods" data="{{...item}}" />
+		</block>
+	</view>
+</block>
+<!-- 预告 -->
+<block wx:if="{{currentRoute == 'forecast'}}">
+	<view class="double-goods-list">
+		<block wx:for="{{forecast.goodsList}}">
+			<template is="doubleGoods" data="{{...item}}" />
+		</block>
+	</view>
+</block>
+<!-- 心愿 -->
+<!-- <block wx:if="{{currentRoute == 'wish'}}">
+	<view class="double-goods-list">
+		<block wx:for="{{wish.goodsList}}">
+			<template is="doubleGoods" data="{{...item}}" />
+		</block>
+	</view>
+</block> -->
+
+<block wx:if="{{categoryPanelSwitch}}">
+	<view class="category-panel-wrap" bindtap="bindCategoryPanelSwitch" data-switch="false">
+		<view class="category-panel">
+			<view class="category ryjj" bindtap="bindTabTap" data-route="category" data-category="日用家居">
+				<text class="name">日用家居</text>
+			</view>
+			<view class="category smjd" bindtap="bindTabTap" data-route="category" data-category="数码家电">
+				<text class="name">数码家电</text>
+			</view>
+			<view class="category myyp" bindtap="bindTabTap" data-route="category" data-category="母婴用品">
+				<text class="name">母婴用品</text>
+			</view>
+			<view class="category fsxb" bindtap="bindTabTap" data-route="category" data-category="服饰鞋包">
+				<text class="name">服饰鞋包</text>
+			</view>
+			<view class="category spsx" bindtap="bindTabTap" data-route="category" data-category="食品生鲜">
+				<text class="name">食品生鲜</text>
+			</view>
+			<view class="category xrzx" bindtap="bindTabTap" data-route="category" data-category="freshman">
+				<text class="name">新人专享</text>
+			</view>
+		</view>
+	</view>
+</block>
+
+<view class="tab-wrap">
+	<view bindtap="bindTabTap" class="tab all {{currentRoute=='all'?'on':''}}" data-route="all">推荐</view>
+	<view bindtap="bindTabTap" class="tab new {{currentRoute=='new'?'on':''}}" data-route="new">上新</view>
+	<view bindtap="bindCategoryPanelSwitch" data-switch="true" class="tab category {{currentRoute=='category'?'on':''}}">分类</view>
+	<view bindtap="bindTabTap" class="tab forecast {{currentRoute=='forecast'?'on':''}}" data-route="forecast">预告</view>
+	<!-- <view bindtap="bindTabTap" class="tab wish {{currentRoute=='wish'?'on':''}}" data-route="wish">心愿</view> -->
+</view>

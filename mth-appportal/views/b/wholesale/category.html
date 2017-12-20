@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <% include ../../commonHead.html %>
+    <title><%=category%></title>
+    <link rel="stylesheet" type="text/css" href="/css/wholesale/list.css?v20161229">
+</head>
+<body style="padding-top: 0;">
+    <div class="banner">
+        <% if(category == '家居' || category == '文体' || category == '日用' || category == '洗护') { %>
+        <img src="/image/wholesale/banner/<%=category%>.png" />
+        <% } else { %>
+        <img src="/image/wholesale/banner/其他.png" />
+        <% } %>
+    </div>
+    <div class="list-wrap">
+        <div class="category-wrap" style="display: block;">
+            <ul id="goodsList" class="list"></ul>
+        </div>
+        <script id="goodsTpl" type="text/html">
+            {{each list as goods i}}
+            {{if i%2 == 0}}
+                <li>
+            {{/if}}
+            <a href="/openapi/h5/b/wholesale/detail?goods_id={{goods.goods_id}}" class="box">
+                <img src="{{goods.picUrlArr[0]}}" />
+                <div class="txt-wrap">
+                    <h3 class="tit">{{goods.title}}</h3>
+                    {{if goods.supplier}}
+                    <p>{{goods.supplier}}</p>
+                    {{else}}
+                    <p>配送范围：{{goods.delivery_desc}}</p>
+                    {{/if}}
+                    <p>起订：{{goods.min_buy_qty}}&nbsp;&nbsp;库存：{{goods.sale_qty}}</p>
+                    <p>规格：{{goods.specification}}{{if goods.max_buy_qty && goods.max_buy_qty!=0}}&nbsp;&nbsp;限购：{{goods.max_buy_qty}}{{/if}}</p>
+                    <p>建议零售价：¥{{goods.market_price}}</p>
+                    <p class="price">¥<em>{{goods.discount_price}}</em></p>
+                </div>
+                {{if goods.sale_qty <= 0}}
+                <div class="soldout-wrap">
+                    <img src="/image/common/soldout.png" />
+                </div>
+                {{/if}}
+            </a>
+            {{if i%2 != 0}}
+                </li>
+            {{/if}}
+            {{/each}}
+        </script>
+    </div>
+    <p id="loading">正在加载……</p>
+    <div class="no-record">
+        <img src="/image/common/no-record.png" />
+        <p>暂无该分类商品</p>
+    </div>
+</body>
+<script type="text/javascript">
+var J = {
+    display_area : '<%=category%>',
+    container : 'goodsList',
+    page_no : '1',
+    page_size : '8',
+    hasMore : true,
+    isLoading : false
+};
+
+$(function() {
+    new AutoLoader().load(function() {
+        loadGoods();
+    });
+});
+
+// 加载商品
+function loadGoods() {
+    if(J.hasMore && !J.isLoading) {
+        $.ajax({
+            type: 'POST',
+            url: '/openapi/h5/b/wholesale/getList',
+            data: {
+                display_area: J.display_area || '',
+                label_promotion: J.label_promotion || '',
+                area_id: '<%=area_id %>',
+                page_no: J.page_no || '1',
+                page_size: J.page_size || '8'
+            },
+            beforeSend: function() {
+                J.isLoading = true;
+                if(J.page_no > 1) {
+                    $('#loading').show();
+                }
+            },
+            success: function(data) {
+                var jsonData = typeof data == 'string' ? JSON.parse(data) : data;
+                if(!jsonData.goodsList || !jsonData.goodsList.length || jsonData.goodsList.length == 0) {
+                    if(J.page_no==1) {  // 一个商品都没有
+                        $('.no-record').show();
+                    }
+                    return;
+                }
+                J.page_no++;
+                var tdata = {
+                    list: jsonData.goodsList
+                };
+                var html = template('goodsTpl', tdata);
+                $('#' + J.container).append(html);
+                if(jsonData.page.page_no == jsonData.page.total_page) {
+                    J.hasMore = false;
+                }
+            },
+            complete: function() {
+                J.isLoading = false;
+                $('#loading').hide();
+            }
+        });
+    }
+}
+</script>
+</html>

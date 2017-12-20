@@ -1,0 +1,211 @@
+body {
+	font-weight: 300;
+	width: 10rem;
+	margin: 0 auto;
+    background-color: #fff;
+    padding-bottom: 1.866667rem;
+}
+.ticket {
+	width: 9.48rem;
+	height: 3.64rem;
+	margin: 0 auto;
+	margin-top: 0.4rem;
+	background-color: #f4f4f4;
+	position: relative;
+}
+.ticket .ticket-info {
+	width: 9.48rem;
+	height: 3.64rem;
+	color: #fff;
+	border-radius: 0.133333rem;
+	/* box-shadow: 0 10px 10px -5px rgba(0,0,0,0.2); */
+	overflow: hidden;
+	position: relative;
+	background: #F96844 url(/image/interests/choose-off.png) 0.693333rem 0.4rem no-repeat;
+	background-size: 0.666667rem 0.666667rem;
+}
+.ticket .ticket-info.on {
+	background: #F96844 url(/image/interests/choose-on.png) 0.693333rem 0.4rem no-repeat;
+	background-size: 0.666667rem 0.666667rem;
+}
+.ticket .ticket-info:before {
+	content: " ";
+	width: 0.48rem;
+	height: 0.48rem;
+	background-color: #fff;
+	border-radius: 50%;
+	position: absolute;
+	left: 1.946667rem;
+	top: -0.24rem;
+	z-index: 2;
+}
+.ticket .ticket-info:after {
+	content: " ";
+	width: 0.48rem;
+	height: 0.48rem;
+	background-color: #fff;
+	border-radius: 50%;
+	position: absolute;
+	left: 1.946667rem;
+	bottom: -0.24rem;
+	z-index: 2;
+}
+.ticket .ticket-info .left-box {
+	float: left;
+	width: 2.173333rem;
+	height: 3.64rem;
+}
+[data-dpr="1"] .ticket .ticket-info .left-box {
+	border-right: 1px dashed #eee;
+}
+[data-dpr="2"] .ticket .ticket-info .left-box {
+	border-right: 2px dashed #eee;
+}
+[data-dpr="3"] .ticket .ticket-info .left-box {
+	border-right: 3px dashed #eee;
+}
+.ticket .ticket-info .left-box .type {
+	width: 2.173333rem;
+	height: 3.64rem;
+	line-height: 2.066667rem;
+	font-size: 0.48rem;
+	-webkit-writing-mode: vertical-lr;
+	writing-mode: vertical-lr;
+	letter-spacing: 0.133333rem;
+	font-weight: bold;
+	margin-top: 1.333333rem;
+}
+.ticket .ticket-info .left-box .limit-tit {
+	color: #999;
+	font-size: 0.346667rem;
+	line-height: 0.48rem;
+	margin-top: 1.466667rem;
+}
+.ticket .ticket-info .left-box .limit-price {
+	color: #ff4242;
+	font-size: 0.48rem;
+}
+.ticket .ticket-info .right-box {
+	float: right;
+	width: 6.333333rem;
+	height: 3.106667rem;
+	padding: 0.266667rem 0.4rem 0.266667rem 0.533333rem;
+}
+.ticket .ticket-info .right-box .source {
+	font-size: 0.426667rem;
+	height: 0.826667rem;
+	line-height: 0.826667rem;
+}
+.ticket .ticket-info .right-box .code {
+	font-size: 0.693333rem;
+	font-weight: bold;
+	height: 1.2rem;
+	line-height: 1.2rem;
+	margin-top: 0.266667rem;
+	background: url(/image/interests/barcode.png) right center no-repeat;
+	background-size: 0.693333rem 0.72rem;
+}
+.ticket .ticket-info .right-box .bottom-txt {
+	font-size: 0.32rem;
+	margin-top: 0.4rem;
+}
+.ticket .ticket-info .right-box .bottom-txt em {
+	padding-left: 0.066667rem;
+}
+.ticket .ticket-info .right-box .bottom-txt .limit-price {
+	float: left;
+}
+.ticket .ticket-info .right-box .bottom-txt .expire-date {
+	float: right;
+}
+.loading {
+	color: #999;
+	font-size: 0.373333rem;
+	text-align: center;
+	width: 10.0rem;
+	position: fixed;
+	top: 2.666667rem;
+	left: 0;
+	display: none;
+}
+.footer-bar {
+	width: 9.466667rem;
+	padding: 0.266667rem;
+	position: fixed;
+	left: 0;
+	bottom: 0;
+	background-color: #fff;
+	z-index: 99;
+}
+.footer-bar .btn {
+	display: inline-block;
+	width: 4.466667rem;
+	height: 1.2rem;
+	line-height: 1.2rem;
+	font-size: 0.533333rem;
+	border-radius: 0.066667rem;
+	text-align: center;
+	letter-spacing: 0.066667rem;
+	color: #666;
+	background-color: #eee;
+	border: none;
+}
+.footer-bar .btn.fr {
+	float: right;
+}
+.footer-bar .btn.confirm {
+	color: #fff;
+	background-color: #ff4242;
+}
+.no-record {
+    margin-top: 2rem;
+    text-align: center;
+    display: none;
+}
+.no-record p {
+	color: #999;
+	font-size: 0.426667rem;
+    padding-top: 0.64rem;
+}
+.no-record img {
+    width: 3.76rem;
+}
+.alert-layer {
+	width: 100%;
+	height: 100%;
+	overflow-x: hidden;
+	background-color: rgba(0, 0, 0, 0.6);
+	position: fixed;
+	left: 0;
+	top: 0;
+	z-index: 99;
+	display: none;
+}
+.alert-layer .alert-wrap {
+	width: 8.426667rem;
+	background-color: #fff;
+	border-radius: 0.066667rem;
+	margin: 0 auto;
+	margin-top: 3.466667rem;
+	padding-bottom: 0.666667rem;
+}
+.alert-layer .alert-wrap .msg {
+	font-size: 0.533333rem;
+	color: #333;
+	text-align: center;
+	font-weight: normal;
+	padding: 1.12rem 0.533333rem 0 0.533333rem;
+}
+.alert-layer .alert-wrap .btn {
+	width: 3.333333rem;
+	height: 1.066667rem;
+	display: block;
+	line-height: 1.066667rem;
+	font-size: 0.48rem;
+	text-align: center;
+	color: #fff;
+	background-color: #ff4242;
+	margin: 0 auto;
+	border-radius: 0.066667rem;
+	margin-top: 0.8rem;
+}

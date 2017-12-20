@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.meitianhui.sync.dao.SyncDao">
+
+	<insert id="insertConsumerVoucherLog" parameterType="Map">
+		INSERT INTO
+		consumer_voucher_log (
+		last_process_point
+		,last_run_time
+		,exception_desc
+		)
+		VALUES (
+		#{last_process_point}
+		,#{last_run_time}
+		,#{exception_desc}
+		)
+	</insert>
+
+	<insert id="insertUserPasswordLog" parameterType="Map">
+		INSERT INTO
+		user_password_log (
+		last_process_point
+		,last_run_time
+		,exception_desc
+		)
+		VALUES (
+		#{last_process_point}
+		,#{last_run_time}
+		,#{exception_desc}
+		)
+	</insert>
+
+	<select id="selectConsumerVoucherLastLog" resultType="Map">
+		<![CDATA[
+			SELECT last_process_point 
+			 FROM consumer_voucher_log 
+			 ORDER BY log_id DESC LIMIT 0,1
+		]]>
+	</select>
+	
+	<select id="selectUserPasswordLogLastLog" resultType="Map">
+		<![CDATA[
+			SELECT last_process_point 
+			 FROM user_password_log 
+			 ORDER BY log_id DESC LIMIT 0,1
+		]]>
+	</select>
+
+
+</mapper>

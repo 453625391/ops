@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.meitianhui.demo.dao.mongodb.LogDemoDao">
+	<!-- 新增 -->
+	<insert id="insertLogDemo" parameterType="Map">
+		INSERT INTO demo
+		(id, name)
+		VALUES
+		(#{id}, #{name})
+	</insert>
+
+</mapper>

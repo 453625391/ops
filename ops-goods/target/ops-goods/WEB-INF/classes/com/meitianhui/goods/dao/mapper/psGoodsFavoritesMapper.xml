@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.meitianhui.goods.dao.PsGoodsFavoritesDao">
+
+	<insert id="insertPsGoodsFavorites" parameterType="PsGoodsFavorites">
+		INSERT INTO
+		ps_goods_favorites (
+		favorites_type
+		,goods_id
+		,member_type_key
+		,member_id
+		,member_info
+		,created_date
+		,remark
+		)
+		VALUES
+		(
+		#{favorites_type}
+		,#{goods_id}
+		,#{member_type_key}
+		,#{member_id}
+		,#{member_info}
+		,#{created_date}
+		,#{remark}
+		)
+	</insert>
+
+	
+	<select id="selectPsGoodsFavorites" parameterType="Map" resultType="PsGoodsFavorites">
+		SELECT
+			favorites_type
+			,goods_id
+			,member_type_key
+			,member_id
+		FROM
+		ps_goods_favorites
+		<where>
+			<if test="member_id != null and member_id != ''">
+				AND member_id = #{member_id}
+			</if>
+			<if test="member_type_key != null and member_type_key != ''">
+				AND member_type_key = #{member_type_key}
+			</if> 
+			<if test="goods_id != null and goods_id != ''">
+				AND goods_id = #{goods_id}
+			</if>
+		</where>
+	</select>
+	
+
+	<select id="selectFgGoodsFavoritesListForApp" parameterType="Map" resultType="Map">
+		SELECT
+			pg.goods_id
+			,pg.title
+			,pg.data_source
+			,pg.label_promotion
+			,pg.market_price
+			,pg.discount_price
+			,pg.sale_qty
+			,pg.pic_info
+			,pg.valid_thru
+		FROM
+		ps_goods_favorites pgf INNER JOIN ps_goods pg ON pgf.goods_id = pg.goods_id AND pg.status = 'on_shelf'
+		<where>
+			pgf.favorites_type = 'llm'
+			<if test="member_id != null and member_id != ''">
+				AND pgf.member_id = #{member_id}
+			</if>
+			<if test="member_type_key != null and member_type_key != ''">
+				AND pgf.member_type_key = #{member_type_key}
+			</if> 
+			<if test="goods_id != null and goods_id != ''">
+				AND pgf.goods_id = #{goods_id}
+			</if>
+		</where>
+		ORDER BY pgf.created_date DESC
+	</select>
+	
+	<select id="selectTsGoodsFavoritesListForApp" parameterType="Map" resultType="Map">
+		SELECT
+			pg.goods_id
+			,pg.title
+			,pg.label
+			,pg.market_price
+			,pg.discount_price
+			,pg.ts_min_num
+			,pg.ts_price
+			,pg.sale_qty
+			,pg.pic_info
+		FROM
+		ps_goods_favorites pgf INNER JOIN ps_goods pg ON pgf.goods_id = pg.goods_id AND pg.status = 'on_shelf'
+		<where>
+			pgf.favorites_type = 'hpt'
+			<if test="member_id != null and member_id != ''">
+				AND pgf.member_id = #{member_id}
+			</if>
+			<if test="member_type_key != null and member_type_key != ''">
+				AND pgf.member_type_key = #{member_type_key}
+			</if> 
+			<if test="goods_id != null and goods_id != ''">
+				AND pgf.goods_id = #{goods_id}
+			</if>
+		</where>
+		ORDER BY pgf.created_date DESC
+	</select>
+	
+	
+	<delete id="deletePsGoodsFavorites" parameterType="Map">
+		DELETE FROM ps_goods_favorites 
+		<where>
+			goods_id = #{goods_id} AND member_id = #{member_id} AND member_type_key = #{member_type_key} 
+		</where>
+	</delete>
+
+</mapper>

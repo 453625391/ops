@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.meitianhui.storage.dao.StorageDao">
+	<insert id="insertDocument" parameterType="IdDocument">
+		INSERT INTO
+		id_document
+		(
+		doc_id
+		, doc_name
+		, doc_type
+		, path
+		, status
+		, created_date
+		)
+		VALUES
+		(
+		#{doc_id}
+		,#{doc_name}
+		,#{doc_type}
+		,#{path}
+		,#{status}
+		,#{created_date}
+		)
+	</insert>
+
+	<select id="selectDocument" parameterType="List" resultType="IdDocument">
+		SELECT
+		doc_id
+		,path
+		FROM id_document
+		<where>
+			doc_id in
+			<foreach item="item" index="index" collection="list" open="("
+				separator="," close=")">
+				#{item}
+			</foreach>
+		</where>
+	</select>
+
+	<select id="selectDocumentById" parameterType="String" resultType="Map">
+		SELECT
+		doc_id
+		,path
+		FROM id_document
+		<where>
+			doc_id = #{doc_id}
+		</where>
+	</select>
+</mapper>

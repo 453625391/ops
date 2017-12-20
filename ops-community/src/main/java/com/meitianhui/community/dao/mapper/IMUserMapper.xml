@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.meitianhui.community.dao.IMUserMapper">
+	
+	<!-- 根据会员编号与会员类型查询对应的会员账号信息 -->
+	<select id="getUserMember" parameterType="String" resultType="hashmap">
+		select mum.user_id,mum.member_type_key,mum.member_id,mum.is_admin from mddb.md_user_member mum
+		 where mum.member_id = #{member_id} and mum.member_type_key = #{member_type_key} LIMIT 1
+	</select>
+
+	<!-- 根据会员编号与会员类型查询数据库环信用户信息 -->
+	<select id="getIMUserId" parameterType="String" resultType="String">
+		select mium.im_user_id from md_im_user_member mium where mium.member_id = #{member_id} and mium.member_type_key = #{member_type_key} LIMIT 1
+	</select>
+	
+	<!-- 查询单个IM用户信息 -->
+	<select id="queryOneIMUser" parameterType="String" resultType="hashmap">
+		SELECT miu.im_user_id,miu.username,miu.sex_key,miu.birthday,miu.remark,
+		  CASE mium.member_type_key WHEN 'stores' THEN ms.stores_name WHEN 'consumer' THEN mc.nick_name END nickname,
+		  CASE mium.member_type_key WHEN 'stores' THEN ms.head_pic_path WHEN 'consumer' THEN mc.head_pic_path END head_pic_path
+		  FROM md_im_user miu 
+		  INNER JOIN md_im_user_member mium on miu.im_user_id = mium.im_user_id
+		  LEFT JOIN md_stores ms on mium.member_id = ms.stores_id
+		  LEFT JOIN md_consumer mc on mium.member_id = mc.consumer_id
+		 WHERE miu.im_user_id = #{im_user_id}
+	</select>
+	
+	<!-- 新增IM账号信息 -->
+	<insert id="insertIMUser" parameterType="IMUser">
+		insert into mddb.md_im_user
+			(im_user_id,username,password,nickname,head_pic_path,sex_key,birthday,activated,created,modified,remark)
+		 values
+			(#{im_user_id}, #{username}, #{password}, #{nickname}, #{head_pic_path}, #{sex_key}, #{birthday}, #{activated}, #{created}, #{modified}, #{remark})
+	</insert>
+	
+	<!-- 更新IM账号信息 -->
+	<update id="updateIMUser" parameterType="hashmap">
+		update mddb.md_im_user
+		<set>
+			modified = now(),
+			<if test="username != null">
+				username = #{username},
+			</if>
+			<if test="password != null">
+				password = #{password},
+			</if>
+			<if test="nickname != null">
+				nickname = #{nickname},
+			</if>
+			<if test="head_pic_path != null">
+				head_pic_path = #{head_pic_path},
+			</if>
+			<if test="sex_key != null">
+				sex_key = #{sex_key},
+			</if>
+			<if test="birthday != null">
+				birthday = #{birthday},
+			</if>
+		</set>
+		where im_user_id = #{im_user_id}
+	</update>
+	
+	<!-- 新增IM与会员账号关系 -->
+	<insert id="insertIMUserMember" parameterType="IMUserMember">
+		insert into mddb.md_im_user_member
+			(user_id,im_user_id,member_type_key,member_id,created_date,remark)
+		values
+			(#{user_id}, #{im_user_id}, #{member_type_key}, #{member_id}, #{created_date}, #{remark})
+	</insert>
+	
+	<!-- 根据相关条件查询用户基本信息 -->
+	<select id="getIMUserBaseInfoList" parameterType="hashmap" resultType="hashmap">
+		SELECT miu.im_user_id,mium.member_type_key,mium.member_id,miu.sex_key,
+		  CASE mium.member_type_key WHEN 'stores' THEN ms.stores_name WHEN 'consumer' THEN mc.nick_name END nickname,
+		  CASE mium.member_type_key WHEN 'stores' THEN ms.head_pic_path WHEN 'consumer' THEN mc.head_pic_path END head_pic_path
+		  FROM md_im_user miu 
+		  INNER JOIN md_im_user_member mium on miu.im_user_id = mium.im_user_id
+		  LEFT JOIN md_stores ms on mium.member_id = ms.stores_id
+		  LEFT JOIN md_consumer mc on mium.member_id = mc.consumer_id
+		<where>
+			<if test="userIdList != null and userIdList.size() > 0">
+				miu.im_user_id in
+				<foreach collection="userIdList" item="userId" open="(" close=")" separator=",">
+					#{userId}
+				</foreach>
+			</if>
+		</where>
+	</select>
+	
+	<!-- 获取带经纬度信息的用户信息 -->
+	<select id="getIMUserLocationInfoList" parameterType="hashmap" resultType="hashmap">
+		SELECT miu.im_user_id,mium.member_type_key,mium.member_id,miu.sex_key,
+			CASE mium.member_type_key WHEN 'stores' THEN ms.stores_name WHEN 'consumer' THEN mc.nick_name END nickname,
+			CASE mium.member_type_key WHEN 'stores' THEN ms.head_pic_path WHEN 'consumer' THEN mc.head_pic_path END head_pic_path,
+			CASE mium.member_type_key WHEN 'stores' THEN ms.longitude WHEN 'consumer' THEN mcl.longitude END longitude,
+			CASE mium.member_type_key WHEN 'stores' THEN ms.latitude WHEN 'consumer' THEN mcl.latitude END latitude
+	  	FROM md_im_user miu 
+	  	INNER JOIN md_im_user_member mium on miu.im_user_id = mium.im_user_id
+	  	LEFT JOIN md_stores ms on mium.member_id = ms.stores_id
+	 	LEFT JOIN md_consumer mc on mium.member_id = mc.consumer_id
+      	LEFT JOIN (SELECT a.consumer_id, MAX(a.created_date) created_date FROM md_consumer_location a GROUP by a.consumer_id) a ON mc.consumer_id = a.consumer_id
+      	LEFT JOIN md_consumer_location mcl ON a.consumer_id = mcl.consumer_id AND a.created_date = mcl.created_date
+		<where>
+			<if test="userIdList != null and userIdList.size() > 0">
+				miu.im_user_id in
+				<foreach collection="userIdList" item="userId" open="(" close=")" separator=",">
+					#{userId}
+				</foreach>
+			</if>
+		</where>
+	</select>
+</mapper>

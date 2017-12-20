@@ -1,0 +1,11 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <% include ../commonHead.html %>
+    <title>帮助-领了么</title>
+    <link rel="stylesheet" type="text/css" href="/css/payback.css">
+</head>
+<body>
+
+</body>
+</html>

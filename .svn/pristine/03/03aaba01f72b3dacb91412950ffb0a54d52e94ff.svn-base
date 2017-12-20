@@ -1,0 +1,9 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<% include ../commonHead.html %>
+    <title>帮助</title>
+</head>
+<body>
+</body>
+</html>

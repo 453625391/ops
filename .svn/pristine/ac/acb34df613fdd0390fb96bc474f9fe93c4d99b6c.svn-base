@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <% include ../../../commonHead.html %>
+    <title>我的参与</title>
+    <link rel="stylesheet" type="text/css" href="/css/payback/lottery/joined.css">
+</head>
+<body>
+    <div class="activity-container">
+        <% if(joinedList.length > 0) { %>
+        <ul>
+            <% for(var i=0; i<joinedList.length; i++) { %>
+            <li class="activity-box">
+                <a href="/openapi/h5/c/payback/lottery/detail?member_id=<%=member_id%>&activity_id=<%=joinedList[i].activity_id%>" class="activity">
+                    <div class="activity-info">
+                        <div class="left-box">
+                            <img src="<%=joinedList[i].picArr[0] %>" class="<%if(parseInt(joinedList[i].win_num||0) == 0 && joinedList[i].pa_status == 'offline'){%>gray<%}%>" />
+                            <% if(parseInt(joinedList[i].win_num||0) > 0) { %>
+                            <em class="win"></em>
+                            <% } %>
+                        </div>
+                        <div class="right-box">
+                            <p class="tit"><%=joinedList[i].title%></p>
+                            <p class="goods-tit"><%=joinedList[i].goods_title%></p>
+                            <p class="num">中奖数量：<i><%=joinedList[i].win_num || 0%></i></p>
+                            <p class="num">参与次数：<i><%=joinedList[i].member_count || 0%></i></p>
+                            <p class="num">开奖时间：<i><%=joinedList[i].lottery_time%></i></p>
+                        </div>
+                    </div>
+                    <% if(joinedList[i].pld_status == 'delivered') { %>
+                    <div class="delevery-info">
+                        <p>已发货：<%=joinedList[i].contact_person%>&nbsp;&nbsp;<%=joinedList[i].contact_tel%></p>
+                        <p><%=joinedList[i].delivery_address%></p>
+                    </div>
+                    <% } %>
+                </a>
+            </li>
+            <% } %>
+        </ul>
+        <% } else { %>
+        <div class="no-record">
+            <img src="/image/common/no-record.png" />
+            <p>暂无参与记录</p>
+        </div>
+        <% } %>
+    </div>
+</body>
+</html>

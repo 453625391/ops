@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<% include ../../commonHead.html %>
+    <title>拼团领</title>
+    <link rel="stylesheet" type="text/css" href="/css/hpt/index.css?v20170329">
+</head>
+<body>
+    <div class="goods-container">
+        <div class="no-record" style="display: block;">
+            <img src="/image/common/no-record.png" />
+            <p>暂无活动</p>
+        </div>
+    </div>
+    <% if(requestParams.s) { %>
+    <div>
+        <img src="/image/fan/qr.gif?v2" style="width: 100%; margin-top: 0.133333rem;" />
+    </div>
+    <% } %>
+</body>
+</html>

@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <!-- 删除苹果默认的工具栏和菜单栏 -->
+    <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+    <!-- 设置苹果工具栏颜色 -->
+    <meta name="format-detection" content="telphone=no, email=no" />
+    <!-- 忽略页面中的数字识别为电话，忽略email识别 -->
+    <!-- 启用360浏览器的极速模式(webkit) -->
+    <meta name="renderer" content="webkit">
+    <!-- 避免IE使用兼容模式 -->
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <!-- 针对手持设备优化，主要是针对一些老的不识别viewport的浏览器，比如黑莓 -->
+    <meta name="HandheldFriendly" content="true">
+    <!-- 微软的老式浏览器 -->
+    <meta name="MobileOptimized" content="320">
+    <!-- uc强制竖屏 -->
+    <meta name="screen-orientation" content="portrait">
+    <!-- QQ强制竖屏 -->
+    <meta name="x5-orientation" content="portrait">
+    <!-- UC强制全屏 -->
+    <meta name="full-screen" content="yes">
+    <!-- QQ强制全屏 -->
+    <meta name="x5-fullscreen" content="true">
+    <!-- UC应用模式 -->
+    <meta name="browsermode" content="application">
+    <!-- QQ应用模式 -->
+    <meta name="x5-page-mode" content="app">
+    <!-- windows phone 点击无高光 -->
+    <meta name="msapplication-tap-highlight" content="no">
+    <!-- 禁用iPhone手机浏览器上给电话号码自动加上的link样式 -->
+    <meta name="format-detection" content="telephone=no">
+    <title>我要批</title>
+    <link rel="stylesheet" type="text/css" href="/css/reset.css">
+    <link rel="stylesheet" type="text/css" href="/css/wholesale/main.css">
+    <script type="text/javascript" src="/js/third-part/flexible.js"></script>
+    <script type="text/javascript" src="/js/third-part/zepto.min.js"></script>
+    <script type="text/javascript" src="/js/third-part/swipe.js"></script>
+</head>
+
+<body>
+    <div class="banner tb">
+        <div id="slider" class="swipe">
+            <div class="swipe-wrap">
+                <% for(var i in goods.picUrlArr) { %>
+                    <div>
+                        <img src="<%=goods.picUrlArr[i] %>" />
+                    </div>
+                <% } %>
+            </div>
+        </div>
+        <nav>
+            <ul id="position">
+                <% for(var i in goods.picUrlArr) { %>
+                    <% if(i == 0) { %>
+                        <li class="on"></li>
+                    <% } else { %>
+                        <li></li>
+                    <% } %>    
+                <% } %>
+            </ul>
+        </nav>
+    </div>
+    <div class="cnt-box">
+        <p class="tit"><%=goods.title %></p>
+        <div class="sub-tit">
+            <ul>
+                <%if(goods.min_buy_qty){%><li>起订：<%=goods.min_buy_qty %></li><%}%>
+                <%if(goods.sale_qty){%><li>库存：<%=goods.sale_qty %></li><%}%>
+                <%if(goods.specification){%><li>规格：<%=goods.specification %></li><%}%>
+                <%if(goods.max_buy_qty && goods.max_buy_qty!=0){%><li>限购：<%=goods.max_buy_qty %></li><%}%>
+                <li>建议零售价：¥<%=goods.market_price %></li>
+            </ul>
+        </div>
+        <div class="price-box">
+            <span class="price">¥<em><%=goods.discount_price %></em></span>
+            <!-- <a href="javascript: void(0);" id="csBtn" class="customer-service">客户服务</a> -->
+        </div>
+    </div>
+    <p class="delivery">配送范围：<%=goods.delivery_desc %></p>
+    <% if(goods.desc1) { %>
+    <p class="delivery desc">商品描述：<%=goods.desc1 %></p>
+    <% } %>
+    <% if(goods.picDetailArr) { %>
+    <div class="detail-wrap">
+    <% for(var i=0; i<goods.picDetailArr.length; i++) { %>
+        <p><%=goods.picDetailArr[i].title %></p>
+        <div class="detail-img-wrap">
+            <img src="<%=goods.picDetailArr[i].url %>" />
+        </div>
+    <% } %>
+    </div>
+    <% } %>
+    <div class="footer-bar today-fb">
+        <a href="javascript: void(0);" id="buyNow" class="btn" data-id="<%=goods.goods_id %>">立即采购</a>
+        <a href="/openapi/h5/b/wholesale/list?area_id=<%=area_id %>" class="btn"><span class="pf">批发中心</span></a>
+    </div>
+
+    <div id="mask"></div>
+    <div id="prompt">
+        <em id="close"></em>
+        <div class="img-wrap">
+            <img src="/image/wholesale/wyp-qr.png" />
+        </div>
+        <p class="txt">扫码，或直接在微信上搜索“mtywoyaopi”添加好友即可和客服人员聊天，解答您的一切疑问</p>
+    </div>
+</body>
+<script type="text/javascript">
+$(function() {
+    var bullets = document.getElementById('position').getElementsByTagName('li');
+    var slider = Swipe(document.getElementById('slider'), {
+        auto: 3000,
+        continuous: true,
+        callback: function(pos) {
+            var i = bullets.length;
+            while (i--) {
+                bullets[i].className = '';
+            }
+            bullets[pos].className = 'on';
+        }
+    });
+
+    $('#csBtn').click(function() {
+        maskController('show');
+        promptController('show');
+    });
+    $('#close').click(function() {
+        maskController('hide');
+        promptController('hide');
+    });
+    $('#mask').click(function() {
+        maskController('hide');
+        promptController('hide');
+    });
+
+    // 立即购买
+    var goods_id = $('#buyNow').attr('data-id');
+    if(goods_id) {
+        if(window.jsObj) {
+            $('#buyNow').tap(function(e) {
+                window.jsObj.buyGoods(goods_id);
+            });
+        } else {
+            setupWebViewJavascriptBridge(function(bridge) {
+                $('#buyNow').tap(function(e) {
+                    e.preventDefault()
+                    bridge.callHandler('buyGoods', {
+                        'goods_id': goods_id
+                    });
+                });
+            });
+        }
+    }
+});
+
+function maskController(type) {
+    if(type == 'show') {
+        $('#mask').css({
+            'z-index' : 2,
+            opacity : 0.6,
+            filter : 'alpha(opacity=60)'
+        });
+    } else {
+        $('#mask').css({
+            'z-index' : -1,
+            opacity : 0,
+            filter : 'alpha(opacity=0)'
+        });
+    }
+}
+
+function promptController(type) {
+    if(type == 'show') {
+        $('#prompt').css({
+            'z-index' : 3,
+            opacity : 1,
+            filter : 'alpha(opacity=100)'
+        });
+    } else {
+        $('#prompt').css({
+            'z-index' : -1,
+            opacity : 0,
+            filter : 'alpha(opacity=0)'
+        });
+    }
+}
+
+function setupWebViewJavascriptBridge(callback) {
+    if (window.WebViewJavascriptBridge) {
+        return callback(WebViewJavascriptBridge);
+    }
+    if (window.WVJBCallbacks) {
+        return window.WVJBCallbacks.push(callback);
+    }
+    window.WVJBCallbacks = [callback];
+    var WVJBIframe = document.createElement('iframe');
+    WVJBIframe.style.display = 'none';
+    WVJBIframe.src = 'wvjbscheme://__BRIDGE_LOADED__';
+    document.documentElement.appendChild(WVJBIframe);
+    setTimeout(function() {
+        document.documentElement.removeChild(WVJBIframe)
+    }, 0)
+}
+</script>
+</html>

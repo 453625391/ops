@@ -1,0 +1,1166 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.meitianhui.order.dao.FgOrderDao">
+
+
+	<insert id="insertFgOrder" parameterType="FgOrder">
+		INSERT INTO
+		fg_order (
+		order_id
+		,order_no
+		,order_date
+		,order_type
+		,desc1
+		,item_num
+		,payment_way_key
+		,total_fee
+		,discount_fee
+		,sale_fee
+		,member_type_key
+		,member_id
+		,member_info
+		,member_mobile
+		,delivery_address
+		,contact_person
+		,contact_tel
+		,logistics
+		,status
+		,settle_status
+		,created_date
+		,modified_date
+		,remark
+		)
+		VALUES (
+		#{order_id}
+		,#{order_no}
+		,#{order_date}
+		,#{order_type}
+		,#{desc1}
+		,#{item_num}
+		,#{payment_way_key}
+		,#{total_fee}
+		,#{discount_fee}
+		,#{sale_fee}
+		,#{member_type_key}
+		,#{member_id}
+		,#{member_info}
+		,#{member_mobile}
+		,#{delivery_address}
+		,#{contact_person}
+		,#{contact_tel}
+		,#{logistics}
+		,#{status}
+		,#{settle_status}
+		,#{created_date}
+		,#{modified_date}
+		,#{remark}
+		)
+	</insert>
+
+	<insert id="insertFgOrderItem" parameterType="FgOrderItem">
+		INSERT INTO
+		fg_order_item (
+		order_item_id
+		,order_id
+		,goods_id
+		,goods_code
+		,goods_title
+		,goods_pic_info
+		,supplier_id
+		,supplier
+		,manufacturer
+		,specification
+		,qty
+		,goods_unit
+		,sale_price
+		,discount_fee
+		,total_fee
+		,settled_price
+		,service_fee
+		,created_date
+		,modified_date
+		,remark
+		,taobao_link
+		)
+		VALUES
+		(
+		#{order_item_id}
+		,#{order_id}
+		,#{goods_id}
+		,#{goods_code}
+		,#{goods_title}
+		,#{goods_pic_info}
+		,#{supplier_id}
+		,#{supplier}
+		,#{manufacturer}
+		,#{specification}
+		,#{qty}
+		,#{goods_unit}
+		,#{sale_price}
+		,#{discount_fee}
+		,#{total_fee}
+		,#{settled_price}
+		,#{service_fee}
+		,#{created_date}
+		,#{modified_date}
+		,#{remark}
+		,#{taobao_link}	
+		)
+	</insert>
+
+
+	<insert id="insertFgOrderExtra" parameterType="FgOrderExtra">
+		INSERT INTO
+		fg_order_extra (
+		order_id
+		,consumer_id
+		,stores_id
+		,created_date
+		,remark
+		)
+		VALUES
+		(
+		#{order_id}
+		,#{consumer_id}
+		,#{stores_id}
+		,#{created_date}
+		,#{remark}
+		)
+	</insert>
+
+	<insert id="insertFgOrderRefundLog" parameterType="FgOrderRefundLog">
+		INSERT INTO
+		fg_order_refund_log (
+		order_id
+		,order_no
+		,member_type_key
+		,member_id
+		,taobao_account_no
+		,alipay_account_no
+		,tracked_date
+		,event_desc
+		)
+		VALUES (
+		#{order_id}
+		,#{order_no}
+		,#{member_type_key}
+		,#{member_id}
+		,#{taobao_account_no}
+		,#{alipay_account_no}
+		,#{tracked_date}
+		,#{event_desc}
+		)
+	</insert>
+
+	<select id="selectFgOrder" parameterType="Map" resultType="Map">
+		<![CDATA[
+			SELECT
+				o.order_id
+				,o.order_no
+				,o.order_type
+				,o.total_fee
+				,o.discount_fee
+				,o.sale_fee
+				,o.member_type_key
+				,o.member_id
+				,o.member_info
+				,o.member_mobile
+				,o.logistics
+				,o.modified_date
+				,o.status
+				,o.settle_status
+			FROM
+				fg_order o
+		]]>
+		<where>
+			1=1
+			<if test="order_type != null and order_type != ''">
+				AND o.order_type = #{order_type}
+			</if>
+			<if test="order_id != null and order_id != ''">
+				AND o.order_id = #{order_id}
+			</if>
+			<if test="order_no != null and order_no != ''">
+				AND o.order_no = #{order_no}
+			</if>
+			<if test="member_id != null and member_id != ''">
+				AND o.member_id = #{member_id}
+			</if>
+			<if test="member_type_key != null and member_type_key != ''">
+				AND o.member_type_key = #{member_type_key}
+			</if>
+			<if test="member_mobile != null and member_mobile != ''">
+				AND o.member_mobile = #{member_mobile}
+			</if>
+			<if test="member_info_like != null and member_info_like != ''">
+				AND o.member_info like
+				CONCAT('%',#{member_info_like},'%')
+			</if>
+			<if test="status != null and status != ''">
+				AND o.status = #{status}
+			</if>
+			<if test="status_neq != null and status_neq != ''">
+				AND o.status &lt;&gt; #{status_neq}
+			</if>
+			<if test="external_order_no != null and external_order_no != ''">
+				AND o.external_order_no = #{external_order_no}
+			</if>
+			<if test="order_date_start != null and order_date_start != ''">
+				AND o.order_date &gt;= #{order_date_start}
+			</if>
+			<if test="order_date_end != null and order_date_end != ''">
+				AND o.order_date &lt;=
+				date_add(#{order_date_end},interval 1 day)
+			</if>
+		</where>
+		ORDER BY o.order_date DESC
+	</select>
+	
+	<select id="selectFgOrderByStatus" parameterType="Map" resultType="Map">
+		<![CDATA[
+			SELECT
+				count(o.order_id) as count_num
+			FROM
+				fg_order o
+		]]>
+		<where>
+			1=1
+			<if test="member_id != null and member_id != ''">
+				AND o.member_id = #{member_id}
+			</if>
+			<if test="member_type_key != null and member_type_key != ''">
+				AND o.member_type_key = #{member_type_key}
+			</if>
+			<if test="member_mobile != null and member_mobile != ''">
+				AND o.member_mobile = #{member_mobile}
+			</if>
+				AND o.status = 'closed' 
+		</where>
+	</select>
+
+	<select id="selectFgOrderItem" parameterType="Map" resultType="Map">
+		<![CDATA[
+			SELECT
+				oi.goods_id
+				,oi.goods_code
+				,oi.goods_title
+				,oi.qty
+				,oi.sale_price
+				,oi.total_fee
+				,oi.discount_fee
+			FROM
+				fg_order_item oi
+		]]>
+		<where>
+			1=1
+			<if test="order_id != null and order_id != ''">
+				AND oi.order_id = #{order_id}
+			</if>
+			<if test="order_no != null and order_no != ''">
+				AND oi.order_no = #{order_no}
+			</if>
+		</where>
+	</select>
+
+	<select id="selectFgOrderListCheck" parameterType="Map"
+		resultType="Map">
+		<![CDATA[
+			SELECT
+				o.order_id
+			FROM
+				fg_order o inner join fg_order_item oi on oi.order_id = o.order_id
+		]]>
+		<where>
+			1=1
+			<if test="status_neq != null and status_neq != ''">
+				AND o.status &lt;&gt; #{status_neq}
+			</if>
+			<if test="order_date_start != null and order_date_start != ''">
+				AND o.order_date &gt;= #{order_date_start}
+			</if>
+			<if test="order_date_end != null and order_date_end != ''">
+				AND o.order_date &lt;=
+				date_add(#{order_date_end},interval 1 day)
+			</if>
+			<if test="member_mobile != null and member_mobile != ''">
+				AND o.member_mobile = #{member_mobile}
+			</if>
+			<if test="goods_code != null and goods_code != ''">
+				AND oi.goods_code = #{goods_code}
+			</if>
+		</where>
+		ORDER BY o.order_date DESC
+	</select>
+
+
+	<select id="selectFgOrderList" parameterType="Map" resultType="Map">
+		<![CDATA[
+			SELECT
+				o.order_id
+				,o.order_no
+				,o.order_date
+				,o.order_type
+				,o.payment_way_key
+				,o.desc1
+				,o.total_fee
+				,o.discount_fee
+				,o.sale_fee
+				,o.delivery_address
+				,o.contact_person
+				,o.contact_tel
+				,o.logistics
+				,o.data_source
+				,o.external_order_no
+				,o.remark
+				,o.biz_remark
+				,o.status
+				,o.settle_status
+				,oi.goods_id as item_goods_id
+				,oi.goods_code as item_goods_code
+				,oi.goods_title as item_goods_title
+				,oi.qty as item_qty
+				,oi.sale_price as item_sale_price
+				,oi.goods_pic_info as item_goods_pic_info
+				,oi.remark as item_remark
+				,oi.taobao_link as item_taobao_link
+			FROM
+				fg_order o inner join fg_order_item oi on oi.order_id = o.order_id
+		]]>
+		<where>
+			1=1
+			<if test="member_id != null and member_id != ''">
+				AND o.member_id = #{member_id}
+			</if>
+			<if test="member_type_key != null and member_type_key != ''">
+				AND o.member_type_key = #{member_type_key}
+			</if>
+			<if test="status_neq != null and status_neq != ''">
+				AND o.status &lt;&gt; #{status_neq}
+			</if>
+			<if test="status != null and status != ''">
+				AND o.status = #{status}
+			</if>
+			<if test="order_date_start != null and order_date_start != ''">
+				AND o.order_date &gt;= #{order_date_start}
+			</if>
+			<if test="order_date_end != null and order_date_end != ''">
+				AND o.order_date &lt;=
+				date_add(#{order_date_end},interval 1 day)
+			</if>
+			<if test="member_mobile != null and member_mobile != ''">
+				AND o.member_mobile = #{member_mobile}
+			</if>
+			<if test="member_info_like != null and member_info_like != ''">
+				AND o.member_info like
+				CONCAT('%',#{member_info_like},'%')
+			</if>
+			<if test="goods_code != null and goods_code != ''">
+				AND oi.goods_code = #{goods_code}
+			</if>
+		</where>
+		ORDER BY o.order_date DESC
+	</select>
+
+	<select id="selectFgOrderDetail" parameterType="Map" resultType="Map">
+		<![CDATA[
+			SELECT
+				o.order_id
+				,o.order_no
+				,o.order_date
+				,o.order_type
+				,o.desc1
+				,o.item_num
+				,o.payment_way_key
+				,o.total_fee
+				,o.discount_fee
+				,o.sale_fee
+				,o.member_type_key
+				,o.member_id
+				,o.member_info
+				,o.member_mobile
+				,o.delivery_address
+				,o.contact_person
+				,o.contact_tel
+				,o.logistics
+				,o.data_source
+				,o.external_order_no
+				,o.external_buyer_name
+				,o.external_buyer_pay_no
+				,o.modified_date
+				,o.remark
+				,o.biz_remark
+				,o.status
+				,o.settle_status
+				,oi.goods_id as item_goods_id
+				,oi.goods_code as item_goods_code
+				,oi.goods_title as item_goods_title
+				,oi.specification as item_specification
+				,oi.manufacturer as item_manufacturer
+				,oi.supplier as item_supplier
+				,oi.qty as item_qty
+				,oi.goods_unit as item_goods_unit
+				,oi.sale_price as item_sale_price
+				,oi.total_fee as item_total_fee
+				,oi.discount_fee as item_discount_fee
+				,oi.settled_price as item_settled_price
+				,oi.service_fee as item_service_fee
+				,oi.remark as item_remark
+			FROM
+				fg_order o inner join fg_order_item oi on oi.order_id = o.order_id
+		]]>
+		<where>
+			1=1
+			<if test="order_type != null and order_type != ''">
+				AND o.order_type = #{order_type}
+			</if>
+			<if test="member_id != null and member_id != ''">
+				AND o.member_id = #{member_id}
+			</if>
+			<if test="member_type_key != null and member_type_key != ''">
+				AND o.member_type_key = #{member_type_key}
+			</if>
+			<if test="order_id != null and order_id != ''">
+				AND o.order_id = #{order_id}
+			</if>
+			<if test="order_no != null and order_no != ''">
+				AND o.order_no = #{order_no}
+			</if>
+			<if test="contact_tel != null and contact_tel != ''">
+				AND o.contact_tel = #{contact_tel}
+			</if>
+			<if test="status != null and status != ''">
+				AND o.status = #{status}
+			</if>
+			<if test="status_neq != null and status_neq != ''">
+				AND o.status &lt;&gt; #{status_neq}
+			</if>
+			<if test="settle_status != null and settle_status != ''">
+				AND o.settle_status = #{settle_status}
+			</if>
+			<if test="status_in != null">
+				AND o.status in
+				<foreach item="item" index="index" collection="status_in"
+					open="(" separator="," close=")">
+					#{item}
+				</foreach>
+			</if>
+			<if test="logistics_like != null and logistics_like != ''">
+				AND o.logistics LIKE CONCAT('%',#{logistics_like},'%')
+			</if>
+			<if test="logistics_is_not_null != null and logistics_is_not_null != ''">
+				AND o.logistics IS NOT NULL
+			</if>
+			<if test="goods_id != null and goods_id != ''">
+				AND oi.goods_id = #{goods_id}
+			</if>
+			<if test="goods_code != null and goods_code != ''">
+				AND oi.goods_code = #{goods_code}
+			</if>
+			<if test="goods_title_like != null and goods_title_like != ''">
+				AND oi.goods_title LIKE
+				CONCAT('%',#{goods_title_like},'%')
+			</if>
+			<if test="supplier_id != null and supplier_id != ''">
+				AND oi.supplier_id = #{supplier_id}
+			</if>
+			<if test="supplier_like != null and supplier_like != ''">
+				AND oi.supplier LIKE CONCAT('%',#{supplier_like},'%')
+			</if>
+			<if test="manufacturer_like != null and manufacturer_like != ''">
+				AND oi.manufacturer LIKE
+				CONCAT('%',#{manufacturer_like},'%')
+			</if>
+			<if test="order_like != null and order_like != ''">
+				AND (o.order_no like CONCAT('%',#{order_like},'%') or
+				o.external_order_no like CONCAT('%',#{order_like},'%') or
+				o.contact_tel like CONCAT('%',#{order_like},'%') or
+				oi.supplier like
+				CONCAT('%',#{order_like},'%') or
+				oi.goods_code like
+				CONCAT('%',#{order_like},'%'))
+			</if>
+			<if test="order_date_start != null and order_date_start != ''">
+				AND o.order_date &gt;= #{order_date_start}
+			</if>
+			<if test="order_date_end != null and order_date_end != ''">
+				AND o.order_date &lt;=
+				date_add(#{order_date_end},interval 1 day)
+			</if>
+			<if test="order_date != null and order_date != ''">
+				AND DATE_FORMAT(o.order_date, '%Y-%m-%d') =
+				DATE_FORMAT(#{order_date}, '%Y-%m-%d')
+			</if>
+			<if test="external_order_no != null and external_order_no != ''">
+				AND o.external_order_no = #{external_order_no}
+			</if>
+			<if test="external_order_no_in != null">
+				AND o.external_order_no in
+				<foreach item="item" index="index" collection="external_order_no_in"
+					open="(" separator="," close=")">
+					#{item}
+				</foreach>
+			</if>
+			<if test="external_buyer_name != null and external_buyer_name != ''">
+				AND o.external_buyer_name = #{external_buyer_name}
+			</if>
+			<if test="member_mobile != null and member_mobile != ''">
+				AND o.member_mobile = #{member_mobile}
+			</if>
+			<if test="member_info_like != null and member_info_like != ''">
+				AND o.member_info like
+				CONCAT('%',#{member_info_like},'%')
+			</if>
+		</where>
+		ORDER BY o.order_date DESC
+	</select>
+
+	<select id="selectFgOrderDetailOld" parameterType="Map"
+			resultType="Map">
+		<![CDATA[
+			SELECT
+				o.order_id
+				,o.order_no
+				,o.order_date
+				,o.order_type
+				,o.desc1
+				,o.item_num
+				,o.payment_way_key
+				,o.total_fee
+				,o.discount_fee
+				,o.sale_fee
+				,o.member_type_key
+				,o.member_id
+				,o.member_info
+				,o.member_mobile
+				,o.delivery_address
+				,o.contact_person
+				,o.contact_tel
+				,o.logistics
+				,o.data_source
+				,o.external_order_no
+				,o.external_buyer_name
+				,o.external_buyer_pay_no
+				,o.modified_date
+				,o.remark
+				,o.biz_remark
+				,o.status
+				,o.settle_status
+				,oi.goods_id as item_goods_id
+				,oi.goods_code as item_goods_code
+				,oi.goods_title as item_goods_title
+				,oi.specification as item_specification
+				,oi.manufacturer as item_manufacturer
+				,oi.supplier as item_supplier
+				,oi.qty as item_qty
+				,oi.goods_unit as item_goods_unit
+				,oi.sale_price as item_sale_price
+				,oi.total_fee as item_total_fee
+				,oi.discount_fee as item_discount_fee
+				,oi.settled_price as item_settled_price
+				,oi.service_fee as item_service_fee
+				,oi.remark as item_remark
+			FROM
+				fg_order_2017 o inner join fg_order_item_2017 oi on oi.order_id = o.order_id
+		]]>
+		<where>
+			1=1
+			<if test="order_type != null and order_type != ''">
+				AND o.order_type = #{order_type}
+			</if>
+			<if test="member_id != null and member_id != ''">
+				AND o.member_id = #{member_id}
+			</if>
+			<if test="member_type_key != null and member_type_key != ''">
+				AND o.member_type_key = #{member_type_key}
+			</if>
+			<if test="order_id != null and order_id != ''">
+				AND o.order_id = #{order_id}
+			</if>
+			<if test="order_no != null and order_no != ''">
+				AND o.order_no = #{order_no}
+			</if>
+			<if test="contact_tel != null and contact_tel != ''">
+				AND o.contact_tel = #{contact_tel}
+			</if>
+			<if test="status != null and status != ''">
+				AND o.status = #{status}
+			</if>
+			<if test="status_neq != null and status_neq != ''">
+				AND o.status &lt;&gt; #{status_neq}
+			</if>
+			<if test="settle_status != null and settle_status != ''">
+				AND o.settle_status = #{settle_status}
+			</if>
+			<if test="status_in != null">
+				AND o.status in
+				<foreach item="item" index="index" collection="status_in"
+						 open="(" separator="," close=")">
+					#{item}
+				</foreach>
+			</if>
+			<if test="logistics_like != null and logistics_like != ''">
+				AND o.logistics LIKE CONCAT('%',#{logistics_like},'%')
+			</if>
+			<if test="logistics_is_not_null != null and logistics_is_not_null != ''">
+				AND o.logistics IS NOT NULL
+			</if>
+			<if test="goods_id != null and goods_id != ''">
+				AND oi.goods_id = #{goods_id}
+			</if>
+			<if test="goods_code != null and goods_code != ''">
+				AND oi.goods_code = #{goods_code}
+			</if>
+			<if test="goods_title_like != null and goods_title_like != ''">
+				AND oi.goods_title LIKE
+				CONCAT('%',#{goods_title_like},'%')
+			</if>
+			<if test="supplier_id != null and supplier_id != ''">
+				AND oi.supplier_id = #{supplier_id}
+			</if>
+			<if test="supplier_like != null and supplier_like != ''">
+				AND oi.supplier LIKE CONCAT('%',#{supplier_like},'%')
+			</if>
+			<if test="manufacturer_like != null and manufacturer_like != ''">
+				AND oi.manufacturer LIKE
+				CONCAT('%',#{manufacturer_like},'%')
+			</if>
+			<if test="order_like != null and order_like != ''">
+				AND (o.order_no like CONCAT('%',#{order_like},'%') or
+				o.external_order_no like CONCAT('%',#{order_like},'%') or
+				o.contact_tel like CONCAT('%',#{order_like},'%') or
+				oi.supplier like
+				CONCAT('%',#{order_like},'%') or
+				oi.goods_code like
+				CONCAT('%',#{order_like},'%'))
+			</if>
+			<if test="order_date_start != null and order_date_start != ''">
+				AND o.order_date &gt;= #{order_date_start}
+			</if>
+			<if test="order_date_end != null and order_date_end != ''">
+				AND o.order_date &lt;=
+				date_add(#{order_date_end},interval 1 day)
+			</if>
+			<if test="order_date != null and order_date != ''">
+				AND DATE_FORMAT(o.order_date, '%Y-%m-%d') =
+				DATE_FORMAT(#{order_date}, '%Y-%m-%d')
+			</if>
+			<if test="external_order_no != null and external_order_no != ''">
+				AND o.external_order_no = #{external_order_no}
+			</if>
+			<if test="external_order_no_in != null">
+				AND o.external_order_no in
+				<foreach item="item" index="index" collection="external_order_no_in"
+						 open="(" separator="," close=")">
+					#{item}
+				</foreach>
+			</if>
+			<if test="external_buyer_name != null and external_buyer_name != ''">
+				AND o.external_buyer_name = #{external_buyer_name}
+			</if>
+			<if test="member_mobile != null and member_mobile != ''">
+				AND o.member_mobile = #{member_mobile}
+			</if>
+			<if test="member_info_like != null and member_info_like != ''">
+				AND o.member_info like
+				CONCAT('%',#{member_info_like},'%')
+			</if>
+		</where>
+		ORDER BY o.order_date DESC
+	</select>
+	<select id="selectFgOrderDetail2017" parameterType="Map"
+		resultType="Map">
+		<![CDATA[
+			SELECT
+				o.order_id
+				,o.order_no
+				,o.order_date
+				,o.order_type
+				,o.desc1
+				,o.item_num
+				,o.payment_way_key
+				,o.total_fee
+				,o.discount_fee
+				,o.sale_fee
+				,o.member_type_key
+				,o.member_id
+				,o.member_info
+				,o.member_mobile
+				,o.delivery_address
+				,o.contact_person
+				,o.contact_tel
+				,o.logistics
+				,o.data_source
+				,o.external_order_no
+				,o.external_buyer_name
+				,o.external_buyer_pay_no
+				,o.modified_date
+				,o.remark
+				,o.biz_remark
+				,o.status
+				,o.settle_status
+				,oi.goods_id as item_goods_id
+				,oi.goods_code as item_goods_code
+				,oi.goods_title as item_goods_title
+				,oi.specification as item_specification
+				,oi.manufacturer as item_manufacturer
+				,oi.supplier as item_supplier
+				,oi.qty as item_qty
+				,oi.goods_unit as item_goods_unit
+				,oi.sale_price as item_sale_price
+				,oi.total_fee as item_total_fee
+				,oi.discount_fee as item_discount_fee
+				,oi.settled_price as item_settled_price
+				,oi.service_fee as item_service_fee
+				,oi.remark as item_remark
+			FROM
+				fg_order_2017 o inner join fg_order_item_2017 oi on oi.order_id = o.order_id
+		]]>
+		<where>
+			1=1
+			<if test="order_type != null and order_type != ''">
+				AND o.order_type = #{order_type}
+			</if>
+			<if test="member_id != null and member_id != ''">
+				AND o.member_id = #{member_id}
+			</if>
+			<if test="member_type_key != null and member_type_key != ''">
+				AND o.member_type_key = #{member_type_key}
+			</if>
+			<if test="order_id != null and order_id != ''">
+				AND o.order_id = #{order_id}
+			</if>
+			<if test="order_no != null and order_no != ''">
+				AND o.order_no = #{order_no}
+			</if>
+			<if test="contact_tel != null and contact_tel != ''">
+				AND o.contact_tel = #{contact_tel}
+			</if>
+			<if test="status != null and status != ''">
+				AND o.status = #{status}
+			</if>
+			<if test="status_neq != null and status_neq != ''">
+				AND o.status &lt;&gt; #{status_neq}
+			</if>
+			<if test="settle_status != null and settle_status != ''">
+				AND o.settle_status = #{settle_status}
+			</if>
+			<if test="status_in != null">
+				AND o.status in
+				<foreach item="item" index="index" collection="status_in"
+					open="(" separator="," close=")">
+					#{item}
+				</foreach>
+			</if>
+			<if test="logistics_like != null and logistics_like != ''">
+				AND o.logistics LIKE CONCAT('%',#{logistics_like},'%')
+			</if>
+			<if test="logistics_is_not_null != null and logistics_is_not_null != ''">
+				AND o.logistics IS NOT NULL
+			</if>
+			<if test="goods_id != null and goods_id != ''">
+				AND oi.goods_id = #{goods_id}
+			</if>
+			<if test="goods_code != null and goods_code != ''">
+				AND oi.goods_code = #{goods_code}
+			</if>
+			<if test="goods_title_like != null and goods_title_like != ''">
+				AND oi.goods_title LIKE
+				CONCAT('%',#{goods_title_like},'%')
+			</if>
+			<if test="supplier_id != null and supplier_id != ''">
+				AND oi.supplier_id = #{supplier_id}
+			</if>
+			<if test="supplier_like != null and supplier_like != ''">
+				AND oi.supplier LIKE CONCAT('%',#{supplier_like},'%')
+			</if>
+			<if test="manufacturer_like != null and manufacturer_like != ''">
+				AND oi.manufacturer LIKE
+				CONCAT('%',#{manufacturer_like},'%')
+			</if>
+			<if test="order_like != null and order_like != ''">
+				AND (o.order_no like CONCAT('%',#{order_like},'%') or
+				o.external_order_no like CONCAT('%',#{order_like},'%') or
+				o.contact_tel like CONCAT('%',#{order_like},'%') or
+				oi.supplier like
+				CONCAT('%',#{order_like},'%') or
+				oi.goods_code like
+				CONCAT('%',#{order_like},'%'))
+			</if>
+			<if test="order_date_start != null and order_date_start != ''">
+				AND o.order_date &gt;= #{order_date_start}
+			</if>
+			<if test="order_date_end != null and order_date_end != ''">
+				AND o.order_date &lt;=
+				date_add(#{order_date_end},interval 1 day)
+			</if>
+			<if test="order_date != null and order_date != ''">
+				AND DATE_FORMAT(o.order_date, '%Y-%m-%d') =
+				DATE_FORMAT(#{order_date}, '%Y-%m-%d')
+			</if>
+			<if test="external_order_no != null and external_order_no != ''">
+				AND o.external_order_no = #{external_order_no}
+			</if>
+			<if test="external_order_no_in != null">
+				AND o.external_order_no in
+				<foreach item="item" index="index" collection="external_order_no_in"
+					open="(" separator="," close=")">
+					#{item}
+				</foreach>
+			</if>
+			<if test="external_buyer_name != null and external_buyer_name != ''">
+				AND o.external_buyer_name = #{external_buyer_name}
+			</if>
+			<if test="member_mobile != null and member_mobile != ''">
+				AND o.member_mobile = #{member_mobile}
+			</if>
+			<if test="member_info_like != null and member_info_like != ''">
+				AND o.member_info like
+				CONCAT('%',#{member_info_like},'%')
+			</if>
+		</where>
+		ORDER BY o.order_date DESC
+	</select>
+
+
+	<select id="selectFgOrderDetailForImport" parameterType="Map"
+		resultType="Map">
+		<![CDATA[
+			SELECT
+				o.order_id
+				,o.order_no
+				,o.order_date
+				,o.order_type
+				,o.member_id
+				,o.member_mobile
+				,o.member_type_key
+				,o.discount_fee
+				,o.total_fee
+				,o.desc1
+				,o.data_source
+				,o.modified_date
+				,o.status
+				,oi.goods_id as item_goods_id
+				,oi.goods_code as item_goods_code
+			FROM
+				fg_order o inner join fg_order_item oi on oi.order_id = o.order_id
+		]]>
+		<where>
+			1=1
+			<if test="order_type != null and order_type != ''">
+				AND o.order_type = #{order_type}
+			</if>
+			<if test="order_id != null and order_id != ''">
+				AND o.order_id = #{order_id}
+			</if>
+			<if test="order_no != null and order_no != ''">
+				AND o.order_no = #{order_no}
+			</if>
+			<if test="status != null and status != ''">
+				AND o.status = #{status}
+			</if>
+			<if test="settle_status != null and settle_status != ''">
+				AND o.settle_status = #{settle_status}
+			</if>
+			<if test="goods_code != null and goods_code != ''">
+				AND oi.goods_code = #{goods_code}
+			</if>
+			<if test="order_date_start != null and order_date_start != ''">
+				AND o.order_date &gt;= #{order_date_start}
+			</if>
+			<if test="order_date_end != null and order_date_end != ''">
+				AND o.order_date &lt;=date_add(#{order_date_end},interval
+				1 day)
+			</if>
+			<if test="external_buyer_name != null and external_buyer_name != ''">
+				AND o.external_buyer_name = #{external_buyer_name}
+			</if>
+			<if test="external_order_no != null and external_order_no != ''">
+				AND o.external_order_no = #{external_order_no}
+			</if>
+			<if test="member_mobile != null and member_mobile != ''">
+				AND o.member_mobile = #{member_mobile}
+			</if>
+			<if test="member_info_like != null and member_info_like != ''">
+				AND o.member_info like
+				CONCAT('%',#{member_info_like},'%')
+			</if>
+		</where>
+	</select>
+
+
+	<select id="selectFgOrderSettlement" parameterType="Map"
+		resultType="Map">
+		<![CDATA[
+			SELECT
+				o.order_id
+				,o.order_no
+				,o.modified_date
+				,oi.goods_id as item_goods_id
+				,oi.goods_code as item_goods_code
+				,oi.goods_title as item_goods_title
+				,oi.supplier as item_supplier
+				,oi.supplier_id as item_supplier_id
+				,oi.qty as item_qty
+				,oi.settled_price as item_settled_price
+				,oi.service_fee as item_service_fee
+			FROM
+				fg_order o inner join fg_order_item oi on oi.order_id = o.order_id
+		]]>
+		<where>
+			1=1
+			<if test="status != null and status != ''">
+				AND o.status = #{status}
+			</if>
+			<if test="settle_status != null and settle_status != ''">
+				AND o.settle_status = #{settle_status}
+			</if>
+			<if test="order_date_start != null and order_date_start != ''">
+				AND o.order_date &gt;= #{order_date_start}
+			</if>
+			<if test="order_date_end != null and order_date_end != ''">
+				AND o.order_date &lt;=
+				date_add(#{order_date_end},interval 1 day)
+			</if>
+			<if test="order_date != null and order_date != ''">
+				AND DATE_FORMAT(o.order_date, '%Y-%m-%d') =
+				DATE_FORMAT(#{order_date}, '%Y-%m-%d')
+			</if>
+		</where>
+		ORDER BY o.order_date DESC
+	</select>
+
+	<select id="selectFgOrderSettlementCount" parameterType="Map"
+		resultType="Map">
+		<![CDATA[
+			SELECT
+				sum(o.total_fee) as total_fee
+				,count(o.order_id) as count_num
+			FROM
+				fg_order o inner join fg_order_item oi on oi.order_id = o.order_id
+		]]>
+		<where>
+			1=1
+			<if test="order_like != null and order_like != ''">
+				AND (oi.goods_code like CONCAT('%',#{order_like},'%') or
+				oi.supplier like CONCAT('%',#{order_like},'%') or
+				oi.goods_title like
+				CONCAT('%',#{order_like},'%'))
+			</if>
+			<if test="order_date != null and order_date != ''">
+				AND DATE_FORMAT(o.order_date, '%Y-%m-%d') =
+				DATE_FORMAT(#{order_date}, '%Y-%m-%d')
+			</if>
+			<if test="status != null and status != ''">
+				AND o.status = #{status}
+			</if>
+			<if test="status_in != null">
+				AND o.status in
+				<foreach item="item" index="index" collection="status_in"
+					open="(" separator="," close=")">
+					#{item}
+				</foreach>
+			</if>
+			<if test="settle_status != null and settle_status != ''">
+				AND o.settle_status = #{settle_status}
+			</if>
+		</where>
+	</select>
+
+	<select id="selectFgOrderSupplyCount" parameterType="Map"
+		resultType="String">
+		<![CDATA[
+			SELECT
+				o.status as status 
+			FROM
+				fg_order o inner join fg_order_item oi on oi.order_id = o.order_id
+		]]>
+		<where>
+			1=1
+				<!-- AND DATE_FORMAT(o.order_date, '%Y-%m-%d') =
+				DATE_FORMAT(now(), '%Y-%m-%d') -->
+				AND oi.supplier_id = #{supplier_id}
+		</where>
+	</select>
+
+	<select id="selectStoresRecomConsumerFreeGetCount"
+		parameterType="Map" resultType="Map">
+		<![CDATA[
+			SELECT
+				oe.consumer_id
+				,o.contact_person AS name
+				,o.contact_tel AS contact
+			FROM
+				fg_order_extra oe
+				INNER JOIN fg_order o ON oe.order_id = o.order_id
+		]]>
+		<where>
+			1=1
+			<if test="stores_id != null and stores_id != ''">
+				AND oe.stores_id = #{stores_id}
+			</if>
+			<if test="order_date_start != null and order_date_start != ''">
+				AND o.order_date &gt;= #{order_date_start}
+			</if>
+			<if test="order_date_end != null and order_date_end != ''">
+				AND o.order_date &lt;=
+				date_add(#{order_date_end},interval 1 day)
+			</if>
+		</where>
+	</select>
+
+	<select id="selectFgOrderExtra" parameterType="Map" resultType="Map">
+		<![CDATA[
+			SELECT
+				stores_id
+			FROM
+				fg_order_extra
+		]]>
+		<where>
+			consumer_id = #{consumer_id} AND order_id = #{order_id}
+		</where>
+	</select>
+
+	<select id="selectFgOrderCount" parameterType="Map" resultType="Map">
+		<![CDATA[
+			SELECT
+				count(order_id) as count_num
+			FROM
+				fg_order
+		]]>
+		<where>
+			1=1
+			<if test="member_id != null and member_id != ''">
+				AND member_id = #{member_id}
+			</if>
+			<if test="member_type_key != null and member_type_key != ''">
+				AND member_type_key = #{member_type_key}
+			</if>
+			<if test="status != null and status != ''">
+				AND status = #{status}
+			</if>
+			<if test="order_date_start != null and order_date_start != ''">
+				AND order_date &gt;= #{order_date_start}
+			</if>
+			<if test="order_date_end != null and order_date_end != ''">
+				AND order_date &lt; date_add(#{order_date_end},interval 1
+				day)
+			</if>
+		</where>
+	</select>
+
+
+	<select id="selectFgOrderViolationCount" parameterType="Map"
+		resultType="Map">
+		<![CDATA[
+			SELECT
+				count(order_id) as total_num,
+				SUM(CASE WHEN logistics IS NOT NULL AND status ='cancelled' THEN 1 ELSE 0 END) as violation_num
+			FROM
+				fg_order
+		]]>
+		<where>
+			1=1
+			<if test="member_id != null and member_id != ''">
+				AND member_id = #{member_id}
+			</if>
+			<if test="member_type_key != null and member_type_key != ''">
+				AND member_type_key = #{member_type_key}
+			</if>
+		</where>
+	</select>
+
+
+	<update id="updateFgOrder" parameterType="Map">
+		UPDATE fg_order SET
+		<trim suffixOverrides=",">
+			modified_date = SYSDATE(),
+			<if test="status != null and status != ''">
+				status = #{status},
+			</if>
+			<if test="settle_status != null and settle_status != ''">
+				settle_status = #{settle_status},
+			</if>
+			<if test="delivery_address != null and delivery_address != ''">
+				delivery_address = #{delivery_address},
+			</if>
+			<if test="logistics != null and logistics != ''">
+				logistics = #{logistics},
+			</if>
+			<if test="data_source != null and data_source != ''">
+				data_source = #{data_source},
+			</if>
+			<if test="payment_way_key != null and payment_way_key != ''">
+				payment_way_key = #{payment_way_key},
+			</if>
+			<if test="external_order_no != null and external_order_no != ''">
+				external_order_no = #{external_order_no},
+			</if>
+			<if test="external_buyer_name != null and external_buyer_name != ''">
+				external_buyer_name = #{external_buyer_name},
+			</if>
+			<if test="external_buyer_pay_no != null and external_buyer_pay_no != ''">
+				external_buyer_pay_no = #{external_buyer_pay_no},
+			</if>
+			<if test="remark != null and remark != ''">
+				remark = #{remark},
+			</if>
+			<if test="biz_remark != null and biz_remark != ''">
+				biz_remark = #{biz_remark},
+			</if>
+			<if test="delivery_address != null and delivery_address != ''">
+				delivery_address = #{delivery_address},
+			</if>
+			<if test="contact_person != null and contact_person != ''">
+				contact_person = #{contact_person},
+			</if>
+			<if test="contact_tel != null and contact_tel != ''">
+				contact_tel = #{contact_tel},
+			</if>
+		</trim>
+		<where>
+			1=1
+			<if test="order_id != null and order_id != ''">
+				AND order_id=#{order_id}
+			</if>
+			<if test="order_type != null and order_type != ''">
+				AND order_type=#{order_type}
+			</if>
+			<if test="order_no != null and order_no != ''">
+				AND order_no=#{order_no}
+			</if>
+			<if test="modified_date != null and modified_date != ''">
+				AND modified_date=#{modified_date}
+			</if>
+		</where>
+	</update>
+
+	<select id="selectTimeoutFgOrder" parameterType="Map"
+		resultType="Map">
+		SELECT
+		o.order_no
+		,o.member_type_key
+		,o.member_id
+		,o.total_fee
+		,o.contact_tel
+		,oi.goods_id
+		,oi.qty
+		FROM
+		fg_order o inner join
+		fg_order_item oi on o.order_id = oi.order_id
+		WHERE o.order_date &lt;
+		#{lt_date} AND o.order_date &gt; #{gt_date}
+		AND o.status = 'processing'
+	</select>
+
+
+	<update id="fgOrderAutoCancel" parameterType="Map">
+		UPDATE fg_order SET
+		modified_date = SYSDATE(),status
+		='cancelled',biz_remark='超时未确定,订单自动取消',remark='超时未确定,订单自动取消'
+		WHERE order_date &lt; #{lt_date}
+		AND order_date &gt; #{gt_date}
+		AND status ='processing'
+	</update>
+
+
+</mapper>

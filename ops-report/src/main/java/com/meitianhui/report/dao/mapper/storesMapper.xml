@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.meitianhui.report.dao.StoresDao">
+
+
+	<select id="selectStoresTransactionType" parameterType="Map" 
+		resultType="Map">
+		 <![CDATA[
+		 	{CALL usp_query_statistics_trans_store(#{p_stores_id})}
+		 ]]>
+	</select>
+	
+</mapper>

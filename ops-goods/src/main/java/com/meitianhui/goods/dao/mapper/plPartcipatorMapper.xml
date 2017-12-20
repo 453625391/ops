@@ -1,0 +1,507 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.meitianhui.goods.dao.PlPartcipatorDao">
+
+	<insert id="insertPlPartcipator" parameterType="PlPartcipator">
+		INSERT INTO
+		pl_partcipator (
+		partcipator_id
+		,activity_id
+		,member_type_key
+		,member_id
+		,member_info
+		,status
+		,joined_date
+		,created_date
+		,modified_date
+		,remark
+		)
+		VALUES (
+		#{partcipator_id}
+		,#{activity_id}
+		,#{member_type_key}
+		,#{member_id}
+		,#{member_info}
+		,#{status}
+		,#{joined_date}
+		,#{created_date}
+		,#{modified_date}
+		,#{remark}
+		)
+	</insert>
+
+	<insert id="insertPlActivity" parameterType="PlActivity">
+		INSERT
+		INTO
+		pl_activity (
+		activity_id
+		,title
+		,desc1
+		,goods_id
+		,json_data
+		,prize_qty
+		,lottery_time
+		,total_num
+		,min_num
+		,status
+		,created_date
+		,modified_date
+		,remark
+		)
+		VALUES (
+		#{activity_id}
+		,#{title}
+		,#{desc1}
+		,#{goods_id}
+		,#{json_data}
+		,#{prize_qty}
+		,#{lottery_time}
+		,#{total_num}
+		,#{min_num}
+		,#{status}
+		,#{created_date}
+		,#{modified_date}
+		,#{remark}
+		)
+	</insert>
+
+
+	<insert id="insertPlLuckyDelivery" parameterType="List">
+		INSERT INTO pl_lucky_delivery (
+		lucky_delivery_id
+		,activity_id
+		,member_type_key
+		,member_id
+		,contact_person
+		,contact_tel
+		,delivery_area_id
+		,delivery_address
+		,logistics
+		,status
+		,win_num
+		,created_date
+		,modified_date
+		)
+		VALUES
+		<foreach collection="list" item="item" index="index"
+			separator=",">
+			( #{item.lucky_delivery_id}
+			,#{item.activity_id}
+			,#{item.member_type_key}
+			,#{item.member_id}
+			,#{item.contact_person}
+			,#{item.contact_tel}
+			,#{item.delivery_area_id}
+			,#{item.delivery_address}
+			,#{item.logistics}
+			,#{item.status}
+			,#{item.win_num}
+			,#{item.created_date}
+			,#{item.modified_date})
+		</foreach>
+	</insert>
+
+
+	<select id="selectPlPartcipator" parameterType="Map" resultType="Map">
+		<![CDATA[
+			SELECT
+			 partcipator_id
+			,activity_id
+			,member_type_key
+			,member_id
+			,joined_date
+			,status
+			,modified_date
+			,remark
+			FROM
+				pl_partcipator
+		]]>
+		<where>
+			1=1
+			<if test="partcipator_id != null and partcipator_id != ''">
+				AND partcipator_id = #{partcipator_id}
+			</if>
+			<if test="activity_id != null and activity_id != ''">
+				AND activity_id = #{activity_id}
+			</if>
+			<if test="member_id != null and member_id != ''">
+				AND member_id = #{member_id}
+			</if>
+			<if test="partcipator_id != null and partcipator_id != ''">
+				AND partcipator_id = #{partcipator_id}
+			</if>
+			<if test="status != null and status != ''">
+				AND status = #{status}
+			</if>
+		</where>
+		ORDER BY created_date DESC
+	</select>
+
+
+	<select id="selectWinMemberGroupFind" parameterType="Map"
+		resultType="Map">
+		<![CDATA[
+			SELECT
+			activity_id
+			,member_type_key
+			,member_id
+			,count(partcipator_id) as cou_num
+			FROM
+				pl_partcipator
+		]]>
+		<where>
+			activity_id = #{activity_id} AND status = #{status}
+		</where>
+		GROUP BY member_id
+	</select>
+
+
+	<select id="selectPlPartcipatorForOp" parameterType="Map"
+		resultType="Map">
+		<![CDATA[
+			SELECT
+			 pp.partcipator_id
+			,pp.activity_id
+			,pp.member_type_key
+			,pp.member_id
+			,pp.joined_date
+			,pp.status
+			,pp.remark
+			,pa.title
+			,pa.desc1
+			,pa.json_data
+			,pa.prize_qty
+			,pa.lottery_time
+			,pa.total_num
+			,pa.status AS pa_status
+			,pa.created_date
+			FROM
+				pl_partcipator pp
+			LEFT JOIN pl_activity pa ON pp.activity_id = pa.activity_id
+		]]>
+		<where>
+			1=1
+			<if test="activity_id != null and activity_id != ''">
+				AND pp.activity_id = #{activity_id}
+			</if>
+			<if test="member_id != null and member_id != ''">
+				AND pp.member_id = #{member_id}
+			</if>
+			<if test="partcipator_id != null and partcipator_id != ''">
+				AND pp.partcipator_id = #{partcipator_id}
+			</if>
+			<if test="status != null and status != ''">
+				AND pa.status = #{status}
+			</if>
+		</where>
+		ORDER BY created_date DESC
+	</select>
+
+
+	<select id="selectPlPartcipatorForConsumer" parameterType="Map"
+		resultType="Map">
+		<![CDATA[
+			SELECT
+			pp.activity_id
+			,pp.member_type_key
+			,pp.member_id
+			,pa.title
+			,pa.desc1
+			,pa.json_data
+			,pa.prize_qty
+			,pa.lottery_time
+			,pa.total_num
+			,pa.status AS pa_status
+			,pld.status AS pld_status
+			,pld.win_num
+			,pld.contact_person
+			,pld.contact_tel
+			,pld.delivery_area_id
+			,pld.delivery_address
+			,COUNT(pp.partcipator_id) AS member_count
+			,pg.title AS goods_title
+			,pg.desc1 AS goods_desc1
+			FROM
+				pl_partcipator pp
+			LEFT JOIN pl_activity pa ON pp.activity_id = pa.activity_id
+			LEFT JOIN pl_lucky_delivery pld ON pp.activity_id = pld.activity_id	AND pp.member_id=pld.member_id
+			INNER JOIN ps_goods pg ON pa.goods_id= pg.goods_id AND pg.category='奖品'
+		]]>
+		<where>
+			pp.member_id = #{member_id}
+			<if test="activity_id != null and activity_id != ''">
+				AND pp.activity_id = #{activity_id}
+			</if>
+			<if test="status != null and status != ''">
+				AND pa.status = #{status}
+			</if>
+		</where>
+		GROUP BY pp.member_id,pp.activity_id
+		ORDER BY pp.created_date DESC
+	</select>
+
+	<select id="selectPlActivityForOp" parameterType="Map"
+		resultType="Map">
+		<![CDATA[
+			SELECT
+			 pa.activity_id
+			,pa.title
+			,pa.desc1
+			,pa.goods_id
+			,pa.json_data
+			,pa.prize_qty
+			,pa.lottery_time
+			,pa.total_num
+			,pa.min_num
+			,pa.status	
+			,pa.created_date
+			,pa.modified_date
+			,pa.remark
+			,pg.title AS goods_title
+			,pg.desc1 AS goods_desc1
+			,pg.pic_detail_info AS goods_pic_detail_info
+			FROM
+				pl_activity pa
+			INNER JOIN ps_goods pg ON pa.goods_id= pg.goods_id AND pg.category='奖品'
+		]]>
+		<where>
+			1=1
+			<if test="activity_id != null and activity_id != ''">
+				AND pa.activity_id = #{activity_id}
+			</if>
+			<if test="goods_id != null and goods_id != ''">
+				AND pa.goods_id = #{goods_id}
+			</if>
+			<if test="activity_like != null and activity_like != ''">
+				AND (pa.title like CONCAT('%',#{activity_like},'%')
+				OR
+				pg.title
+				like CONCAT('%',#{activity_like},'%'))
+			</if>
+			<if test="status_in != null">
+				AND pa.status in
+				<foreach item="item" index="index" collection="status_in"
+					open="(" separator="," close=")">
+					#{item}
+				</foreach>
+			</if>
+			<if test="status != null and status != ''">
+				AND pa.status = #{status}
+			</if>
+			<if test="gt_date != null">
+				AND pa.lottery_time &gt; #{gt_date}
+			</if>
+			<if test="lt_date != null">
+				AND pa.lottery_time &lt; #{lt_date}
+			</if>
+		</where>
+		ORDER BY pa.created_date DESC
+	</select>
+
+	<select id="selectPlActivityForConsumer" parameterType="Map"
+		resultType="Map">
+		<![CDATA[
+			SELECT
+			 pa.activity_id
+			,pa.title
+			,pa.desc1
+			,pa.goods_id
+			,pa.json_data
+			,pa.prize_qty
+			,pa.lottery_time
+			,pa.total_num
+			,pa.min_num
+			,pa.status	
+			,pa.created_date
+			,pa.modified_date
+			,pg.title AS goods_title
+			,pg.desc1 AS goods_desc1
+			,pg.pic_detail_info AS goods_pic_detail_info
+			FROM
+				pl_activity pa
+			INNER JOIN ps_goods pg ON pa.goods_id= pg.goods_id AND pg.category='奖品'
+		]]>
+		<where>
+			1=1
+			<if test="activity_id != null and activity_id != ''">
+				AND pa.activity_id = #{activity_id}
+			</if>
+			<if test="status != null and status != ''">
+				AND pa.status = #{status}
+			</if>
+		</where>
+		ORDER BY pa.created_date DESC
+	</select>
+
+
+	<select id="selectPlLuckyDeliveryForOp" parameterType="Map"
+		resultType="Map">
+	<![CDATA[
+			SELECT
+			 pld.lucky_delivery_id
+			,pld.activity_id
+			,pld.member_type_key
+			,pld.member_id
+			,(select pp.member_info from pl_partcipator pp where pp.member_id =pld.member_id and pp.activity_id=pld.activity_id and pp.member_type_key='consumer' group by pp.member_id) as member_info
+			,pld.contact_person
+			,pld.contact_tel
+			,pld.delivery_area_id
+			,pld.delivery_address
+			,pld.logistics
+			,pld.status	
+			,pld.win_num
+			,pld.created_date
+			,pld.modified_date
+			,pld.remark
+			,pa.title
+			,pa.desc1
+			,pg.title AS goods_title
+			FROM
+				pl_lucky_delivery pld
+			INNER JOIN pl_activity pa ON pld.activity_id = pa.activity_id
+			INNER JOIN ps_goods pg ON pa.goods_id= pg.goods_id AND pg.category='奖品' 
+		]]>
+		<where>
+			1=1
+			<if test="lucky_delivery_id != null and lucky_delivery_id != ''">
+				AND pld.lucky_delivery_id = #{lucky_delivery_id}
+			</if>
+			<if test="member_id != null and member_id != ''">
+				AND pld.member_id = #{member_id}
+			</if>
+			<if test="activity_id != null and activity_id != ''">
+				AND pld.activity_id = #{activity_id}
+			</if>
+			<if test="activity_like != null and activity_like != ''">
+				AND (pld.contact_person like
+				CONCAT('%',#{activity_like},'%') or
+				pld.contact_tel like
+				CONCAT('%',#{activity_like},'%') or
+				pa.title like
+				CONCAT('%',#{activity_like},'%') or
+				pa.desc1 like
+				CONCAT('%',#{activity_like},'%'))
+			</if>
+			<if test="status != null and status != ''">
+				AND pld.status = #{status}
+			</if>
+			<if test="status_in != null">
+				AND pld.status in
+				<foreach item="item" index="index" collection="status_in"
+					open="(" separator="," close=")">
+					#{item}
+				</foreach>
+			</if>
+		</where>
+		ORDER BY pld.created_date DESC
+	</select>
+
+	<select id="selectPlLuckyDeliveryForConsumer" parameterType="Map"
+		resultType="Map">
+		<![CDATA[
+			SELECT
+			 pld.lucky_delivery_id
+			,pld.activity_id
+			,pld.member_type_key
+			,pld.member_id
+			,(select pp.member_info from pl_partcipator pp where pp.member_id =pld.member_id and pp.activity_id=pld.activity_id and pp.member_type_key='consumer' group by pp.member_id) as member_info
+			,pld.contact_person
+			,pld.contact_tel
+			,pld.delivery_area_id
+			,pld.delivery_address
+			,pld.logistics
+			,pld.status	
+			,pld.win_num
+			,pa.title
+			,pa.desc1
+			,pg.title AS goods_title
+			FROM
+				pl_lucky_delivery pld
+			INNER JOIN pl_activity pa ON pld.activity_id = pa.activity_id
+			INNER JOIN ps_goods pg ON pa.goods_id= pg.goods_id AND pg.category='奖品' 
+		]]>
+		<where>
+			pld.activity_id = #{activity_id}
+		</where>
+		ORDER BY pld.created_date DESC
+	</select>
+
+
+	<update id="updatePlActivity" parameterType="Map">
+		UPDATE pl_activity SET
+		<trim suffixOverrides=",">
+			modified_date = SYSDATE(),
+			<if test="status != null and status != ''">
+				status = #{status},
+			</if>
+			<if test="total_num != null and total_num != ''">
+				total_num =total_num + #{total_num},
+			</if>
+			<if test="remark != null and remark != ''">
+				remark = #{remark},
+			</if>
+		</trim>
+		<where>
+			activity_id = #{activity_id}
+			<if test="modified_date != null and modified_date != ''">
+				AND modified_date = #{modified_date}
+			</if>
+		</where>
+	</update>
+
+
+	<update id="updatePlLuckyDelivery" parameterType="Map">
+		UPDATE pl_lucky_delivery SET
+		<trim suffixOverrides=",">
+			modified_date = SYSDATE(),
+			<if test="status != null and status != ''">
+				status = #{status},
+			</if>
+			<if test="remark != null and remark != ''">
+				remark = #{remark},
+			</if>
+			<if test="logistics != null and logistics != ''">
+				logistics = #{logistics},
+			</if>
+		</trim>
+		<where>
+			1=1
+			<if test="lucky_delivery_id != null and lucky_delivery_id != ''">
+				AND lucky_delivery_id = #{lucky_delivery_id}
+			</if>
+			<if test="modified_date != null and modified_date != ''">
+				AND modified_date = #{modified_date}
+			</if>
+		</where>
+	</update>
+
+
+	<update id="updatePlPartcipator" parameterType="Map">
+		UPDATE pl_partcipator SET
+		modified_date = SYSDATE(),
+		status = #{status}
+		<where>
+			1=1
+			<if test="partcipator_id != null and partcipator_id != ''">
+				AND partcipator_id = #{partcipator_id}
+			</if>
+			<if test="activity_id != null and activity_id != ''">
+				AND activity_id = #{activity_id}
+			</if>
+			<if test="modified_date != null and modified_date != ''">
+				AND modified_date = #{modified_date}
+			</if>
+			<if test="where_status != null and where_status != ''">
+				AND status = #{where_status}
+			</if>
+		</where>
+	</update>
+
+	<delete id="deletePlPartcipatorByActivity" parameterType="Map">
+		<![CDATA[
+             DELETE FROM pl_partcipator WHERE activity_id = #{activity_id}
+          ]]>
+	</delete>
+
+
+</mapper>

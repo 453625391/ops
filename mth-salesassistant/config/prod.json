@@ -1,0 +1,10 @@
+{
+  "server":{
+    "debug":false,
+    "port":8000
+  },
+  "service":{
+    "javaServiceHost":"http://121.43.59.219:8080",
+    "hydHost":"http://s.meitianhui.com"
+  }
+}

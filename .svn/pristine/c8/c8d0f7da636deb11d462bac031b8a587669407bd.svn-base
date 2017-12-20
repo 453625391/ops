@@ -1,0 +1,32 @@
+<!--detail.wxml-->
+<!-- banner -->
+<swiper class="banner" indicator-dots="true" indicator-active-color="#ff0000" autoplay="true" interval="3000">
+	<block wx:for="{{goods.picUrlArr}}">
+		<swiper-item>
+			<image class="banner-img" src="{{item}}"></image>
+		</swiper-item>
+	</block>
+</swiper>
+
+<view class="cnt-box">
+	<view class="tit"><text class="tag">淘宝</text>{{goods.title}}</view>
+	<view class="price-box">
+		<view class="final-price">到手价¥<text class="money">{{goods.discount_price}}</text></view>
+		<view class="refund">预付¥{{goods.market_price}}    返还¥{{goods.refund}}</view>
+	</view>
+	<view class="sale-box">
+		已售<text class="sold-num">{{goods.stock_qty-goods.sale_qty}}</text>件 / 仅剩<text class="left-num">{{goods.sale_qty}}</text>件
+	</view>
+</view>
+<view class="guide">
+	<image class="guide-img" src="https://appportal.meitianhui.com/image/wxapp/guide.png"></image>
+</view>
+<view class="desc">{{goods.desc1}}</view>
+<view class="detail-wrap">
+	<view wx:if="{{goods.picDetailArr && goods.picDetailArr.length>0}}"><image class="detail-bar-img" src="https://appportal.meitianhui.com/image/wxapp/detail-bar.png"></image></view>
+	<block wx:for="{{goods.picDetailArr}}">
+		<view>
+			<image class="detail-img" src="{{item.url}}" mode="widthFix"></image>
+		</view>
+	</block>
+</view>

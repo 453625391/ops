@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <!-- 删除苹果默认的工具栏和菜单栏 -->
+    <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+    <!-- 设置苹果工具栏颜色 -->
+    <meta name="format-detection" content="telphone=no, email=no" />
+    <!-- 忽略页面中的数字识别为电话，忽略email识别 -->
+    <!-- 启用360浏览器的极速模式(webkit) -->
+    <meta name="renderer" content="webkit">
+    <!-- 避免IE使用兼容模式 -->
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <!-- 针对手持设备优化，主要是针对一些老的不识别viewport的浏览器，比如黑莓 -->
+    <meta name="HandheldFriendly" content="true">
+    <!-- 微软的老式浏览器 -->
+    <meta name="MobileOptimized" content="320">
+    <!-- uc强制竖屏 -->
+    <meta name="screen-orientation" content="portrait">
+    <!-- QQ强制竖屏 -->
+    <meta name="x5-orientation" content="portrait">
+    <!-- UC强制全屏 -->
+    <meta name="full-screen" content="yes">
+    <!-- QQ强制全屏 -->
+    <meta name="x5-fullscreen" content="true">
+    <!-- UC应用模式 -->
+    <meta name="browsermode" content="application">
+    <!-- QQ应用模式 -->
+    <meta name="x5-page-mode" content="app">
+    <!-- windows phone 点击无高光 -->
+    <meta name="msapplication-tap-highlight" content="no">
+    <!-- 禁用iPhone手机浏览器上给电话号码自动加上的link样式 -->
+    <meta name="format-detection" content="telephone=no">
+    <title>亲情卡</title>
+    <link rel="stylesheet" type="text/css" href="/css/reset.css">
+    <script type="text/javascript" src="/js/third-part/flexible.js"></script>
+    <script type="text/javascript" src="/js/third-part/fastclick.min.js"></script>
+    <script type="text/javascript" src="/js/third-part/jquery.min.js"></script>
+    <script type="text/javascript" src="/js/third-part/qrcode.min.js"></script>
+    <style type="text/css">
+        #qrcode {
+            margin: 0 auto;
+            margin-top: 1rem;
+            text-align: center;
+        }
+        #qrcode img {
+            width: 8rem;
+            height: 8rem;
+            margin: 0 auto;
+        }
+        .warn {
+            width: 8rem;
+            padding-top: 0.666667rem;
+            margin: 0 auto;
+            color: #333;
+        }
+        [data-dpr="1"] .warn {
+            font-size: 14px;
+            line-height: 20px;
+        }
+        [data-dpr="2"] .warn {
+            font-size: 28px;
+            line-height: 40px;
+        }
+        [data-dpr="3"] .warn {
+            font-size: 42px;
+            line-height: 60px;
+        }
+    </style>
+</head>
+<body>
+	<div id="qrcode"></div>
+    <p class="warn">注意：<br>此二维码是每天惠会员卡的附属卡号，主要用于便捷支付，请勿分享和拷贝，如遭泄露，可立即通过手机上的领有惠App销毁此卡。</p>
+</body>
+<script type="text/javascript">
+$(function() {
+	var qrcode = new QRCode(document.getElementById('qrcode'), {
+        colorDark : '#f96116',
+        colorLight : '#fff',
+        correctLevel : QRCode.CorrectLevel.H
+    });
+    if('<%=card_no%>' != '') {
+        qrcode.makeCode('<%=card_no %>');
+    }
+});
+</script>
+</html>

@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.meitianhui.finance.dao.VoucherDao">
+
+	<insert id="insertFdVoucherToGoldLog" parameterType="FdVoucherToGoldLog">
+		INSERT INTO
+		fd_voucher_to_gold_log (
+		log_id
+		,consumer_id
+		,member_type_key
+		,member_id
+		,voucher
+		,gold
+		,tracked_date
+		,remark
+		)
+		VALUES (
+		#{log_id}
+		,#{consumer_id}
+		,#{member_type_key}
+		,#{member_id}
+		,#{voucher}
+		,#{gold}
+		,#{tracked_date}
+		,#{remark}
+		)
+	</insert>
+
+	<select id="selectFdVoucherToGoldLog" parameterType="Map"
+		resultType="FdVoucherToGoldLog">
+		<![CDATA[
+			SELECT
+				member_type_key
+				,member_id
+				,voucher
+				,gold
+				,tracked_date
+				,remark
+			FROM
+				fd_voucher_to_gold_log
+		]]>
+		<where>
+			1=1
+			<if test="member_id != null and member_id != ''">
+				AND member_id=#{member_id}
+			</if>
+			<if test="member_type_key != null and member_type_key != ''">
+				AND member_type_key=#{member_type_key}
+			</if>
+			<if test="consumer_id != null and consumer_id != ''">
+				AND consumer_id=#{consumer_id}
+			</if>
+		</where>
+		ORDER BY tracked_date DESC
+	</select>
+
+</mapper>

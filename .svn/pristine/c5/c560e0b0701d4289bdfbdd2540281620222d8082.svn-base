@@ -1,0 +1,146 @@
+body {
+	font-weight: 300;
+	width: 10rem;
+	margin: 0 auto;
+    background-color: #f4f4f4;
+}
+.banner {
+    width: 10rem;
+    margin: 0 auto;
+    position: relative;
+    overflow: hidden;
+}
+.banner img {
+    width: 10rem;
+}
+.goods-container {
+	width: 10rem;
+	background: #f4f4f4;
+	overflow: hidden;
+	margin: 0 auto;
+}
+.goods {
+	display: block;
+	text-decoration: none;
+	padding: 0.4rem 0.266667rem;
+	background-color: #fff;
+	margin-bottom: 0.266667rem;
+	overflow: hidden;
+}
+.goods .left-box, .goods .left-box img {
+	float: left;
+	width: 2.88rem;
+	height: 2.88rem;
+}
+.goods .left-box {
+	border: 0.026667rem solid #f4f4f4;
+	position: relative;
+}
+.goods .left-box .soldout-wrap {
+	position: absolute;
+	width: 2.88rem;
+	height: 2.88rem;
+	left: 0;
+	top: 0;
+	background-color: rgba(0, 0, 0, 0.3);
+}
+.goods .left-box .soldout-wrap img {
+	width: 2.293333rem;
+    height: 2.293333rem;
+    margin-top: 0.293333rem;
+    margin-left: 0.293333rem;
+}
+.goods .right-box {
+	float: right;
+	width: 6.2rem;
+	height: 2.933333rem;
+	padding-left: 0.266667rem;
+	position: relative;
+}
+.goods .right-box .tit {
+	color: #333;
+	font-size: 0.426667rem;
+	font-weight: normal;
+	height: 1.066667rem;
+	line-height: 0.533333rem;
+	overflow: hidden;
+	margin-bottom: 0.133333rem;
+}
+.goods .right-box .tit .tag {
+	height: 0.426667rem;
+	line-height: 0.426667rem;
+	font-size: 0.266667rem;
+	display: inline-block;
+	padding: 0 0.106667rem;
+	margin-top: 0.053333rem;
+	margin-right: 0.066667rem;
+	border-radius: 0.04rem;
+	text-align: center;
+	color: #fff;
+	float: left;
+}
+.goods .right-box .tit .tb {
+	background-color: #ff4400;
+}
+.goods .right-box .tit .zy {
+	background-color: #6441a5;
+}
+.goods .right-box .goods-tit {
+	color: #666;
+	font-size: 0.373333rem;
+	line-height: 0.48rem;
+	height: 0.48rem;
+	margin-bottom: 0.133333rem;
+	overflow: hidden;
+}
+.goods .right-box .num {
+	color: #858585;
+	font-size: 0.32rem;
+	line-height: 0.4rem;
+}
+.goods .right-box .num i {
+	color: #333;
+}
+.goods .right-box .price-wrap {
+	width: 6.2rem;
+	padding: 0 0.266667rem;
+	position: absolute;
+	left: 0;
+	bottom: 0;
+	overflow: hidden;
+}
+.goods .right-box .price-wrap .price {
+	color: #ff0000;
+	font-size: 0.426667rem;
+}
+.goods .right-box .price-wrap .price em {
+	font-size: 0.64rem;
+}
+.goods .right-box .price-wrap .payback {
+	color: #ff7800;
+	font-size: 0.426667rem;
+	float: right;
+	text-indent: 0.666667rem;
+	background: url(/image/common/payback.png) center left no-repeat;
+	background-size: 0.533333rem 0.533333rem;
+}
+.goods .right-box .price-wrap .payback em {
+	font-size: 0.64rem;
+}
+.no-record {
+    margin-top: 2rem;
+    font-size: 0.373333rem;
+    color: #666;
+    text-align: center;
+}
+.no-record p {
+    padding-top: 0.373333rem;
+}
+.no-record img {
+    width: 3.76rem;
+}
+.loading {
+	font-size: 0.32rem;
+	text-align: center;
+	padding: 0.266667rem 0;
+}

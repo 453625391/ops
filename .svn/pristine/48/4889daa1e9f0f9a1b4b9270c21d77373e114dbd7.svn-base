@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.meitianhui.member.dao.SalesmanSpecialistDao">
+
+	<select id="selectSalesmanSpecialistList" parameterType="Map" resultType="Map">
+		<![CDATA[
+		SELECT
+			ms.name,
+			ms.nick_name,
+			ms.sex_key,
+			ms.contact_tel,
+			ms.area_id,
+			ms.id_card,
+			ma.path,
+			mss.salesman_id,
+			mss.audit_status,
+			mss.created_date
+		FROM
+			md_salesman_specialist mss
+			INNER JOIN md_salesman ms ON mss.salesman_id = ms.salesman_id	
+			LEFT JOIN md_area ma ON ms.area_id = ma.area_id
+		]]>	
+		<where>
+			1=1
+			<if test="search_like !=null and search_like !=''">
+				AND (ms.name like concat('%',#{search_like},'%') or
+					ms.contact_tel like concat('%',#{search_like},'%') or
+					ms.id_card like concat('%',#{search_like},'%'))
+			</if>
+			<if test="audit_status_in != null">
+				AND mss.audit_status in
+				<foreach item="item" index="index" collection="audit_status_in"
+					open="(" separator="," close=")">
+					#{item}
+				</foreach>
+			</if>
+		</where>	
+		ORDER BY mss.created_date DESC
+	</select>
+	
+	<select id="selectSalesmanSpecialistLogList" parameterType="Map" resultType="Map">
+		<![CDATA[
+		SELECT
+			mssl.log_id,
+			mssl.tracked_date,
+			mssl.event_desc,
+			mssl.salesman_id as mssl_salesman_id,
+			mss.salesman_id as mss_salesman_id,
+			ms.salesman_id as ms_salesman_id,
+			ms.nick_name
+		FROM
+			md_salesman_specialist_log mssl	
+			LEFT JOIN md_salesman_specialist mss ON mssl.salesman_id = mss.salesman_id
+			LEFT JOIN md_salesman ms ON ms.salesman_id = mss.salesman_id
+		]]>	
+		<where>
+			1=1
+			<if test="salesman_id !=null and salesman_id !=''">
+				AND mssl.salesman_id = #{salesman_id}
+			</if>
+			
+		</where>	
+		ORDER BY mssl.tracked_date DESC
+	</select>
+	
+	<select id="selectSalesmanSpecialist" parameterType="Map" resultType="Map">
+		<![CDATA[
+			SELECT
+			     mss.salesman_id
+				,mss.is_marketer
+				,mss.is_assistant
+				,mss.service_store_num
+				,mss.self_store_num
+				,mss.audit_status
+				,mss.remark
+			FROM
+				md_salesman_specialist mss
+		]]>
+		<where>
+			1=1
+			<if test="salesman_id != null and salesman_id != ''">
+				AND mss.salesman_id = #{salesman_id}
+			</if>
+			<if test="audit_status != null and audit_status != ''">
+				AND mss.audit_status = #{audit_status}
+			</if>
+		</where>	
+	</select>
+	
+	<update id="updateSalesmanSpecialist" parameterType="Map">
+		UPDATE md_salesman_specialist SET 
+		<trim suffixOverrides=",">
+			modified_date = SYSDATE(),
+			<if test="audit_status != null and audit_status != ''">
+				audit_status = #{audit_status},
+			</if>
+			<if test="remark != null and remark != ''">
+				remark = #{remark},
+			</if>
+			<if test="is_assistant != null and is_assistant != ''">
+				is_assistant = #{is_assistant},
+			</if>
+			<if test="is_marketer != null and is_marketer != ''">
+				is_marketer = #{is_marketer},
+			</if>
+			<if test="service_store_num != null and service_store_num != ''">
+				service_store_num = service_store_num+#{service_store_num},
+			</if>
+		</trim>	
+		<where>
+			salesman_id = #{salesman_id}
+		</where>
+	</update>
+	
+	<insert id="insertSalesmanSpecialist" parameterType="MDSalesmanSpecialist">
+		INSERT INTO
+		md_salesman_specialist(
+			salesman_id,
+			is_marketer,
+			is_assistant,
+			service_store_num,
+			self_store_num,
+			audit_status,
+			created_date,
+			modified_date,
+			remark
+		)VALUES(
+			#{salesman_id},
+			#{is_marketer},
+			#{is_assistant},
+			#{service_store_num},
+			#{self_store_num},
+			#{audit_status},
+			#{created_date},
+			#{modified_date},
+			#{remark}
+		)
+	</insert>
+		
+	<insert id="insertSalesmanSpecialistLog" parameterType="Map">
+		INSERT INTO
+		md_salesman_specialist_log (
+			log_id
+			,salesman_id
+			,category
+			,tracked_date
+			,event_desc
+			)
+		VALUES (
+			#{log_id}
+			,#{salesman_id}
+			,#{category}
+			,#{tracked_date}
+			,#{event_desc}
+		)
+	</insert>
+</mapper>

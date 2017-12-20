@@ -1,0 +1,344 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.meitianhui.order.dao.CsOrderDao">
+
+	<insert id="insertCsOrder" parameterType="CsOrder">
+		INSERT INTO
+		cs_order (
+		order_id
+		,order_no
+		,order_type
+		,order_date
+		,goods_id
+		,goods_code
+		,goods_title
+		,supplier_id
+		,supplier
+		,qty
+		,goods_unit
+		,payment_way_key
+		,sale_fee
+		,discount_fee
+		,total_fee
+		,settled_price
+		,service_fee
+		,member_type_key
+		,member_id
+		,member_info
+		,contact_person
+		,contact_tel
+		,delivery_address
+		,logistics
+		,status
+		,settle_status
+		,created_date
+		,modified_date
+		,remark
+		)
+		VALUES (
+		#{order_id}
+		,#{order_no}
+		,#{order_type}
+		,#{order_date}
+		,#{goods_id}
+		,#{goods_code}
+		,#{goods_title}
+		,#{supplier_id}
+		,#{supplier}
+		,#{qty}
+		,#{goods_unit}
+		,#{payment_way_key}
+		,#{sale_fee}
+		,#{discount_fee}
+		,#{total_fee}
+		,#{settled_price}
+		,#{service_fee}
+		,#{member_type_key}
+		,#{member_id}
+		,#{member_info}
+		,#{contact_person}
+		,#{contact_tel}
+		,#{delivery_address}
+		,#{logistics}
+		,#{status}
+		,#{settle_status}
+		,#{created_date}
+		,#{modified_date}
+		,#{remark}
+		)
+	</insert>
+
+	<select id="selectPhoneBillOrderForAppList" parameterType="Map"
+		resultType="CsOrder">
+		<![CDATA[
+			SELECT
+				order_id
+				,order_no
+				,order_type
+				,order_date
+				,goods_id
+				,goods_title
+				,qty
+				,goods_unit
+				,payment_way_key
+				,sale_fee
+				,discount_fee
+				,total_fee
+				,contact_person
+				,contact_tel
+				,delivery_address
+				,logistics
+				,status
+				,remark
+			FROM
+				cs_order
+		]]>
+		<where>
+			1=1
+			<if test="order_id != null and order_id != ''">
+				AND order_id = #{order_id}
+			</if>
+			<if test="order_no != null and order_no != ''">
+				AND order_no = #{order_no}
+			</if>
+			<if test="status != null and status != ''">
+				AND status = #{status}
+			</if>
+			<if test="member_id != null and member_id != ''">
+				AND member_id = #{member_id}
+			</if>
+		</where>
+		ORDER BY order_date DESC
+	</select>
+
+	<select id="selectCsOrderForOpList" parameterType="Map"
+		resultType="CsOrder">
+		<![CDATA[
+			SELECT
+				order_id
+				,order_no
+				,order_type
+				,order_date
+				,goods_id
+				,goods_code
+				,goods_title
+				,payment_way_key
+				,qty
+				,sale_fee
+				,total_fee
+				,settled_price
+				,contact_person
+				,contact_tel
+				,member_id
+				,member_type_key
+				,member_info
+				,supplier_id
+				,supplier
+				,status
+				,settle_status
+				,remark
+			FROM
+				cs_order
+		]]>
+		<where>
+			1=1
+			<if test="order_no != null and order_no != ''">
+				AND order_no = #{order_no}
+			</if>
+			<if test="contact_tel != null and contact_tel != ''">
+				AND contact_tel = #{contact_tel}
+			</if>
+			<if test="settle_status != null and settle_status != ''">
+				AND settle_status = #{settle_status}
+			</if>
+			<if test="status != null and status != ''">
+				AND status = #{status}
+			</if>
+			<if test="status_in != null">
+				AND status in
+				<foreach collection="status_in" item="item" open="(" close=")"
+					separator=",">
+					#{item}
+				</foreach>
+			</if>
+			<if test="member_info != null and member_info != ''">
+				AND member_info like CONCAT('%',#{member_info},'%')
+			</if>
+			<if test="goods_title != null and goods_title != ''">
+				AND goods_title like CONCAT('%',#{goods_title},'%')
+			</if>
+			<if test="supplier != null and supplier != ''">
+				AND supplier like CONCAT('%',#{supplier},'%')
+			</if>
+			<if test="contact_tel != null and contact_tel != ''">
+				AND contact_tel = #{contact_tel}
+			</if>
+			<if test="order_date_start != null and order_date_start != ''">
+				AND order_date &gt;= #{order_date_start}
+			</if>
+			<if test="order_date_end != null and order_date_end != ''">
+				AND order_date &lt;= date_add(#{order_date_end},interval 1 day) 
+			</if>
+		</where>
+		ORDER BY order_date DESC
+	</select>
+
+	<!-- 查询增值订单结算统计 -->
+	<select id="selectCsOrderSettlementCount" parameterType="Map"
+		resultType="Map">
+		<![CDATA[
+			SELECT
+				sum(total_fee) as total_fee
+				,count(order_id) as count_num
+			FROM
+				cs_order
+		]]>
+		<where>
+			<if test="order_no != null and order_no != ''">
+				AND order_no = #{order_no}
+			</if>
+			<if test="contact_tel != null and contact_tel != ''">
+				AND contact_tel = #{contact_tel}
+			</if>
+			<if test="settle_status != null and settle_status != ''">
+				AND settle_status = #{settle_status}
+			</if>
+			<if test="status != null and status != ''">
+				AND status = #{status}
+			</if>
+			<if test="status_in != null and status_in != ''">
+				AND status in
+				<foreach collection="status_in" item="item" open="(" close=")"
+					separator=",">
+					#{item}
+				</foreach>
+			</if>
+			<if test="member_info != null and member_info != ''">
+				AND member_info like CONCAT('%',#{member_info},'%')
+			</if>
+			<if test="goods_title != null and goods_title != ''">
+				AND goods_title like CONCAT('%',#{goods_title},'%')
+			</if>
+			<if test="supplier != null and supplier != ''">
+				AND supplier like CONCAT('%',#{supplier},'%')
+			</if>
+			<if test="contact_tel != null and contact_tel != ''">
+				AND contact_tel = #{contact_tel}
+			</if>
+			<if test="order_date != null and order_date != ''">
+				AND DATE_FORMAT(order_date, '%Y-%m-%d') =
+				DATE_FORMAT(#{order_date}, '%Y-%m-%d')
+			</if>
+		</where>
+	</select>
+
+	<select id="selectCsOrderDetail" parameterType="Map" resultType="CsOrder">
+		<![CDATA[
+			SELECT
+				order_id
+				,order_no
+				,order_type
+				,order_date
+				,goods_id
+				,goods_title
+				,qty
+				,goods_unit
+				,payment_way_key
+				,sale_fee
+				,discount_fee
+				,total_fee
+				,member_type_key
+				,member_id
+				,member_info
+				,contact_person
+				,contact_tel
+				,delivery_address
+				,logistics
+				,status
+				,modified_date
+				,remark
+			FROM
+				cs_order
+		]]>
+		<where>
+			1=1
+			<if test="order_id != null and order_id != ''">
+				AND order_id = #{order_id}
+			</if>
+			<if test="order_no != null and order_no != ''">
+				AND order_no = #{order_no}
+			</if>
+			<if test="status != null and status != ''">
+				AND status = #{status}
+			</if>
+			<if test="member_id != null and member_id != ''">
+				AND member_id = #{member_id}
+			</if>
+		</where>
+		ORDER BY order_date DESC
+	</select>
+
+	<update id="updateCsOrder" parameterType="Map">
+		UPDATE cs_order SET
+		<trim suffixOverrides=",">
+			modified_date = SYSDATE(),
+			<if test="remark != null and remark != ''">
+				remark = #{remark},
+			</if>
+			<if test="status != null and status != ''">
+				status = #{status},
+			</if>
+			<if test="settle_status != null and settle_status != ''">
+				settle_status = #{settle_status},
+			</if>
+		</trim>
+		<where>
+			1=1
+			<if test="order_id != null and order_id != ''">
+				AND order_id=#{order_id}
+			</if>
+			<if test="modified_date != null and modified_date != ''">
+				AND modified_date=#{modified_date}
+			</if>
+		</where>
+	</update>
+
+	<!-- 查询结算订单列表 -->
+	<select id="selectCsOrderForSettlement" parameterType="Map"
+		resultType="Map">
+		<![CDATA[
+			SELECT
+				 order_id
+				,order_no
+				,order_type
+				,goods_id
+				,goods_code
+				,goods_title
+				,supplier_id
+				,supplier
+				,qty
+				,sale_fee
+				,discount_fee
+				,total_fee
+				,settled_price
+				,service_fee
+				,modified_date
+			FROM
+				cs_order
+		]]>
+		<where>
+			<if test="order_date != null and order_date != ''">
+				AND DATE_FORMAT(order_date, '%Y-%m-%d') =
+				DATE_FORMAT(#{order_date}, '%Y-%m-%d')
+			</if>
+			<if test="status != null and status != ''">
+				AND status = #{status}
+			</if>
+			<if test="settle_status != null and settle_status != ''">
+				AND settle_status = #{settle_status}
+			</if>
+		</where>
+		ORDER BY created_date
+	</select>
+
+</mapper>

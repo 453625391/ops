@@ -1,0 +1,1278 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.meitianhui.member.dao.StoresDao">
+
+	<insert id="insertMDStores" parameterType="MDStores">
+		INSERT INTO
+		md_stores (
+		stores_id
+		,stores_no
+		,stores_name
+		,stores_type_key
+		,business_type_key
+		,desc1
+		,desc2
+		,area_id
+		,address
+		,longitude
+		,latitude
+		,assistant_id
+		,contact_person
+		,contact_tel
+		,service_tel
+		,business_developer
+		,area_size
+		,device_no
+		,neighbor_pic_path
+		,id_card_pic_path
+		,certification_pic_path
+		,licence_pic_path
+		,logo_pic_path
+		,old_facade_pic_path
+		,new_facade_pic_path
+		,old_stores_pic_path
+		,new_stores_pic_path
+		,sys_status
+		,business_status_key
+		,registered_date
+		,created_date
+		,modified_date
+		,label
+		,remark
+		)
+		VALUES (
+		#{stores_id}
+		,#{stores_no}
+		,#{stores_name}
+		,#{stores_type_key}
+		,#{business_type_key}
+		,#{desc1}
+		,#{desc2}
+		,#{area_id}
+		,#{address}
+		,#{longitude}
+		,#{latitude}
+		,#{assistant_id}
+		,#{contact_person}
+		,#{contact_tel}
+		,#{contact_tel}
+		,#{business_developer}
+		,#{area_size}
+		,#{device_no}
+		,#{neighbor_pic_path}
+		,#{id_card_pic_path}
+		,#{certification_pic_path}
+		,#{licence_pic_path}
+		,#{logo_pic_path}
+		,#{old_facade_pic_path}
+		,#{new_facade_pic_path}
+		,#{old_stores_pic_path}
+		,#{new_stores_pic_path}
+		,#{sys_status}
+		,#{business_status_key}
+		,#{registered_date}
+		,SYSDATE()
+		,SYSDATE()
+		,#{label}
+		,#{remark}
+		)
+	</insert>
+
+	<insert id="insertMDStoresLog" parameterType="Map">
+		INSERT INTO
+		md_stores_log (
+		log_id
+		,stores_id
+		,category
+		,tracked_date
+		,event
+		)
+		VALUES (
+		#{log_id}
+		,#{stores_id}
+		,#{category}
+		,#{tracked_date}
+		,#{event}
+		)
+	</insert>
+
+
+	<insert id="insertMDStoresRecommend" parameterType="MDStoresRecommend">
+		INSERT INTO
+		md_stores_recommend
+		(
+		recommend_id
+		,stores_id
+		,area_id
+		,order_no
+		,created_date
+		,remark
+		)
+		VALUES (
+		#{recommend_id}
+		,#{stores_id}
+		,#{area_id}
+		,#{order_no}
+		,#{created_date}
+		,#{remark}
+		)
+	</insert>
+
+
+	<select id="selectMDStoresRecommendInfo" parameterType="Map"
+		resultType="Map">
+		<![CDATA[
+			SELECT
+				r.order_no
+				,s.stores_id 
+				,s.stores_no
+				,s.stores_name
+				,s.stores_type_key
+				,s.business_type_key
+				,s.desc1
+				,s.area_id
+				,a.path as area_desc
+				,s.address
+				,s.contact_person
+				,s.contact_tel
+				,s.label
+				,s.activity_servcie
+				,s.longitude
+				,s.latitude
+				,s.neighbor_pic_path
+				,s.logo_pic_path
+				,s.new_facade_pic_path
+				,s.new_stores_pic_path
+			FROM
+				md_stores_recommend r
+				inner join md_stores s on r.stores_id = s.stores_id
+				left join md_area a on a.area_code = s.area_id
+		]]>
+		<where>
+			s.business_status_key &lt;&gt; 'TDJD_04'
+			<if test="order_no != null and order_no != ''">
+				AND r.order_no=#{order_no}
+			</if>
+			<if test="area_id != null and area_id != ''">
+				AND r.area_id=#{area_id}
+			</if>
+		</where>
+		ORDER BY r.order_no
+	</select>
+
+	<select id="selectMDStoresRecommend" parameterType="Map"
+		resultType="MDStoresRecommend">
+		<![CDATA[
+			SELECT
+				stores_id
+				,area_id
+				,order_no
+			FROM
+				md_stores_recommend
+		]]>
+		<where>
+			1=1
+			<if test="order_no != null and order_no != ''">
+				AND order_no=#{order_no}
+			</if>
+			<if test="area_id != null and area_id != ''">
+				AND area_id=#{area_id}
+			</if>
+		</where>
+	</select>
+
+	<select id="selectStoresAssistant" parameterType="Map"
+		resultType="Map">
+		<![CDATA[
+			SELECT
+			     c.assistant_id
+				,c.assistant_name
+				,c.desc1
+				,c.id_card
+				,c.head_pic_path
+				,c.sex_key
+				,c.area_id
+				,c.address
+				,c.contact_tel
+				,c.registered_date
+				,c.status
+				,c.created_date
+				,c.modified_date
+				,c.remark 
+			FROM
+				md_assistant c left join md_stores s on s.assistant_id = c.assistant_id
+		]]>
+		<where>
+			1=1
+			<if test="stores_id != null and stores_id != ''">
+				AND s.stores_id=#{stores_id}
+			</if>
+		</where>
+	</select>
+
+
+	<select id="selectSalesmanStoresNum" parameterType="Map" resultType="Map">
+		<![CDATA[
+			SELECT
+				count(ms.assistant_id) assistantnum
+				,count(ms.business_developer) businessnum
+			FROM
+				md_stores ms
+		]]>
+		<where>
+			ms.business_status_key &lt;&gt; 'TDJD_04'
+			<if test="assistant_id != null and assistant_id != ''">
+				AND ms.assistant_id = #{assistant_id}
+			</if>
+			<if test="business_developer != null and business_developer != ''">
+				AND ms.business_developer = #{business_developer}
+			</if>
+		</where>
+	</select>
+
+
+	<select id="selectNearbyMDStoresForSalesassistantBySpecialist" parameterType="Map"
+		resultType="Map">
+		<![CDATA[
+			SELECT
+				a.stores_id
+				,a.stores_no
+				,a.stores_name
+				,a.stores_type_key
+				,a.business_type_key
+				,a.contact_person
+				,a.contact_tel
+				,a.service_tel
+				,a.area_id
+				,a.address
+				,a.label
+				,a.latitude
+				,a.longitude
+				,a.assistant_id
+				,a.is_assistant_locked
+				,a.business_developer
+				,a.activity_servcie
+				,a.neighbor_pic_path
+				,a.logo_pic_path
+				,a.old_facade_pic_path
+				,a.new_facade_pic_path
+				,a.old_stores_pic_path
+				,a.new_stores_pic_path
+				,a.modified_date
+				,a.msm_name
+				,a.msm_contact_tel
+			FROM
+				(select 
+				ms.stores_id
+				,ms.stores_no
+				,ms.stores_name
+				,ms.stores_type_key
+				,ms.business_type_key
+				,ms.contact_person
+				,ms.contact_tel
+				,ms.service_tel
+				,ms.area_id
+				,ms.address
+				,ms.label
+				,ms.latitude
+				,ms.longitude
+				,ms.assistant_id
+				,ms.is_assistant_locked
+				,ms.business_developer
+				,ms.is_stage_hpt
+				,ms.activity_servcie
+				,ms.neighbor_pic_path
+				,ms.logo_pic_path
+				,ms.old_facade_pic_path
+				,ms.new_facade_pic_path
+				,ms.old_stores_pic_path
+				,ms.new_stores_pic_path
+				,ms.modified_date
+				,msm.name as msm_name
+				,msm.contact_tel as msm_contact_tel
+				from md_stores ms
+				LEFT JOIN md_salesman msm ON ms.assistant_id = msm.salesman_id
+				where ms.business_status_key <> 'TDJD_04' ) a
+		]]>
+		<where>
+			1=1
+			<if test="business_developer != null and business_developer != ''">
+				AND a.business_developer = #{business_developer}
+			</if>
+			<if test="assistant_id != null and assistant_id != ''">
+				AND a.assistant_id = #{assistant_id}
+			</if>
+		</where>
+		ORDER BY a.modified_date DESC 
+	</select>
+
+	<select id="selectNearbyMDStoresForSalesassistantByMain" parameterType="Map"
+		resultType="Map">
+		<![CDATA[
+			SELECT
+				a.stores_id
+				,a.stores_no
+				,a.stores_name
+				,a.stores_type_key
+				,a.business_type_key
+				,a.contact_person
+				,a.contact_tel
+				,a.service_tel
+				,a.area_id
+				,a.address
+				,a.label
+				,a.latitude
+				,a.longitude
+				,a.assistant_id
+				,a.is_assistant_locked
+				,a.business_developer
+				,a.activity_servcie
+				,a.neighbor_pic_path
+				,a.logo_pic_path
+				,a.old_facade_pic_path
+				,a.new_facade_pic_path
+				,a.old_stores_pic_path
+				,a.new_stores_pic_path
+				,a.modified_date
+				,msm.name msm_name
+				,msm.contact_tel msm_contact_tel
+			FROM
+				(select 
+				ms.stores_id
+				,ms.stores_no
+				,ms.stores_name
+				,ms.stores_type_key
+				,ms.business_type_key
+				,ms.contact_person
+				,ms.contact_tel
+				,ms.service_tel
+				,ms.area_id
+				,ms.address
+				,ms.label
+				,ms.latitude
+				,ms.longitude
+				,ms.assistant_id
+				,ms.is_assistant_locked
+				,ms.business_developer
+				,ms.is_stage_hpt
+				,ms.activity_servcie
+				,ms.neighbor_pic_path
+				,ms.logo_pic_path
+				,ms.old_facade_pic_path
+				,ms.new_facade_pic_path
+				,ms.old_stores_pic_path
+				,ms.new_stores_pic_path
+				,ms.modified_date
+				from md_stores ms
+				where ms.business_status_key <> 'TDJD_04' ) a
+			LEFT JOIN md_salesman msm ON a.assistant_id = msm.salesman_id		
+		]]>
+		<where>
+			1=1
+			<if test="search_like !=null and search_like !=''">
+				AND a.stores_name like concat('%',#{search_like},'%') or
+					a.contact_person like concat('%',#{search_like},'%') or
+					a.contact_tel like concat('%',#{search_like},'%')
+			</if>
+		</where>
+		ORDER BY a.modified_date ASC LIMIT 20 
+	</select>
+				
+	<select id="selectNearbyMDStoresForSalesassistantByApproval" parameterType="Map"
+		resultType="Map">
+		<![CDATA[
+			SELECT
+				a.stores_id
+				,a.stores_no
+				,a.stores_name
+				,a.stores_type_key
+				,a.business_type_key
+				,a.contact_person
+				,a.contact_tel
+				,a.service_tel
+				,a.area_id
+				,a.address
+				,a.label
+				,a.latitude
+				,a.longitude
+				,a.assistant_id
+				,a.is_assistant_locked
+				,a.business_developer
+				,a.activity_servcie
+				,a.neighbor_pic_path
+				,a.logo_pic_path
+				,a.old_facade_pic_path
+				,a.new_facade_pic_path
+				,a.old_stores_pic_path
+				,a.new_stores_pic_path
+				,a.modified_date
+				,a.msm_name
+				,a.msm_contact_tel
+			FROM
+				(select 
+				ms.stores_id
+				,ms.stores_no
+				,ms.stores_name
+				,ms.stores_type_key
+				,ms.business_type_key
+				,ms.contact_person
+				,ms.contact_tel
+				,ms.service_tel
+				,ms.area_id
+				,ms.address
+				,ms.label
+				,ms.latitude
+				,ms.longitude
+				,ms.assistant_id
+				,ms.is_assistant_locked
+				,ms.business_developer
+				,ms.is_stage_hpt
+				,ms.activity_servcie
+				,ms.neighbor_pic_path
+				,ms.logo_pic_path
+				,ms.old_facade_pic_path
+				,ms.new_facade_pic_path
+				,ms.old_stores_pic_path
+				,ms.new_stores_pic_path
+				,ms.modified_date
+				,msm.name as msm_name
+				,msm.contact_tel as msm_contact_tel
+				from md_stores ms
+				INNER JOIN (SELECT maa.stores_id,maa.assistant_id from md_assistant_application maa 
+				where maa.assistant_id = #{assistant_id} and maa.audit_status ='non-audit' ) m ON ms.stores_id = m.stores_id
+				LEFT JOIN md_salesman msm ON ms.assistant_id = msm.salesman_id
+				where ms.business_status_key <> 'TDJD_04' ) a
+		]]>		
+		ORDER BY a.modified_date DESC
+	</select>
+
+	<select id="selectNearbyMDStoresForSalesassistant" parameterType="Map"
+		resultType="Map">
+		<![CDATA[
+			SELECT
+				a.stores_id
+				,a.stores_no
+				,a.stores_name
+				,a.stores_type_key
+				,a.business_type_key
+				,a.contact_person
+				,a.contact_tel
+				,a.service_tel
+				,a.area_id
+				,a.address
+				,a.label
+				,a.latitude
+				,a.longitude
+				,a.assistant_id
+				,a.is_assistant_locked
+				,a.business_developer
+				,a.activity_servcie
+				,a.neighbor_pic_path
+				,a.logo_pic_path
+				,a.old_facade_pic_path
+				,a.new_facade_pic_path
+				,a.old_stores_pic_path
+				,a.new_stores_pic_path
+				,a.modified_date
+				,msm.name msm_name
+				,msm.contact_tel msm_contact_tel
+				,a.distance
+			FROM
+				(select 
+				ms.stores_id
+				,ms.stores_no
+				,ms.stores_name
+				,ms.stores_type_key
+				,ms.business_type_key
+				,ms.contact_person
+				,ms.contact_tel
+				,ms.service_tel
+				,ms.area_id
+				,ms.address
+				,ms.label
+				,ms.latitude
+				,ms.longitude
+				,ms.assistant_id
+				,ms.is_assistant_locked
+				,ms.business_developer
+				,ms.is_stage_hpt
+				,ms.activity_servcie
+				,ms.neighbor_pic_path
+				,ms.logo_pic_path
+				,ms.old_facade_pic_path
+				,ms.new_facade_pic_path
+				,ms.old_stores_pic_path
+				,ms.new_stores_pic_path
+				,ms.modified_date
+				,round(6378.138 * 2 * asin(
+				sqrt(pow(sin((ms.latitude * pi() / 180 - #{latitude} * pi() / 180) / 2), 2) + 
+					cos(ms.latitude * pi() / 180) * 
+					cos(#{latitude} * pi() / 180) * 
+					pow(sin((ms.longitude * pi() / 180 - #{longitude} * pi() / 180) / 2) , 2))) * 1000) as distance 
+					from md_stores ms
+				where ms.business_status_key <> 'TDJD_04' 
+				and ms.latitude > #{latitude_gt} 
+				and ms.latitude < #{latitude_lt} 
+				and ms.longitude > #{longitude_gt} 
+				and ms.longitude < #{longitude_lt}) a
+			LEFT JOIN md_salesman msm ON a.assistant_id = msm.salesman_id		
+		]]>
+		<where>
+			1=1
+			<if test="range != null and range != ''">
+				AND a.distance &lt;= #{range}
+			</if>
+			<if test="is_assistant_locked != null and is_assistant_locked != ''">
+				<if test="is_assistant_locked = 'N'">
+				AND a.is_assistant_locked != "Y"
+				</if>
+			</if>
+		</where>
+		ORDER BY a.distance ASC
+	</select>
+
+
+	<select id="selectNearbyMDStores" parameterType="Map"
+		resultType="Map">
+		<![CDATA[
+			SELECT
+				a.stores_id
+				,a.stores_no
+				,a.stores_name
+				,a.stores_type_key
+				,a.business_type_key
+				,a.contact_tel
+				,a.service_tel
+				,a.area_id
+				,a.address
+				,a.label
+				,a.latitude
+				,a.longitude
+				,a.activity_servcie
+				,a.neighbor_pic_path
+				,a.logo_pic_path
+				,a.old_facade_pic_path
+				,a.new_facade_pic_path
+				,a.old_stores_pic_path
+				,a.new_stores_pic_path
+				,a.distance
+			FROM
+				(select 
+				stores_id
+				,stores_no
+				,stores_name
+				,stores_type_key
+				,business_type_key
+				,contact_tel
+				,service_tel
+				,area_id
+				,address
+				,label
+				,latitude
+				,longitude
+				,is_stage_hpt
+				,activity_servcie
+				,neighbor_pic_path
+				,logo_pic_path
+				,old_facade_pic_path
+				,new_facade_pic_path
+				,old_stores_pic_path
+				,new_stores_pic_path
+				,round(6378.138 * 2 * asin(
+				sqrt(pow(sin((latitude * pi() / 180 - #{latitude} * pi() / 180) / 2),	2) + 
+					cos(latitude * pi() / 180) * cos(	#{latitude} * pi()/180)* pow(sin((longitude * pi()/180 - #{longitude} * pi()/180)/2),2))) * 1000) as distance from md_stores 
+					where business_status_key <> 'TDJD_04' and latitude > #{latitude_gt} and latitude < #{latitude_lt} and longitude > #{longitude_gt} and longitude < #{longitude_lt}) a
+		]]>
+		<where>
+			1=1
+			<if test="range != null and range != ''">
+				AND a.distance &lt;= #{range}
+			</if>
+			<if test="business_type_in != null">
+				AND a.business_type_key in
+				<foreach item="item" index="index" collection="business_type_in"
+					open="(" separator="," close=")">
+					#{item}
+				</foreach>
+			</if>
+			<if test="business_type_key != null and business_type_key != ''">
+				AND a.business_type_key = #{business_type_key}
+			</if>
+			<if test="stores_type_key != null and stores_type_key != ''">
+				AND a.stores_type_key = #{stores_type_key}
+			</if>
+			<if test="area_id != null and area_id != ''">
+				AND a.area_id = #{area_id}
+			</if>
+			<if test="city != null and city != ''">
+				AND SUBSTR(a.area_id from 1 for 4) = #{city}
+			</if>
+			<if test="is_stage_hpt != null and is_stage_hpt != ''">
+				AND a.is_stage_hpt = #{is_stage_hpt}
+			</if>
+			<if test="activity_servcie != null and activity_servcie != ''">
+				AND a.activity_servcie like	CONCAT('%',#{activity_servcie},'%')
+			</if>
+		</where>
+		ORDER BY a.distance ASC
+	</select>
+
+	<select id="selectShumeStores" parameterType="Map" resultType="Map">
+		<![CDATA[
+			SELECT
+				a.stores_id
+				,a.stores_no
+				,a.stores_name
+				,a.stores_type_key
+				,a.business_type_key
+				,a.desc1
+				,a.area_id
+				,a.address
+				,a.label
+				,a.contact_person
+				,a.contact_tel
+				,a.latitude
+				,a.longitude
+				,a.neighbor_pic_path
+				,a.logo_pic_path
+				,m.merchant_type
+				,m.zone
+				,m.created_date
+			FROM
+				md_stores a inner join md_merchant m on a.stores_id = m.member_id 
+		]]>
+		<where>
+			a.business_status_key &lt;&gt; 'TDJD_04'
+			<if test="contact_tel != null and contact_tel != ''">
+				AND a.contact_tel &lt;= #{contact_tel}
+			</if>
+			<if test="stores_id != null and stores_id != ''">
+				AND a.stores_id = #{stores_id}
+			</if>
+			<if test="merchant_type != null and merchant_type != ''">
+				AND m.merchant_type = #{merchant_type}
+			</if>
+			<if test="zone_id != null and zone_id != ''">
+				AND m.zone_id = #{zone_id}
+			</if>
+		</where>
+		ORDER BY m.created_date DESC
+	</select>
+
+	<select id="selectNearbyShumeStores" parameterType="Map"
+		resultType="Map">
+		<![CDATA[
+			SELECT
+				a.stores_id
+				,a.stores_no
+				,a.stores_name
+				,a.stores_type_key
+				,a.business_type_key
+				,a.desc1
+				,a.address
+				,a.label
+				,a.contact_person
+				,a.contact_tel
+				,a.latitude
+				,a.longitude
+				,a.neighbor_pic_path
+				,a.logo_pic_path
+				,a.distance
+				,m.merchant_type
+				,m.zone
+				,m.created_date
+			FROM
+				(select 
+				stores_id
+				,stores_no
+				,stores_name
+				,stores_type_key
+				,business_type_key
+				,desc1
+				,address
+				,label
+				,contact_person
+				,contact_tel
+				,latitude
+				,longitude
+				,neighbor_pic_path
+				,logo_pic_path
+				,round(6378.138 * 2 * asin(
+				sqrt(pow(sin((latitude * pi() / 180 - #{latitude} * pi() / 180) / 2),	2) + 
+					cos(latitude * pi() / 180) * cos(	#{latitude} * pi()/180)* pow(sin((longitude * pi()/180 - #{longitude} * pi()/180)/2),2))) * 1000) as distance from md_stores 
+					where business_status_key <> 'TDJD_04' and latitude > #{latitude_gt} and latitude < #{latitude_lt} and longitude > #{longitude_gt} and longitude < #{longitude_lt}) a
+			LEFT JOIN md_merchant m ON a.stores_id = m.member_id
+		]]>
+		<where>
+			1=1
+			<if test="range != null and range != ''">
+				AND a.distance &lt;= #{range}
+			</if>
+			<if test="area_id != null and area_id != ''">
+				AND a.area_id = #{area_id}
+			</if>
+			<if test="merchant_type != null and merchant_type != ''">
+				AND m.merchant_type = #{merchant_type}
+			</if>
+			<if test="zone_id != null and zone_id != ''">
+				AND m.zone_id = #{zone_id}
+			</if>
+		</where>
+		ORDER BY a.distance ASC
+	</select>
+
+
+	<select id="selectMDStoresBaseInfo" parameterType="Map"
+		resultType="Map">
+		<![CDATA[
+			SELECT
+				s.stores_id 
+				,s.stores_no
+				,s.stores_name
+				,s.stores_type_key
+				,s.business_type_key
+				,s.desc1
+				,s.area_id
+				,a.path as area_desc
+				,s.address
+				,s.longitude
+				,s.latitude
+				,s.contact_person
+				,s.contact_tel
+				,s.neighbor_pic_path as neighbor_pic_path
+			FROM
+				md_stores s
+				left join md_area a on a.area_code = s.area_id
+		]]>
+		<where>
+			s.business_status_key &lt;&gt; 'TDJD_04'
+			<if test="stores_id != null and stores_id != ''">
+				AND s.stores_id=#{stores_id}
+			</if>
+		</where>
+	</select>
+
+	<select id="selectMDStores" parameterType="Map" resultType="MDStores">
+		<![CDATA[
+			SELECT
+				s.stores_id 
+				,s.stores_no
+				,s.stores_name
+				,s.stores_type_key
+				,s.business_type_key
+				,s.desc1
+				,s.area_id
+				,a.path as area_desc
+				,s.address
+				,s.device_no
+				,s.longitude
+				,s.latitude
+				,s.assistant_id
+				,s.is_assistant_locked
+				,s.assistant_expired_date
+				,s.contact_person
+				,s.contact_tel
+				,s.head_pic_path
+				,s.area_size
+				,s.customer_average
+				,s.service_fee
+				,s.business_status_key
+				,s.sys_status
+				,s.registered_date
+				,s.label
+				,s.neighbor_pic_path
+				,s.servcie_range
+				,s.servcie_limit
+				,s.activity_servcie
+				,s.activity_posters
+				,s.activity_pic_info
+				,s.logo_pic_path
+				,s.old_facade_pic_path
+				,s.new_facade_pic_path
+				,s.old_stores_pic_path
+				,s.new_stores_pic_path
+				,s.stores_thumbnail_path
+			FROM
+				md_stores s
+				left join md_area a on a.area_code = s.area_id
+		]]>
+		<where>
+			1=1
+			<if test="member_id != null and member_id != ''">
+				AND s.stores_id=#{member_id}
+			</if>
+			<if test="stores_id != null and stores_id != ''">
+				AND s.stores_id=#{stores_id}
+			</if>
+			<if test="stores_type_key != null and stores_type_key != ''">
+				AND s.stores_type_key=#{stores_type_key}
+			</if>
+			<if test="business_status_neq != null and business_status_neq != ''">
+				AND s.business_status_key &lt;&gt; #{business_status_neq}
+			</if>
+			<if test="business_status_key_in != null">
+				AND s.business_status_key in
+				<foreach item="item" index="index" collection="business_status_key_in"
+					open="(" separator="," close=")">
+					#{item}
+				</foreach>
+			</if>
+			<if test="service_fee_neq != null and service_fee_neq != ''">
+				AND s.service_fee &lt;&gt; #{service_fee_neq}
+			</if>
+			<if test="service_fee != null and service_fee != ''">
+				AND s.service_fee = #{service_fee}
+			</if>
+			<if test="device_no != null and device_no != ''">
+				AND s.device_no=#{device_no}
+			</if>
+			<if test="assistant_expired_date != null and assistant_expired_date != ''">
+				AND DATE_ADD(s.assistant_expired_date ,INTERVAL 3 DAY) &lt;= #{assistant_expired_date}
+			</if>
+			<if test="is_assistant_locked != null and is_assistant_locked != ''">
+				AND s.is_assistant_locked=#{is_assistant_locked}
+				AND s.assistant_id = ""
+			</if>	
+			<if test="stores_like != null and stores_like != ''">
+				AND (s.stores_name like CONCAT('%',#{stores_like},'%') or
+				s.contact_person like CONCAT('%',#{stores_like},'%') or
+				s.contact_tel
+				like CONCAT('%',#{stores_like},'%'))
+			</if>
+		</where>
+		ORDER BY s.registered_date DESC
+	</select>
+
+	<select id="selectMDStoresList" parameterType="Map" resultType="MDStores">
+		<![CDATA[
+			SELECT
+				s.stores_id 
+				,s.stores_no
+				,s.stores_name
+				,s.stores_type_key
+				,s.business_type_key
+				,s.address
+				,s.longitude
+				,s.latitude
+				,s.contact_person
+				,s.contact_tel
+				,s.label
+				,s.neighbor_pic_path
+				,s.logo_pic_path
+				,s.old_facade_pic_path
+				,s.new_facade_pic_path
+				,s.old_stores_pic_path
+				,s.new_stores_pic_path
+			FROM
+				md_stores s
+		]]>
+		<where>
+			s.business_status_key &lt;&gt; 'TDJD_04'
+			<if test="stores_like != null and stores_like != ''">
+				AND (s.stores_name like CONCAT('%',#{stores_like},'%') or
+				s.contact_person like CONCAT('%',#{stores_like},'%') or
+				s.contact_tel
+				like CONCAT('%',#{stores_like},'%'))
+			</if>
+			<if test="stores_id_in != null">
+				AND s.stores_id in
+				<foreach item="item" index="index" collection="stores_id_in"
+					open="(" separator="," close=")">
+					#{item}
+				</foreach>
+			</if>
+		</where>
+		ORDER BY s.registered_date DESC
+	</select>
+
+
+	<select id="selectStageStores" parameterType="Map" resultType="Map">
+		<![CDATA[
+			SELECT
+				is_stage_hyd
+				,is_stage_hpt
+			FROM
+				md_stores
+		]]>
+		<where>
+			<if test="stores_id != null and stores_id != ''">
+				AND stores_id=#{stores_id}
+			</if>
+		</where>
+	</select>
+	
+	
+	<select id="selectNormalStores" parameterType="Map" resultType="MDStores">
+		<![CDATA[
+			SELECT
+				s.stores_id 
+				,s.stores_no
+				,s.stores_name
+				,s.stores_type_key
+				,s.business_type_key
+				,s.business_status_key
+				,s.desc1
+				,s.area_id
+				,a.path as area_desc
+				,s.address
+				,s.longitude
+				,s.latitude
+				,s.contact_person
+				,s.contact_tel
+				,s.service_tel
+				,s.head_pic_path
+				,s.email
+				,s.area_size
+				,s.registered_date
+				,s.label
+				,s.neighbor_pic_path
+				,s.servcie_range
+				,s.servcie_limit
+				,s.activity_servcie
+				,s.activity_posters
+				,s.activity_pic_info
+				,s.logo_pic_path
+				,s.old_facade_pic_path
+				,s.new_facade_pic_path
+				,s.old_stores_pic_path
+				,s.new_stores_pic_path
+				,s.stores_thumbnail_path
+				,s.opening_time
+				,s.deliveried_range
+				,s.over_amount
+				,s.is_stage_hyd
+				,s.is_stage_hpt
+			FROM
+				md_stores s
+				left join md_area a on a.area_code = s.area_id
+		]]>
+		<where>
+			s.business_status_key &lt;&gt; 'TDJD_04'
+			<if test="member_id != null and member_id != ''">
+				AND stores_id=#{member_id}
+			</if>
+			<if test="stores_id != null and stores_id != ''">
+				AND stores_id=#{stores_id}
+			</if>
+			<if test="stores_type_key != null and stores_type_key != ''">
+				AND stores_type_key=#{stores_type_key}
+			</if>
+			<if test="business_status_neq != null and business_status_neq != ''">
+				AND business_status_key &lt;&gt; #{business_status_neq}
+			</if>
+			<if test="business_status_key_in != null">
+				AND business_status_key in
+				<foreach item="item" index="index" collection="business_status_key_in"
+					open="(" separator="," close=")">
+					#{item}
+				</foreach>
+			</if>
+			<if test="service_fee_neq != null and service_fee_neq != ''">
+				AND service_fee &lt;&gt; #{service_fee_neq}
+			</if>
+			<if test="service_fee != null and service_fee != ''">
+				AND service_fee = #{service_fee}
+			</if>
+			<if test="device_no != null and device_no != ''">
+				AND device_no=#{device_no}
+			</if>
+			<if test="stores_like != null and stores_like != ''">
+				AND (stores_name like CONCAT('%',#{stores_like},'%') or
+				contact_person like CONCAT('%',#{stores_like},'%') or
+				contact_tel
+				like CONCAT('%',#{stores_like},'%'))
+			</if>
+		</where>
+		ORDER BY registered_date DESC
+	</select>
+
+	<select id="selectMDStoresDetailForConsumer" parameterType="Map"
+		resultType="Map">
+		SELECT
+		s.stores_id
+		,s.stores_no
+		,s.stores_name
+		,s.stores_type_key
+		,s.business_type_key
+		,s.desc1
+		,s.area_id
+		,a.path as area_desc
+		,s.address
+		,s.longitude
+		,s.latitude
+		,s.contact_person
+		,s.service_tel
+		,s.label
+		,s.neighbor_pic_path
+		,s.activity_servcie
+		,s.activity_posters
+		,s.activity_pic_info
+		,s.new_facade_pic_path
+		,s.new_stores_pic_path
+		,s.stores_thumbnail_path
+		,s.logo_pic_path
+		,s.opening_time
+		,s.deliveried_range
+		,s.over_amount
+		,(CASE ISNULL(fs.stores_id)	WHEN 1	then 'N' ELSE 'Y' END) as favorite_flag
+		FROM md_stores s 
+		left join	md_favorite_store fs on	fs.stores_id=s.stores_id AND fs.consumer_id=#{consumer_id}
+		left join md_area a on a.area_code = s.area_id
+		<where>
+			s.business_status_key &lt;&gt; 'TDJD_04'
+			<if test="stores_id != null and stores_id != ''">
+				AND s.stores_id=#{stores_id}
+			</if>
+		</where>
+	</select>
+
+	<select id="selectMDStoresForServiceFree" parameterType="Map"
+		resultType="MDStores">
+		<![CDATA[
+			SELECT
+				stores_id 
+				,stores_type_key 
+				,contact_person
+				,contact_tel
+			FROM
+				md_stores
+		]]>
+		<where>
+			1=1
+			<if test="business_status_key_in != null">
+				AND business_status_key in
+				<foreach item="item" index="index" collection="business_status_key_in"
+					open="(" separator="," close=")">
+					#{item}
+				</foreach>
+			</if>
+			<if test="stores_id != null and stores_id != ''">
+				AND stores_id=#{stores_id}
+			</if>
+			<if test="stores_type_key != null and stores_type_key != ''">
+				AND stores_type_key=#{stores_type_key}
+			</if>
+			<if test="area_id != null and area_id != ''">
+				AND SUBSTR(area_id FROM 1 FOR #{area_length})=#{area_id}
+			</if>
+		</where>
+	</select>
+
+	<!-- 惠商驿站详情查询，指定相关字段 -->
+	<select id="selectMDStoresBusinessInfoFind" parameterType="Map"
+		resultType="Map">
+		SELECT 
+			stores_id,
+			opening_time,
+			deliveried_range,
+			over_amount
+		FROM
+			md_stores
+		<where>
+			stores_id = #{stores_id}
+		</where>
+	</select>
+
+	<update id="updateMDStores" parameterType="Map">
+		UPDATE md_stores SET
+		modified_date = SYSDATE(),
+		<trim suffixOverrides=",">
+			<if test="head_pic_path != null and head_pic_path != ''">
+				head_pic_path = #{head_pic_path},
+			</if>
+			<if test="longitude != null and longitude != ''">
+				longitude = #{longitude},
+			</if>
+			<if test="latitude != null and latitude != ''">
+				latitude = #{latitude},
+			</if>
+			<if test="neighbor_pic_path != null">
+				neighbor_pic_path = #{neighbor_pic_path},
+			</if>
+			<if test="servcie_range != null and servcie_range != ''">
+				servcie_range = #{servcie_range},
+			</if>
+			<if test="servcie_limit != null and servcie_limit != ''">
+				servcie_limit = #{servcie_limit},
+			</if>
+			<if test="activity_servcie != null">
+				activity_servcie = #{activity_servcie},
+			</if>
+			<if test="activity_posters != null">
+				activity_posters = #{activity_posters},
+			</if>
+			<if test="activity_pic_info != null">
+				activity_pic_info = #{activity_pic_info},
+			</if>
+			<if test="stores_thumbnail_path != null">
+				stores_thumbnail_path = #{stores_thumbnail_path},
+			</if>
+			<if test="service_fee != null and service_fee != ''">
+				service_fee = #{service_fee},
+			</if>
+			<if test="desc1 != null">
+				desc1 = #{desc1},
+			</if>
+			<if test="opening_time != null and opening_time != ''">
+				opening_time = #{opening_time},
+			</if>
+			<if test="deliveried_range != null and deliveried_range != ''">
+				deliveried_range = #{deliveried_range},
+			</if>
+			<if test="over_amount != null and over_amount != ''">
+				over_amount = #{over_amount},
+			</if>
+			<if test="is_stage_hyd != null and is_stage_hyd != ''">
+				is_stage_hyd=#{is_stage_hyd},
+			</if>
+			<if test="is_stage_hpt != null and is_stage_hpt != ''">
+				is_stage_hpt=#{is_stage_hpt},
+			</if>
+			<if test="assistant_id != null and assistant_id != ''">
+				assistant_id=#{assistant_id},
+			</if>
+			<if test="is_assistant_locked != null and is_assistant_locked != ''">
+				is_assistant_locked=#{is_assistant_locked},
+			</if>
+			<if test="assistant_expired_date != null and assistant_expired_date != ''">
+				assistant_expired_date = SYSDATE()
+			</if>
+		</trim>
+		<where>
+			<if test="member_id != null and member_id != ''">
+				AND stores_id=#{member_id}
+			</if>
+			<if test="stores_id != null and stores_id != ''">
+				AND stores_id=#{stores_id}
+			</if>
+			<if test="stores_no != null and stores_no != ''">
+				AND stores_no=#{stores_no}
+			</if>
+		</where>
+	</update>
+
+
+	<update id="updateMDStoresSync" parameterType="Map">
+		UPDATE md_stores SET
+		modified_date = SYSDATE(),
+		<trim suffixOverrides=",">
+			<if test="stores_name != null and stores_name != ''">
+				stores_name = #{stores_name},
+			</if>
+			<if test="contact_person != null and contact_person != ''">
+				contact_person = #{contact_person},
+			</if>
+			<if test="contact_tel != null and contact_tel != ''">
+				contact_tel = #{contact_tel},
+			</if>
+			<if test="service_tel != null and service_tel != ''">
+				service_tel = #{service_tel},
+			</if>
+			<if test="grade_key != null and grade_key != ''">
+				grade_key = #{grade_key},
+			</if>
+			<if test="quota_voucher != null and quota_voucher != ''">
+				quota_voucher = #{quota_voucher},
+			</if>
+			<if test="stores_type_key != null and stores_type_key != ''">
+				stores_type_key = #{stores_type_key},
+			</if>
+			<if test="business_type_key != null and business_type_key != ''">
+				business_type_key = #{business_type_key},
+			</if>
+			<if test="desc1 != null">
+				desc1 = #{desc1},
+			</if>
+			<if test="device_no != null and device_no != ''">
+				device_no = #{device_no},
+			</if>
+			<if test="address != null and address != ''">
+				address = #{address},
+			</if>
+			<if test="area_id != null and area_id != ''">
+				area_id = #{area_id},
+			</if>
+			<if test="label != null and label != ''">
+				label = #{label},
+			</if>
+			<if test="neighbor_pic_path != null and neighbor_pic_path != ''">
+				neighbor_pic_path = #{neighbor_pic_path},
+			</if>
+			<if test="id_card_pic_path != null and id_card_pic_path != ''">
+				id_card_pic_path = #{id_card_pic_path},
+			</if>
+			<if test="certification_pic_path != null and certification_pic_path != ''">
+				certification_pic_path = #{certification_pic_path},
+			</if>
+			<if test="licence_pic_path != null and licence_pic_path != ''">
+				licence_pic_path = #{licence_pic_path},
+			</if>
+			<if test="logo_pic_path != null and logo_pic_path != ''">
+				logo_pic_path = #{logo_pic_path},
+			</if>
+			<if test="old_facade_pic_path != null and old_facade_pic_path != ''">
+				old_facade_pic_path = #{old_facade_pic_path},
+			</if>
+			<if test="new_facade_pic_path != null and new_facade_pic_path != ''">
+				new_facade_pic_path = #{new_facade_pic_path},
+			</if>
+			<if test="old_stores_pic_path != null and old_stores_pic_path != ''">
+				old_stores_pic_path = #{old_stores_pic_path},
+			</if>
+			<if test="new_stores_pic_path != null and new_stores_pic_path != ''">
+				new_stores_pic_path = #{new_stores_pic_path},
+			</if>
+			<if test="sys_status != null and sys_status != ''">
+				sys_status = #{sys_status},
+			</if>
+			<if test="business_status_key != null and business_status_key != ''">
+				business_status_key = #{business_status_key},
+			</if>
+		</trim>
+		<where>
+			stores_id=#{stores_id}
+		</where>
+	</update>
+
+	<update id="updateMDStoresAssistant" parameterType="Map">
+		UPDATE md_stores
+		SET modified_date = SYSDATE(),
+		<trim suffixOverrides=",">
+			<if test="assistant_id != null">
+				assistant_id = #{assistant_id},
+			</if>
+			<if test="assistant != null">
+				assistant = #{assistant},
+			</if>
+		</trim>
+		<where>
+			stores_id=#{stores_id}
+		</where>
+	</update>
+
+	<delete id="deleteMDStoresRecommend" parameterType="Map">
+		DELETE FROM
+		md_stores_recommend
+		where area_id=#{area_id}
+	</delete>
+	
+	
+	<select id="selectMDStoresForDefault" parameterType="Map" resultType="MDStores">
+		<![CDATA[
+			SELECT
+				s.stores_id 
+				,s.stores_no
+				,s.stores_name
+				,s.contact_tel
+			FROM
+				md_stores s
+		]]>
+		<where>
+			1=1		
+			<if test="contact_tel != null and contact_tel != ''">
+				AND s.contact_tel = #{contact_tel}
+			</if>
+		</where>
+	</select>
+	
+</mapper>

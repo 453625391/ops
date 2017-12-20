@@ -1,0 +1,176 @@
+.title{
+	width: 9.466667rem;
+	overflow: hidden;
+	margin:0.266667rem auto 0;
+	line-height: 0.6rem;
+	color: #666666;
+}
+[data-dpr="1"] .title{
+	font-size: 14px;
+}
+[data-dpr="2"] .title{
+	font-size: 28px;
+}
+[data-dpr="3"] .title{
+	font-size: 42px;
+}
+.txt-list{
+	width: 9.466667rem;
+	overflow: hidden;
+	margin:0.6rem auto 0;
+}
+.txt-list li{
+	overflow: hidden;
+}
+.txt-list li div{
+	color: #333333;
+	height: 1.333333rem;
+	line-height: 1.333333rem;
+	border-bottom: solid 1px #dddddd;
+}
+.txt-list li div em{
+	float: right;
+	top: 0.333333rem;
+	border-radius: 50%;
+	width: 0.666667rem;
+	height: 0.666667rem;
+	margin: 2px;
+	border: 1px solid;
+	color: #B9B9B9;
+	transition: all 0.2s ease 0s;
+	box-sizing: border-box;
+	display: inline-block;
+	vertical-align: middle;
+	position: relative;
+	font-style: normal;
+	text-align: left;
+	text-indent: -9999px;
+	direction: ltr;
+	transform: rotate(90deg);
+	/*width: 0.533333rem;
+	height: 0.533333rem;
+	float: right;
+	background: url(../image/but-s.png) #000;
+	vertical-align: middle;
+	margin-top: 0.333333rem;
+	margin-right: 0.133333rem;*/
+}
+.txt-list li div em:before{
+	width: 0.266667rem;
+	right: 0.2rem;
+	content: "";
+	pointer-events: none;
+	top: 0.133333rem;
+	transform: rotate(45deg);
+	height: 1px;
+	position: absolute;
+	bottom: 0.133333rem;
+	margin: auto 0px;
+	box-shadow: 0px 0px 0px 32px inset;
+	transform-origin: right center 0px;
+	font-style: normal;
+	color: #B9B9B9;
+	text-align: left;
+	text-indent: -9999px;
+	direction: ltr;
+}
+.txt-list li div em:after{
+	width: 0.236667rem;
+	right: 0.2rem;
+	content: "";
+	pointer-events: none;
+	top: 0.133333rem;
+	transform: rotate(-45deg);
+	height: 1px;
+	position: absolute;
+	bottom: 0.133333rem;
+	margin: auto 0px;
+	box-shadow: 0px 0px 0px 32px inset;
+	transform-origin: right center 0px;
+	font-style: normal;
+	color: #B9B9B9;
+	text-align: left;
+	text-indent: -9999px;
+	direction: ltr;
+}
+.txt-list li div em.but-on{
+	border-radius: 50%;
+	width: 0.666667rem;
+	height: 0.666667rem;
+	margin: 2px;
+	border: 1px solid;
+	transition: all 0.2s ease 0s;
+	box-sizing: border-box;
+	display: inline-block;
+	vertical-align: middle;
+	position: relative;
+	font-style: normal;
+	color: #B9B9B9;
+	text-align: left;
+	text-indent: -9999px;
+	direction: ltr;
+	transform: rotate(-90deg);
+}
+.txt-list li div em.but-on:before{
+	width: 0.266667rem;
+	right: 0.2rem;
+	content: "";
+	pointer-events: none;
+	top: 0.133333rem;
+	transform: rotate(45deg);
+	height: 1px;
+	position: absolute;
+	bottom: 0.133333rem;
+	margin: auto 0px;
+	box-shadow: 0px 0px 0px 32px inset;
+	transform-origin: right center 0px;
+	font-style: normal;
+	color: #B9B9B9;
+	text-align: left;
+	text-indent: -9999px;
+	direction: ltr;
+}
+.txt-list li div em.but-on:after{
+	width: 0.266667rem;
+	right: 0.2rem;
+	content: "";
+	pointer-events: none;
+	top: 0.133333rem;
+	transform: rotate(-45deg);
+	height: 1px;
+	position: absolute;
+	bottom: 0.133333rem;
+	margin: auto 0px;
+	box-shadow: 0px 0px 0px 32px inset;
+	transform-origin: right center 0px;
+	font-style: normal;
+	color: #B9B9B9;
+	text-align: left;
+	text-indent: -9999px;
+	direction: ltr;
+}
+[data-dpr="1"] .txt-list li div{
+	font-size: 18px;
+}
+[data-dpr="2"] .txt-list li div{
+	font-size: 36px;
+}
+[data-dpr="3"] .txt-list li div{
+	font-size: 54px;
+}
+.txt-list li p{
+	color: #666666;
+	line-height: 0.6rem;
+	display: none;
+	padding-top: 0.133333rem;
+	padding-bottom: 0.266667rem;
+}
+[data-dpr="1"] .txt-list li p{
+	font-size: 14px;
+}
+[data-dpr="2"] .txt-list li p{
+	font-size: 28px;
+}
+[data-dpr="3"] .txt-list li p{
+	font-size: 42px;
+}

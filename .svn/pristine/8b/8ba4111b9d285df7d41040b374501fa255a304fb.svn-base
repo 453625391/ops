@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <% include ../../commonHead.html %>
+    <title>选择</title>
+    <link rel="stylesheet" type="text/css" href="/css/interests/chooseTicket.css?v20170314">
+</head>
+<body>
+    <ul id="ticketContainer">
+        <div class="loading">加载中...</div>
+        <script type="text/html" id="ticketTpl">
+            {{each list as ticket i}}
+            <li class="ticket">
+                <div class="ticket-info" benefit-id="{{ticket.benefit_id}}">
+                    <div class="left-box">
+                        <p class="type">{{ticket.benefit_type == 'free_coupon' ? '免单券' : ''}}</p>
+                    </div>
+                    <div class="right-box">
+                        <p class="source">{{ticket.remark || '系统赠送'}}</p>
+                        <p class="code">{{ticket.private_key}}</p>
+                        <div class="bottom-txt">
+                            <span class="limit-price">限制金额<em>{{ticket.limited_price}}</em></span>
+                            <span class="expire-date">截止日期<em>{{ticket.expired_date.substring(0, 10).replace(/-/g, '/')}}</em></span>
+                        </div>
+                    </div>
+                </div>
+            </li>
+            {{/each}}
+        </script>
+    </ul>
+    <div class="no-record">
+        <img src="/image/interests/no-ticket.png" />
+        <p>暂无可用券</p>
+    </div>
+    <div class="footer-bar">
+        <button onclick="window.history.go(-1);" class="btn cancel">取消</button>
+        <button href="javascript: void(0);" class="btn fr" id="getNow">确定</button>
+    </div>
+    <div class="alert-layer">
+        <div class="alert-wrap">
+            <p class="msg"></p>
+            <a href="" class="btn">确定</a>
+        </div>
+    </div>
+</body>
+<script type="text/javascript">
+$(function() {
+    loadTickets();
+
+    $('#ticketContainer').on('click', '.ticket-info', function() {
+        $('.ticket-info').removeClass('on');
+        $(this).addClass('on');
+        $('#getNow').addClass('confirm');
+    });
+
+    $('#getNow').click(function() {
+        var btn = this;
+        var $ticket = $('.ticket-info.on').eq(0);
+        if($ticket.length == 0) {
+            return;
+        }
+        var params = {
+            activity_id: '<%=requestParams.activity_id%>',
+            goods_id: '<%=requestParams.goods_id%>',
+            member_id: '<%=requestParams.member_id%>',
+            member_grade: '<%=requestParams.grade%>',
+            member_mobile: '<%=requestParams.mobile%>',
+            benefit_id: $ticket.attr('benefit-id')
+        };
+        // 确认领取商品
+        $.ajax({
+            type: 'POST',
+            url: '/openapi/h5/c/interests/getGoods',
+            data: params,
+            beforeSend: function() {
+                $(btn).text('领取中');
+                $(btn).attr('disabled', true);
+            },
+            success: function(data) {
+                var jsonData = typeof data == 'string' ? JSON.parse(data) : data;
+                if(jsonData.rsp_code == 'succ') {
+                    $('.alert-layer .msg').text('恭喜您，领取成功！');
+                    $('.alert-layer .btn').attr('href', '/openapi/h5/c/interests?member_id=<%=requestParams.member_id%>&mobile=<%=requestParams.mobile%>');
+                    $('.alert-layer').show();
+                } else {
+                    $('.alert-layer .msg').text(jsonData.error_msg || '领取失败');
+                    $('.alert-layer .btn').attr('href', 'javascript: $(".alert-layer").hide();');
+                    $('.alert-layer').show();
+                }
+            },
+            complete: function() {
+                $(btn).text('确定');
+                $(btn).attr('disabled', false);
+            }
+        });
+    });
+});
+
+// 获取券
+function loadTickets() {
+    $.ajax({
+        type: 'POST',
+        url: '/openapi/h5/c/interests/queryTickets',
+        data: {
+            member_id: '<%=requestParams.member_id%>'
+        },
+        beforeSend: function() {
+            $('.loading').show();
+        },
+        success: function(data) {
+            var jsonData = typeof data == 'string' ? JSON.parse(data) : data;
+            if(!jsonData.ticketList || jsonData.ticketList.length == 0) {
+                $('.no-record').show();
+            }
+            var tdata = {
+                list: jsonData.ticketList
+            };
+            var html = template('ticketTpl', tdata);
+            $('#ticketContainer').append(html);
+        },
+        complete: function() {
+            $('.loading').remove();
+        }
+    });
+}
+</script>
+</html>

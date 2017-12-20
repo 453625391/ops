@@ -1,0 +1,33 @@
+/* 默认样式设定 */
+* {
+    margin: 0;
+    padding: 0;
+    font-size: 16px;
+    font-family: Arial, 'Microsoft Yahei', '微软雅黑', Helvetica, sans-serif;
+}
+html {
+    height: 100%;
+    min-height: 100%;
+}
+body {
+    height: 100%;
+    min-height: 100%;
+    width: 100%;
+}
+li {
+    list-style: none;
+}
+a{ text-decoration: none;}
+
+.main{ border:solid 1px #ddd; width: 1000px; margin:150px auto 0; padding:20px;}
+.nav-ul{ overflow: hidden; text-align:center; margin:30px 0;}
+.nav-ul li a{ background: #efefef;float: left; font-size: 24px; color: #999; width: 135px; height: 135px; line-height: 135px; border:solid 1px #efefef; margin:20px 98px; border-radius: 10px; text-align:center;}
+.nav-ul li a:hover{ background: #80D346; color: #fff; border:solid 1px #80D346;}
+.main h4{ color: #666;border-bottom:dashed 1px #ddd; padding-bottom: 10px; font-size: 20px; font-weight: normal; margin-bottom: 20px;}
+.tab{ margin-bottom: 25px;}
+.tab td{ padding: 10px 0;  font-size: 14px; color: #666}
+.tab input,.tab select,textarea{ height: 30px; border:solid 1px #ddd;}
+.tab select{ width: 120px;}
+textarea{ width: 500px; height: 100px;}
+.tab input[type="button"]{ width: 100px; height: 35px; background: #F96116; color: #fff; border:none; border-radius: 3px; cursor: pointer;}
+.xx{ width: 1000px; margin-bottom: 25px; margin-top: 15px;}

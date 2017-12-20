@@ -1,0 +1,13 @@
+<template name="doubleGoods">
+	<navigator url="/pages/detail/detail?goods_id={{goods_id}}">
+		<view class="double-goods">
+			<view>
+				<image class="goods-pic" src="{{pic_info_url}}"></image>
+			</view>
+			<view class="txt-wrap">
+				<view class="tit">{{title}}<text class="tag tb">淘宝</text></view>
+				<view class="price">到手价<text class="unit">¥</text><text class="money">{{discount_price}}</text></view>
+			</view>
+		</view>
+	</navigator>
+</template>

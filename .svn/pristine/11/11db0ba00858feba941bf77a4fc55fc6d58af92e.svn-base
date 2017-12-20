@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <% include ../commonHead.html %>
+    <title>提现规则</title>
+    <style type="text/css">
+        .main {
+            color: #333;
+            padding: 0.4rem 0.266667rem;
+        }
+        .main p {
+            margin: 0.133333rem 0;
+        }
+        [data-dpr="1"] .main p {
+            font-size: 16px;
+            line-height: 22px
+        }
+        [data-dpr="2"] .main p {
+            font-size:32px;
+            line-height: 44px;
+        }
+        [data-dpr="3"] .main p {
+            font-size: 42px;
+        }
+    </style>
+</head>
+<body>
+    <div class="main">
+        <p>【提现】是指将您当前电子账户上的零钱转账至您的银行账户，请按照如下指引完成后续操作：</p>
+        <p>1、首次提现需要您提供真实的银行账号信息，请按照要求通过【用户反馈】功能完成银行卡绑定，此功能不会要求从银行中扣款；</p>
+        <p>2、零钱余额超过100元才可以申请提现，但可以一次性提取全部余额。为避免对账混乱，请尽量不要频繁小额提现；</p>
+        <p>3、提现申请后您的余额会立即发生变更，由于涉及跨银行操作，一般三个工作日内可到银行账。</p>
+    </div>
+</body>
+</html>

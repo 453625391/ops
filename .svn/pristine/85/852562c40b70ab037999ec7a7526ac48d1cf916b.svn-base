@@ -1,0 +1,321 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.meitianhui.goods.dao.PPActivityDao">
+
+
+	<insert id="insertPPActivityDetail" parameterType="PPActivityDetail">
+		INSERT INTO
+		pp_activity_detail (
+		detail_id
+		,activity_id
+		,stores_id
+		,stores_json_data
+		,acreage
+		,dms
+		,pic_json_data
+		,is_chosen
+		,created_date
+		,modified_date
+		,remark
+		)
+		VALUES (
+		#{detail_id}
+		,#{activity_id}
+		,#{stores_id}
+		,#{stores_json_data}
+		,#{acreage}
+		,#{dms}
+		,#{pic_json_data}
+		,#{is_chosen}
+		,#{created_date}
+		,#{modified_date}
+		,#{remark}
+		)
+	</insert>
+
+
+
+	<insert id="insertPPActivity" parameterType="PPActivity">
+		INSERT
+		INTO
+		pp_activity (
+		activity_id
+		,title
+		,desc1
+		,json_data
+		,start_date
+		,duration
+		,end_date
+		,total_num
+		,fee
+		,status
+		,operator
+		,created_date
+		,modified_date
+		,remark
+		)
+		VALUES (
+		#{activity_id}
+		,#{title}
+		,#{desc1}
+		,#{json_data}
+		,#{start_date}
+		,#{duration}
+		,#{end_date}
+		,#{total_num}
+		,#{fee}
+		,#{status}
+		,#{operator}
+		,#{created_date}
+		,#{modified_date}
+		,#{remark}
+		)
+	</insert>
+	
+	
+
+	<select id="selectPPActivity" parameterType="Map" resultType="Map">
+		<![CDATA[
+			SELECT
+			 pa.activity_id
+			,pa.title
+			,pa.desc1
+			,pa.json_data
+			,pa.start_date
+			,pa.duration
+			,pa.end_date
+			,pa.total_num
+			,pa.actual_total_num
+			,pa.fee
+			,pa.status
+			,pa.operator
+			,pa.created_date
+			,pa.modified_date
+			,pa.remark
+			FROM
+				pp_activity pa
+		]]>
+		<where>
+			1=1
+			<if test="activity_id != null and activity_id != ''">
+				AND pa.activity_id = #{activity_id}
+			</if>
+			<if test="goods_like != null and goods_like != ''">
+				AND (pa.title like CONCAT('%',#{goods_like},'%')
+			</if>
+			<if test="start_date != null and start_date != ''">
+				AND pa.start_date &gt;= #{start_date}
+			</if>
+			<if test="end_date != null and end_date != ''">
+				AND pa.end_date &lt;= #{end_date}
+			</if>
+			<if test="status != null and status != ''">
+				AND #{status} = pa.status
+			</if>
+		</where>
+		ORDER BY pa.created_date DESC
+	</select>
+
+	<select id="selectPPActivityForWeb" parameterType="Map"
+		resultType="Map">
+		<![CDATA[
+			SELECT
+			 pa.activity_id
+			,pa.title
+			,pa.desc1
+			,pa.json_data
+			,pa.start_date
+			,pa.duration
+			,pa.end_date
+			,pa.total_num
+			,pa.actual_total_num
+			,pa.fee
+			,pa.status
+			,pa.created_date
+			,(SELECT count(pad.stores_id) from pp_activity_detail pad WHERE pad.activity_id=pa.activity_id AND pad.stores_id=#{stores_id}) as entry
+			FROM
+				pp_activity pa
+		]]>
+		<where>
+			1=1
+			<if test="activity_id != null and activity_id != ''">
+				AND pa.activity_id = #{activity_id}
+			</if>
+			<if test="goods_like != null and goods_like != ''">
+				AND (pa.title like CONCAT('%',#{goods_like},'%')
+			</if>
+			<if test="start_date != null and start_date != ''">
+				AND DATE_FORMAT(pa.start_date, '%Y-%m-%d') &gt;=
+				DATE_FORMAT(#{start_date}, '%Y-%m-%d')
+			</if>
+			<if test="end_date != null and end_date != ''">
+				AND DATE_FORMAT(pa.end_date, '%Y-%m-%d') &lt;=
+				DATE_FORMAT(#{end_date}, '%Y-%m-%d')
+			</if>
+			<if test="status != null and status != ''">
+				AND pa.status = #{status}
+			</if>
+		</where>
+		ORDER BY pa.created_date DESC
+	</select>
+
+	<select id="selectPPActivityDetail" parameterType="Map"
+		resultType="Map">
+		<![CDATA[
+			SELECT
+			 detail_id
+			,activity_id
+			,stores_id
+			,stores_json_data
+			,acreage
+			,dms
+			,pic_json_data
+			,is_chosen
+			,created_date
+			,modified_date
+			,remark
+			FROM
+				pp_activity_detail
+		]]>
+		<where>
+			1=1
+			<if test="detail_id != null and detail_id != ''">
+				AND detail_id = #{detail_id}
+			</if>
+			<if test="activity_id != null and activity_id != ''">
+				AND activity_id = #{activity_id}
+			</if>
+			<if test="stores_id != null and stores_id != ''">
+				AND stores_id = #{stores_id}
+			</if>
+			<if test="start_date != null and start_date != ''">
+				AND created_date &gt;= #{start_date}
+			</if>
+			<if test="end_date != null and end_date != ''">
+				AND created_date &lt;= date_add(#{end_date},interval 1
+				day)
+			</if>
+			<if test="is_chosen != null and is_chosen != ''">
+				AND is_chosen = #{is_chosen}
+			</if>
+		</where>
+		ORDER BY created_date DESC
+	</select>
+	
+	
+	
+	<update id="updatePPActivity" parameterType="Map">
+		UPDATE pp_activity SET
+		<trim suffixOverrides=",">
+			modified_date = SYSDATE(),
+			<if test="status != null and status != ''">
+				status = #{status},
+			</if>
+			<if test="title != null and title != ''">
+				title = #{title},
+			</if>
+			<if test="desc1 != null and desc1 != ''">
+				desc1 = #{desc1},
+			</if>
+			<if test="json_data != null and json_data != ''">
+				json_data = #{json_data},
+			</if>
+			<if test="start_date != null and start_date != ''">
+				start_date = #{start_date},
+			</if>
+			<if test="duration != null and duration != ''">
+				duration = #{duration},
+			</if>
+			<if test="end_date != null and end_date != ''">
+				end_date = #{end_date},
+			</if>
+			<if test="total_num != null and total_num != ''">
+				total_num = #{total_num},
+			</if>
+			<if test="fee != null and fee != ''">
+				fee = #{fee},
+			</if>
+			<if test="operator != null and operator != ''">
+				operator = #{operator},
+			</if>
+			<if test="remark != null and remark != ''">
+				remark = #{remark},
+			</if>
+		</trim>
+		<where>
+			1=1
+			<if test="activity_id != null and activity_id != ''">
+				AND activity_id = #{activity_id}
+			</if>
+			<if test="modified_date != null and modified_date != ''">
+				AND modified_date = #{modified_date}
+			</if>
+		</where>
+	</update>
+
+	<update id="updatePPActivityNum" parameterType="Map">
+		UPDATE pp_activity SET
+		<trim suffixOverrides=",">
+			modified_date = SYSDATE(),
+			<if test="apply_num != null and apply_num != ''">
+				actual_total_num = actual_total_num + #{apply_num} ,
+			</if>
+		</trim>
+		<where>
+			1=1
+			<if test="activity_id != null and activity_id != ''">
+				AND activity_id = #{activity_id}
+			</if>
+			<if test="modified_date != null and modified_date != ''">
+				AND modified_date = #{modified_date}
+			</if>
+		</where>
+	</update>
+
+	<update id="updatePPActivityDetail" parameterType="Map">
+		UPDATE pp_activity_detail SET
+		<trim suffixOverrides=",">
+			modified_date = SYSDATE(),
+			<if test="chosen != null and chosen != ''">
+				is_chosen = #{chosen},
+			</if>
+		</trim>
+		<where>
+			1=1
+			<if test="detail_id != null and detail_id != ''">
+				AND detail_id = #{detail_id}
+			</if>
+			<if test="activity_id != null and activity_id != ''">
+				AND activity_id = #{activity_id}
+			</if>
+			<if test="modified_date != null and modified_date != ''">
+				AND modified_date = #{modified_date}
+			</if>
+		</where>
+	</update>
+	
+
+	<delete id="deletePPActivityDetail" parameterType="Map">
+		DELETE FROM pp_activity_detail
+		<where>
+			1=1
+			<if test="detail_id != null and detail_id != ''">
+				AND detail_id = #{detail_id}
+			</if>
+			<if test="activity_id != null and activity_id != ''">
+				AND activity_id = #{activity_id}
+			</if>
+			<if test="modified_date != null and modified_date != ''">
+				AND modified_date = #{modified_date}
+			</if>
+		</where>
+	</delete>
+
+	<delete id="deletePPActivity" parameterType="Map">
+		DELETE FROM
+		pp_activity WHERE activity_id = #{activity_id}
+	</delete>
+	
+
+
+</mapper>

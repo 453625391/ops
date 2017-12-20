@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.meitianhui.order.dao.TsActivitySettlementDao">
+
+	<insert id="insertTsActivitySettlement" parameterType="TsActivitySettlement">
+		INSERT INTO 
+		ts_activity_settlement (
+		settlement_id
+		,activity_id
+		,activity_no
+		,goods_id
+		,goods_code
+		,goods_title
+		,market_price
+		,discount_price
+		,settled_price
+		,sale_price
+		,amount
+		,desc1
+		,voucher_desc
+		,member_mobile
+		,settled_date
+		,created_date
+		,modified_date
+		)
+		VALUES (
+		#{settlement_id}
+		,#{activity_id}
+		,#{activity_no}
+		,#{goods_id}
+		,#{goods_code}
+		,#{goods_title}
+		,#{market_price}
+		,#{discount_price}
+		,#{settled_price}
+		,#{sale_price}
+		,#{amount}
+		,#{desc1}
+		,#{voucher_desc}
+		,#{member_mobile}
+		,#{settled_date}
+		,#{created_date}
+		,#{modified_date}
+		)
+	</insert>
+
+
+</mapper>

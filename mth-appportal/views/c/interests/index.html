@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <% include ../../commonHead.html %>
+    <title>会员权益</title>
+    <link rel="stylesheet" type="text/css" href="/css/interests/index.css?v20170314">
+    <script type="text/javascript" src="/js/third-part/JsBarcode.all.min.js"></script>
+</head>
+<body style="padding-top: 0;">
+    <!-- <div class="tab-container">
+        <div class="tab-wrap">
+            <a href="javascript: void(0);" hash="goods" class="tab on">推荐使用</a>
+            <a href="javascript: void(0);" hash="tickets" class="tab">我的权益</a>
+        </div>
+    </div> -->
+
+    <div class="router-block router-goods">
+        <ul id="goodsContainer">
+            <script type="text/html" id="goodsTpl">
+                {{each list as goods i}}
+                <li class="goods-box">
+                    <a href="/openapi/h5/c/interests/detail?activity_id={{goods.activity_id}}&goods_id={{goods.goods_id}}&member_id=<%=requestParams.member_id%>&mobile=<%=requestParams.mobile%>&grade=<%=grade%>&limited_grade={{goods.limited_grade}}" class="goods">
+                        <div class="left-box">
+                            <img src="{{goods.picUrlArr[0]}}" />
+                            {{if goods.sale_qty <= 0}}
+                            <div class="soldout-wrap">
+                                <img src="/image/common/soldout.png" />
+                            </div>
+                            {{/if}}
+                        </div>
+                        <div class="right-box">
+                            <!-- <div><span class="tit">{{goods.title}}</span><span style="float:right;text-decoration: line-through;font-weight:bold;">市场价：{{goods.market_price}}</span></div>
+                            <div><span class="goods-tit">{{goods.goods_title}}</span><span style="float:right;font-weight:bold;color:#ff0000;"> 积分：<span></div> -->
+
+                            <p class="tit">{{goods.title}}</p>
+                            <!-- <p class="goods-tit">{{goods.goods_title}}</p> -->
+
+                            <!-- <p class="num">数量：<i>{{goods.sale_qty}}</i></p> -->
+                            <div class="tit-jf">
+                              <span style="font-size:0.53rem;color:#ff4242">{{goods.limited_point}}</span><span style="font-size:0.373333rem;color:#ff4242">积分</span>
+                              <span style="font-size:0.266666rem;color:#999;text-decoration: line-through;">市场价 ￥{{goods.market_price}}</span>
+                            </div>
+                              <span class="get-btn {{if goods.limited_grade > <%=grade%> || goods.sale_qty <= 0 }}disabled{{/if}}">马上抢</span>
+
+<!-- || goods.limited_point <  <%= %> -->
+                        </div>
+                    </a>
+                </li>
+                {{/each}}
+            </script>
+        </ul>
+        <div class="no-record">
+            <!-- <img src="/image/interests/no-content.png" />
+            <p>暂无活动</p> -->
+            <img src="/image/common/not-found-content.png" />
+            <p>没找到内容.....</p>
+        </div>
+    </div>
+    <div class="router-block router-tickets" style="display: none;">
+        <ul id="ticketContainer">
+            <!-- <li class="ticket" data-code="123456789">
+                <div class="ticket-info">
+                    <div class="left-box">
+                        <p class="type">免单券</p>
+                    </div>
+                    <div class="right-box">
+                        <p class="source">系统赠送</p>
+                        <p class="code">123456789</p>
+                        <div class="bottom-txt">
+                            <span class="limit-price">限制金额<em>100</em></span>
+                            <span class="expire-date">截止日期<em>2017/03/10</em></span>
+                        </div>
+                    </div>
+                </div>
+            </li> -->
+            <script type="text/html" id="ticketTpl">
+                {{each list as ticket i}}
+                <li class="ticket" data-code="{{ticket.private_key}}">
+                    <div class="ticket-info">
+                        <div class="left-box">
+                            <p class="type">{{ticket.benefit_type == 'free_coupon' ? '免单券' : ''}}</p>
+                        </div>
+                        <div class="right-box">
+                            <p class="source">{{ticket.remark || '系统赠送'}}</p>
+                            <p class="code">{{ticket.private_key}}</p>
+                            <div class="bottom-txt">
+                                <span class="limit-price">限制金额<em>{{ticket.limited_price}}</em></span>
+                                <span class="expire-date">截止日期<em>{{ticket.expired_date.substring(0, 10).replace(/-/g, '/')}}</em></span>
+                            </div>
+                        </div>
+                    </div>
+                </li>
+                {{/each}}
+            </script>
+        </ul>
+        <div class="no-record">
+            <!-- <img src="/image/interests/no-ticket.png" />
+            <p>暂无可用券</p> -->
+            <img src="/image/common/not-found-ticket.png" />
+            <p>没找到券.....</p>
+        </div>
+    </div>
+    <div id="barcodeLayer">
+        <div class="barcodeWrap">
+            <h1 class="tit">条码验证</h1>
+            <img id="barcode"/>
+            <a href="javascript: void(0):" class="close"></a>
+        </div>
+    </div>
+</body>
+<script type="text/javascript">
+$(function() {
+    // 点击tab
+    $('.tab').click(function() {
+        window.scrollTo(0,0);
+        var hash = $(this).attr('hash');
+        $('.router-block').hide();
+        $('.router-'+hash).show();
+        $('.tab').removeClass('on');
+        $('.tab[hash="'+hash+'"]').addClass('on');
+    });
+
+    // 点击券查看条形码
+    $('#ticketContainer').on('click', '.ticket', function() {
+        var code = $(this).attr('data-code');
+        $('#barcodeLayer').show();
+        JsBarcode('#barcode', code, {
+            height: 100
+        });
+    });
+
+    // 关闭条形码
+    $('.close').click(function() {
+        $('#barcodeLayer').hide();
+    });
+
+    loadTickets();
+    new AutoLoader().load(function() {
+        var hash = window.location.hash.substring(1) || 'goods';
+        if (hash == 'goods') {
+            loadGoods();
+        }
+    });
+});
+
+var J = {
+    page_no: "1",
+    page_size: "5",
+    hasMore : true,
+    isLoading : false
+}
+
+// 获取商品
+function loadGoods() {
+    if(J.hasMore && !J.isLoading) {
+        $.ajax({
+            type: 'POST',
+            url: '/openapi/h5/c/interests/queryGoods',
+            data: {
+                page_no: J.page_no,
+                page_size: J.page_size
+            },
+            beforeSend: function() {
+                J.isLoading = true;
+            },
+            success: function(data) {
+                var jsonData = typeof data == 'string' ? JSON.parse(data) : data;
+                if(jsonData.goodsList.length == 0) {
+                    J.hasMore = false;
+                    if(J.page_no == 1) {
+                        $('.router-goods .no-record').show();
+                    }
+                    return;
+                }
+                J.page_no++;
+                var tdata = {
+                    list: jsonData.goodsList
+                };
+                var html = template('goodsTpl', tdata);
+                $('#goodsContainer').append(html);
+            },
+            complete: function() {
+                J.isLoading = false;
+            }
+        });
+    }
+}
+
+// 获取券
+function loadTickets() {
+    $.ajax({
+        type: 'POST',
+        url: '/openapi/h5/c/interests/queryTickets',
+        data: {
+            member_id: '<%=requestParams.member_id%>'
+        },
+        success: function(data) {
+            var jsonData = typeof data == 'string' ? JSON.parse(data) : data;
+            if(!jsonData.ticketList || jsonData.ticketList.length == 0) {
+                $('.router-tickets .no-record').show();
+            }
+            var tdata = {
+                list: jsonData.ticketList
+            };
+            var html = template('ticketTpl', tdata);
+            $('#ticketContainer').append(html);
+        }
+    });
+}
+</script>
+</html>

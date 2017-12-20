@@ -1,0 +1,349 @@
+
+body {
+	font-weight: 300;
+	width: 10rem;
+	margin: 0 auto;
+    background-color: #f3f6f5;
+    padding-top: 1.586667rem;
+}
+.tab-container {
+	width: 100%;
+	position: fixed;
+	left: 0;
+	top: 0;
+	overflow: hidden;
+	background-color: #f3f6f5;
+	z-index: 99;
+}
+.tab-wrap {
+	width: 9.466667rem;
+	height: 1.066667rem;
+	margin: 0.266667rem auto;
+	background-color: #fff;
+	display: flex;
+	position: relative;
+}
+.tab-wrap:before {
+	content: " ";
+	width: 0.026667rem;
+	height: 0.533333rem;
+	background-color: #f3f6f5;
+	position: absolute;
+	left: 50%;
+	top: 0.266667rem;
+}
+.tab-container .tab {
+	flex: 1;
+	text-align: center;
+	line-height: 1.066667rem;
+	color: #999999;
+	font-size: 0.4rem;
+	font-weight: normal;
+}
+.tab-container .tab.on {
+	color: #ff4242;
+}
+.router-goods {
+	width: 10rem;
+	background: #f3f6f5;
+	overflow: hidden;
+	margin: 0 auto;
+}
+.goods {
+	display: block;
+	text-decoration: none;
+	padding: 0.266667rem;
+	background-color: #fff;
+	margin-bottom: 0.133333rem;
+	overflow: hidden;
+}
+.goods .left-box, .goods .left-box img {
+	float: left;
+	/*width: 2.4rem;
+	height: 2.4rem;*/
+	width: 2.666666rem;
+	height: 2.666666rem;
+	display: block;
+}
+.goods .left-box {
+	position: relative;
+}
+[data-dpr="1"] .goods .left-box {
+	border: 1px solid #f4f4f4;
+}
+[data-dpr="2"] .goods .left-box {
+	border: 2px solid #f4f4f4;
+}
+[data-dpr="3"] .goods .left-box {
+	border: 3px solid #f4f4f4;
+}
+.goods .left-box .soldout-wrap {
+	width: 2.666666rem;
+	height: 2.666666rem;
+	position: absolute;
+	top: 0;
+	left: 0;
+	background-color: rgba(0, 0, 0, 0.3)
+}
+.goods .left-box .soldout-wrap img {
+	width: 1.866667rem;
+	height: 1.866667rem;
+	margin-top: 0.266667rem;
+	margin-left: 0.266667rem;
+}
+.goods .right-box {
+	float: left;
+	margin-left: 0.266667rem;
+	/*width: 6.6rem;
+	height: 2.4rem;*/
+	/*width: auto;*/
+	height: 2.66667rem;
+	/*padding-left: 0.4rem;*/
+	position: relative;
+}
+.goods .right-box .tit {
+	color: #333;
+	font-size: 0.4rem;
+	line-height: 0.5rem;
+	height: 1rem;
+	font-weight: normal;
+	margin-top: 0.2rem;
+	/*margin-top: 1rem;*/
+	margin-bottom: 0.133333rem;
+	/*overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;*/
+	width: 6.4rem;
+	display: -webkit-box;
+	-webkit-box-orient: vertical;
+	-webkit-line-clamp: 2;
+	overflow: hidden;
+}
+.goods .right-box .goods-tit {
+	color: #666;
+	font-size: 0.373333rem;
+	line-height: 0.48rem;
+	/*height: 0.48rem;
+	overflow: hidden;*/
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+.goods .right-box .num {
+	position: absolute;
+	left: 0.4rem;
+	bottom: 0.106667rem;
+	color: #858585;
+	font-size: 0.32rem;
+	line-height: 0.4rem;
+}
+.goods .right-box .num i {
+	color: #333;
+}
+.goods .right-box .get-btn {
+	width: 1.86666rem;
+	height: 0.74rem;
+	line-height: 0.74rem;
+	background-color: #ff4242;
+	color: #fff;
+	font-size: 0.373333rem;
+	text-align: center;
+	border-radius: 0.1066rem;
+	display: block;
+	position: absolute;
+	right: 0;
+	bottom: 0;
+}
+.tit-jf{
+	position: absolute;
+	left: 0;
+	bottom: 0;
+	line-height: 0.74rem;
+}
+.goods .right-box .get-btn.disabled {
+	color: #666;
+	background-color: #eee;
+}
+.ticket {
+	width: 9.48rem;
+	height: 3.64rem;
+	margin: 0 auto;
+	margin-bottom: 0.4rem;
+	background-color: #f3f6f5;
+	position: relative;
+}
+.ticket .ticket-info {
+	width: 9.48rem;
+	height: 3.64rem;
+	color: #fff;
+	background-color: #F96844;
+	border-radius: 0.133333rem;
+	/* box-shadow: 0 10px 10px -5px rgba(0,0,0,0.2); */
+	overflow: hidden;
+	position: relative;
+}
+.ticket .ticket-info:before {
+	content: " ";
+	width: 0.48rem;
+	height: 0.48rem;
+	background-color: #f3f6f5;
+	border-radius: 50%;
+	position: absolute;
+	left: 1.946667rem;
+	top: -0.24rem;
+	z-index: 2;
+}
+.ticket .ticket-info:after {
+	content: " ";
+	width: 0.48rem;
+	height: 0.48rem;
+	background-color: #f3f6f5;
+	border-radius: 50%;
+	position: absolute;
+	left: 1.946667rem;
+	bottom: -0.24rem;
+	z-index: 2;
+}
+.ticket .ticket-info .left-box {
+	float: left;
+	width: 2.173333rem;
+	height: 3.64rem;
+}
+[data-dpr="1"] .ticket .ticket-info .left-box {
+	border-right: 1px dashed #eee;
+}
+[data-dpr="2"] .ticket .ticket-info .left-box {
+	border-right: 2px dashed #eee;
+}
+[data-dpr="3"] .ticket .ticket-info .left-box {
+	border-right: 3px dashed #eee;
+}
+.ticket .ticket-info .left-box .type {
+	width: 2.173333rem;
+	height: 3.64rem;
+	line-height: 2.066667rem;
+	font-size: 0.48rem;
+	text-align: center;
+	-webkit-writing-mode: vertical-lr;
+	writing-mode: vertical-lr;
+	letter-spacing: 0.133333rem;
+	font-weight: bold;
+}
+.ticket .ticket-info .left-box .limit-tit {
+	color: #999;
+	font-size: 0.346667rem;
+	line-height: 0.48rem;
+	margin-top: 1.466667rem;
+}
+.ticket .ticket-info .left-box .limit-price {
+	color: #ff4242;
+	font-size: 0.48rem;
+}
+.ticket .ticket-info .right-box {
+	float: right;
+	width: 6.333333rem;
+	height: 3.106667rem;
+	padding: 0.266667rem 0.4rem 0.266667rem 0.533333rem;
+}
+.ticket .ticket-info .right-box .source {
+	font-size: 0.426667rem;
+	height: 0.826667rem;
+	line-height: 0.826667rem;
+}
+.ticket .ticket-info .right-box .code {
+	font-size: 0.693333rem;
+	font-weight: bold;
+	height: 1.2rem;
+	line-height: 1.2rem;
+	margin-top: 0.266667rem;
+	background: url(/image/interests/barcode.png) right center no-repeat;
+	background-size: 0.693333rem 0.72rem;
+}
+.ticket .ticket-info .right-box .bottom-txt {
+	font-size: 0.32rem;
+	margin-top: 0.4rem;
+}
+.ticket .ticket-info .right-box .bottom-txt em {
+	padding-left: 0.066667rem;
+}
+.ticket .ticket-info .right-box .bottom-txt .limit-price {
+	float: left;
+}
+.ticket .ticket-info .right-box .bottom-txt .expire-date {
+	float: right;
+}
+#barcodeLayer {
+	width: 100%;
+	height: 100%;
+	overflow: hidden;
+	background-color: rgba(0, 0, 0, 0.65);
+	text-align: center;
+	position: fixed;
+	left: 0;
+	top: 0;
+	z-index: 999;
+	display: none;
+}
+#barcodeLayer .barcodeWrap {
+	width: 9.466667rem;
+	height: 6.4rem;
+	margin: 0 auto;
+	background-color: #fff;
+	border-radius: 0.106667rem;
+	margin-top: 3.333333rem;
+	position: relative;
+}
+#barcodeLayer .barcodeWrap .tit {
+	color: #333;
+	font-size: 0.533333rem;
+	text-align: center;
+	padding-top: 0.733333rem;
+}
+#barcodeLayer #barcode {
+	width: 7.866667rem;
+	margin: 0 auto;
+}
+#barcodeLayer .barcodeWrap .close {
+	width: 2.0rem;
+	height: 2.0rem;
+	position: absolute;
+	left: 50%;
+	bottom: -2.666667rem;
+	margin-left: -1.0rem;
+}
+#barcodeLayer .barcodeWrap .close:before {
+	content: "✕";
+	display: block;
+    width: 0.746667rem;
+    height: 0.746667rem;
+    line-height: 0.746667rem;
+    text-align: center;
+    color: #fff;
+    border-radius: 50%;
+    font-size: 0.56rem;
+    position: absolute;
+    top: 0.626667rem;
+    left: 50%;
+    margin-left: -0.4rem;
+}
+[data-dpr="1"] #barcodeLayer .barcodeWrap .close:before {
+	border: 1px solid #fff;
+}
+[data-dpr="2"] #barcodeLayer .barcodeWrap .close:before {
+	border: 2px solid #fff;
+}
+[data-dpr="3"] #barcodeLayer .barcodeWrap .close:before {
+	border: 3px solid #fff;
+}
+.no-record {
+    margin-top: 2rem;
+    text-align: center;
+    display: none;
+}
+.no-record p {
+	color: #999;
+	font-size: 0.426667rem;
+    padding-top: 0.64rem;
+}
+.no-record img {
+    width: 3.76rem;
+}

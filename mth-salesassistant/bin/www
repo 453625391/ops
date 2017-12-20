@@ -1,0 +1,82 @@
+#! /usr/bin/env node
+var cluster = require('cluster');
+var http = require('http');
+var path = require('path');
+var debug = require("debug")("mth-salesassistant:bin:www");
+var nconf = require("nconf");
+var log4js = require("log4js");
+var numCPUs = require('os').cpus().length;
+
+// var config_file = process.env.DEBUG==='true'?'dev.json':'prod.json';
+var config_file = !!process.env.DEBUG?'../app-config-dev.js':'../app-config.js';
+//初始化加载基本配置参数
+nconf.argv()
+    .env();
+    // .file({
+    //     file: path.join(__dirname,'../' ,config_file)
+    // });
+
+  nconf.overrides(require(config_file));
+
+var app = require('../app');
+
+//全局定义
+Object.defineProperty(global, '__stack', {
+  get: function() {
+    var orig = Error.prepareStackTrace;
+    Error.prepareStackTrace = function(_, stack) { return stack; };
+    var err = new Error();
+    Error.captureStackTrace(err, arguments.callee);
+    var stack = err.stack;
+    Error.prepareStackTrace = orig;
+    return stack;
+  }
+});
+Object.defineProperty(global, '__line', {
+  get: function() {
+    return __stack[1].getLineNumber();
+  }
+});
+
+
+
+var DEBUG = nconf.get("server:debug");
+
+try {
+  require('fs').mkdirSync('./log');
+} catch (e) {
+  if (e.code != 'EEXIST') {//非文件已经存在
+    console.error("Could not set up log directory, error was: ", e);
+    process.exit(1);
+  }
+}
+
+//配置日志文件
+log4js.configure(path.join(__dirname,'../config/log4js.json'));
+
+//如果是调试模式 仅使用单进程即可
+if (process.env.DEBUG || DEBUG) {
+    debug("enter single thred.....");
+    // http.createServer(require("../app").callback()).listen(3000);
+    app.listen(nconf.get('server:port'));
+} else {
+if (cluster.isMaster) {
+  debug(`Master ${process.pid} is running`);
+ var i;
+  // Fork workers.
+  for (i = 0; i < numCPUs; i++) {
+    cluster.fork();
+  }
+  cluster.on('exit', (worker, code, signal) => {
+    debug(`worker ${worker.process.pid} died`);
+    cluster.fork(); //进程重新挂起
+  });
+  cluster.on('fork', (worker) => {
+            debug(`[master] : fork worker ${worker.id}  PID: ${worker.process.pid}`);
+  });
+
+} else {
+  app.listen(nconf.get('server:port'));
+  debug(`Worker ${process.pid} started`);
+}
+}

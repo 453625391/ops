@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <% include ../../commonHead.html %>
+    <title>淘淘领</title>
+    <link rel="stylesheet" type="text/css" href="/css/payback/index.css?v20170621">
+</head>
+
+<body style="background-color:#ffffff;">
+    <div id="app" v-bind:class="{pb: menuBarVisible}">
+        <!-- 推荐 -->
+        <div class="route" v-if="currentRoute=='all'">
+            <!-- banner图 -->
+            <my-banner v-bind:banner-data="bannerData"></my-banner>
+            <!-- 推荐商品 -->
+            <goods-list-double v-bind:goods-list="recommendList"></goods-list-double>
+            <!-- 全部商品 -->
+            <div class="more-recommend-bar"><span class="mid-txt">更多好货</span></div>
+            <goods-list-single v-bind:goods-list="route.all.goodsList" v-bind:route="route.all"></goods-list-single>
+        </div>
+
+        <!-- 上新 -->
+        <div class="route" v-show="currentRoute=='new'">
+            <goods-list-double v-bind:goods-list="route.new.goodsList" v-bind:route="route.new"></goods-list-double>
+        </div>
+
+        <!-- 分类 -->
+        <div class="route" v-show="currentRoute=='category'">
+            <goods-list-single v-bind:goods-list="route.category.goodsList" v-bind:route="route.category"></goods-list-single>
+        </div>
+
+        <!-- 预告 -->
+        <div class="route" v-show="currentRoute=='forecast'">
+            <goods-list-double v-bind:goods-list="route.forecast.goodsList" v-bind:route="route.forecast"></goods-list-double>
+        </div>
+
+        <!-- 心愿 -->
+        <div class="route" v-show="currentRoute=='wish'">
+            <goods-list-double v-bind:goods-list="route.wish.goodsList" v-bind:route="route.wish" v-bind:uncollectable="true" v-on:uncollect="updateWishList"></goods-list-double>
+        </div>
+
+        <div class="category-panel-wrap" v-show="categoryPanelSwitch" v-on:click.stop.prevent="categoryPanelSwitch=false">
+            <ul class="category-panel">
+                <li v-on:click="chooseCategory('日用家居')" class="category ryjj"><span class="name">日用家居</span></li>
+                <li v-on:click="chooseCategory('数码家电')" class="category smjd"><span class="name">数码家电</span></li>
+                <li v-on:click="chooseCategory('母婴用品')" class="category myyp"><span class="name">母婴用品</span></li>
+                <li v-on:click="chooseCategory('服饰鞋包')" class="category fsxb"><span class="name">服饰鞋包</span></li>
+                <li v-on:click="chooseCategory('食品生鲜')" class="category spsx"><span class="name">食品生鲜</span></li>
+                <li v-on:click="chooseCategory('freshman')" class="category xrzx"><span class="name">新人专享</span></li>
+            </ul>
+        </div>
+
+        <div class="menu-bar" v-if="menuBarVisible">
+            <ul>
+                <li><a href="javascript: void(0);" v-on:click="currentRoute='all';categoryPanelSwitch=false;" class="menu recommend" v-bind:class="{'one-fifth': requestParams.mi, on: currentRoute=='all'}">推荐</a></li>
+                <li><a href="javascript: void(0);" v-on:click="currentRoute='new';categoryPanelSwitch=false;" class="menu new" v-bind:class="{'one-fifth': requestParams.mi, on: currentRoute=='new'}">上新</a></li>
+                <li><a href="javascript: void(0);" v-on:click="categoryPanelSwitch=!categoryPanelSwitch" class="menu category" v-bind:class="{'one-fifth': requestParams.mi, on: currentRoute=='category'}">分类</a></li>
+                <li><a href="javascript: void(0);" v-on:click="currentRoute='forecast';categoryPanelSwitch=false;" class="menu forecast" v-bind:class="{'one-fifth': requestParams.mi, on: currentRoute=='forecast'}">预告</a></li>
+                <li v-if="requestParams.mi"><a href="javascript: void(0);" v-on:click="currentRoute='wish';categoryPanelSwitch=false;" class="menu wish one-fifth" v-bind:class="{on: currentRoute=='wish'}">心愿</a></li>
+            </ul>
+        </div>
+    </div>
+    <script type="text/html" id="goodsListDoubleTpl">
+        <ul class="goods-list-double">
+            <li class="goods" v-for="(goods, index) in goodsList">
+                <a v-bind:href="'/openapi/h5/c/payback/detail?goods_id='+goods.goods_id+'<%if(requestParams.mi){%>&mi=<%=requestParams.mi%><%}%><%if(requestParams.mobile){%>&mobile=<%=requestParams.mobile%><%}%><%if(requestParams.bind){%>&bind=1<%}%>'">
+                    <img v-bind:src="goods.pic_info_url" class="goods-pic">
+                    <!-- <em class="freshman" v-if="goods.label_promotion.indexOf('freshman')!=-1"></em> -->
+                    <em class="un-collect" v-if="uncollectable" v-on:click.stop.prevent="uncollect(goods.goods_id, index)"></em>
+                    <div class="saletime-wrap" v-if="goods.leftSeconds>0">
+                        <div class="saletime">
+                            <p class="date">{{goods.saleDate}}</p>
+                            <p class="time">{{goods.saleTime}}</p>
+                            <p class="text">开抢</p>
+                        </div>
+                    </div>
+                    <div class="txt-wrap">
+                        <h3 class="tit">
+                            {{goods.title}}
+                            <em class="tag tb" v-if="goods.data_source=='taobao' || goods.data_source=='merchants'">淘宝</em>
+                            <em class="tag zy" v-if="goods.data_source=='meitianhui'">官方</em>
+                        </h3>
+                        <p class="price">到手价<em><i>¥</i>{{goods.discount_price}}</em></p>
+                    </div>
+                    <div class="soldout-wrap" v-if="goods.sale_qty<=0">
+                        <img src="/image/common/soldout.png" />
+                    </div>
+                </a>
+            </li>
+            <div v-show="route && route.nothing" class="no-record" style="font-size:0.52rem;">
+                <!-- <img src="/image/common/no-record.png" />
+                <p>暂无相关商品</p> -->
+                <img src="/image/common/not-found-order.png" />
+                <p style="margin-top:0.78rem;">暂没找到相关商品</p>
+                <!-- <div>
+                  <div style="float:left;">
+                    <img src="/image/common/not-found-redpacket.png" />
+                    <p>没找到红包.....</p>
+                  </div>
+                </div>
+                <div >
+                  <div style="float:left;">
+                    <img src="/image/common/not-found-wifi.png" />
+                    <p>没找到网络.....</p>
+                  </div>
+                  <div  style="float:right;">
+                    <img src="/image/common/not-found-content.png" />
+                    <p>没找到内容.....</p>
+                  </div>
+                </div> -->
+
+
+            </div>
+            <div v-show="route && route.isLoading" class="loading">正在加载</div>
+            <div v-show="route && !route.hasMore && !route.nothing && route.page.page_no > 1" class="loading">没有更多啦~</div>
+        </ul>
+    </script>
+    <script type="text/html" id="goodsListSingleTpl">
+        <ul class="goods-list-single">
+            <li v-for="goods in goodsList" class="goods">
+                <a v-bind:href="'/openapi/h5/c/payback/detail?goods_id='+goods.goods_id+'<%if(requestParams.mi){%>&mi=<%=requestParams.mi%><%}%><%if(requestParams.mobile){%>&mobile=<%=requestParams.mobile%><%}%><%if(requestParams.bind){%>&bind=1<%}%>'">
+                    <div class="left-box">
+                        <img v-bind:src="goods.pic_info_url" class="goods-pic" />
+                        <!-- <em class="freshman" v-if="goods.label_promotion.indexOf('freshman')!=-1"></em> -->
+                        <div class="saletime-wrap" v-if="goods.leftSeconds>0">
+                            <div class="saletime">
+                                <p class="date">{{goods.saleDate}}</p>
+                                <p class="time">{{goods.saleTime}}</p>
+                                <p class="text">开抢</p>
+                            </div>
+                        </div>
+                        <div class="soldout-wrap" v-if="goods.sale_qty<=0">
+                            <img src="/image/common/soldout.png" />
+                        </div>
+                    </div>
+                    <div class="right-box">
+                        <p class="tit">
+                            {{goods.title}}
+                            <em class="tag tb" v-if="goods.data_source=='taobao' || goods.data_source=='merchants'">淘宝</em>
+                            <em class="tag zy" v-if="goods.data_source=='meitianhui'">官方</em>
+                        </p>
+                        <div class="price-wrap">
+                            <p class="final-price">到手价<em><i>¥</i>{{goods.discount_price}}</em></p>
+                            <div class="other-price">
+                                <!-- <span class="original-price">预付 ¥ {{goods.market_price}}</span>
+                                <span class="refund">返还 ¥ {{(goods.market_price-goods.discount_price).toFixed(2)}}</span> -->
+                                <span class="original-price">预付 ¥ {{goods.market_price}}</span>
+                                <span class="refund">返还 ¥ {{(goods.market_price-goods.discount_price).toFixed(2)}}</span>
+                            </div>
+                        </div>
+                    </div>
+                </a>
+            </li>
+            <div v-show="route.nothing" class="no-record">
+                <img src="/image/common/no-record.png" />
+                <p>暂无相关商品</p>
+            </div>
+            <div v-show="route.isLoading" class="loading">正在加载</div>
+            <div v-show="!route.hasMore && !route.nothing && route.page.page_no > 1" class="loading">没有更多啦~</div>
+        </ul>
+    </script>
+</body>
+<script type="text/javascript">
+Vue.component('goods-list-double', {
+    props: ['goodsList', 'route', 'uncollectable'],
+    template: document.getElementById('goodsListDoubleTpl').innerHTML,
+    methods: {
+        uncollect: function(goodsId, index) {    // 取消收藏
+            var self = this;
+            $.ajax({
+                type: 'POST',
+                url: '/openapi/h5/c/unCollectGoods',
+                data: {
+                    goods_id: goodsId,
+                    member_id: '<%=requestParams.mi%>'
+                },
+                success: function(data) {
+                    if(typeof data == 'string') data = JSON.parse(data);
+                    if(data.rsp_code == 'succ') self.$emit('uncollect', index);
+                }
+            });
+        }
+    }
+});
+
+Vue.component('goods-list-single', {
+    props: ['goodsList', 'route'],
+    template: document.getElementById('goodsListSingleTpl').innerHTML
+});
+
+var app = new Vue({
+    el: '#app',
+    data: function() {
+        return {
+            requestParams: JSON.parse('<%-JSON.stringify(requestParams)%>'),
+            bannerData: JSON.parse('<%-JSON.stringify(banner)%>'),
+            recommendList: JSON.parse('<%-JSON.stringify(recommendList)%>'),
+            currentRoute: '<%=requestParams.cate%>' || (window.localStorage && window.localStorage.llm_route) || 'all',
+            categoryPanelSwitch: false,
+            menuBarVisible: false,   // 是否显示底部分类菜单栏
+            route: {
+                all: {
+                    goodsList: [],
+                    service: 'goods.freeGetGoodsListPageFind',
+                    params: {},
+                    page: {
+                        page_no: '1',
+                        page_size: '10'
+                    },
+                    nothing: false,
+                    isLoading: false,
+                    hasMore: true
+                },
+                new: {
+                    goodsList: [],
+                    service: 'goods.freeGetGoodsNewestListPageFind',
+                    params: {},
+                    page: {
+                        page_no: '1',
+                        page_size: '10'
+                    },
+                    nothing: false,
+                    isLoading: false,
+                    hasMore: true
+                },
+                category: {
+                    goodsList: [],
+                    service: 'goods.freeGetGoodsByLabelListPageFind',
+                    params: {
+                        label_promotion: ''
+                    },
+                    page: {
+                        page_no: '1',
+                        page_size: '10'
+                    },
+                    nothing: false,
+                    isLoading: false,
+                    hasMore: true
+                },
+                forecast: {
+                    goodsList: [],
+                    service: 'goods.freeGetGoodsPreSaleListPageFind',
+                    params: {},
+                    page: {
+                        page_no: '1',
+                        page_size: '10'
+                    },
+                    nothing: false,
+                    isLoading: false,
+                    hasMore: true
+                },
+                wish: {
+                    goodsList: [],
+                    service: 'psGoodsFavorites.app.fgGoodsFavoritesListPageFind',
+                    params: {
+                        member_id: '<%=requestParams.mi%>',
+                        member_type_key: 'consumer'
+                    },
+                    page: {
+                        page_no: '1',
+                        page_size: '10'
+                    },
+                    nothing: false,
+                    isLoading: false,
+                    hasMore: true
+                }
+            }
+        }
+    },
+    methods: {
+        loadGoods: function() {
+            var self = this;
+            if(self.route[self.currentRoute].hasMore && !self.route[self.currentRoute].isLoading) {
+                $.ajax({
+                    type: 'POST',
+                    url: '/openapi/h5/c/payback/getList',
+                    data: {
+                        service: self.route[self.currentRoute].service,
+                        params: JSON.stringify(self.route[self.currentRoute].params),
+                        page: JSON.stringify(self.route[self.currentRoute].page)
+                    },
+                    beforeSend: function() {
+                        self.route[self.currentRoute].isLoading = true;
+                        self.route[self.currentRoute].nothing = false;
+                    },
+                    success: function(data) {
+                        var jsonData = (typeof data == 'string' ? JSON.parse(data) : data) || [];
+                        self.route[self.currentRoute].goodsList.push.apply(self.route[self.currentRoute].goodsList, jsonData.goodsList);
+                        if(self.route[self.currentRoute].goodsList.length == 0) {
+                            self.route[self.currentRoute].nothing = true;
+                        }
+                        if(jsonData.page.total_page == self.route[self.currentRoute].page.page_no
+                            || jsonData.goodsList.length == 0) {
+                            self.route[self.currentRoute].hasMore = false;
+                            return;
+                        }
+                        self.route[self.currentRoute].page.page_no++;
+                    },
+                    complete: function() {
+                        self.route[self.currentRoute].isLoading = false;
+                    }
+                });
+            }
+        },
+        updateWishList: function(index) {
+            this.route.wish.goodsList.splice(index, 1);
+        },
+        chooseCategory: function(categoryName) {
+            this.categoryPanelSwitch=false;
+            this.currentRoute='category';
+            if(categoryName == this.route.category.params.label_promotion) return;
+            this.route.category.params.label_promotion = categoryName;
+            this.route.category.goodsList = [];
+            this.route.category.page.page_no = 1;
+            this.route.category.hasMore = true;
+            this.route.category.isLoading = false;
+            this.loadGoods();
+        },
+        preventDefault: function(e) {
+            e.preventDefault();
+        }
+    },
+    watch: {
+        currentRoute: function(newRoute, oldRoute) {
+            // 切换tab时加载(分类和心愿除外)
+            if(newRoute != 'category' && newRoute != 'wish' && this.route[newRoute].goodsList.length == 0) {
+                this.loadGoods();
+            }
+            // 每次点击心愿单都重新加载
+            if(newRoute == 'wish') {
+                this.route.wish.goodsList = [];
+                this.route.wish.page.page_no = 1;
+                this.route.wish.hasMore = true;
+                this.route.wish.isLoading = false;
+                this.loadGoods();
+            }
+            // 若浏览器支持本地存储，则记录当前route(不记录分类)
+            if(window.localStorage) {
+                window.localStorage.llm_route = newRoute == 'category' ? 'all' : newRoute;
+            }
+            window.scrollTo(0, 0);
+        },
+        categoryPanelSwitch: function(now, old) {
+            if(now) {
+                document.addEventListener('touchmove', this.preventDefault);
+            } else {
+                document.removeEventListener('touchmove', this.preventDefault);
+            }
+        }
+    },
+    mounted: function() {
+        new AutoLoader().load({scrollToTop: true}, this.loadGoods);
+    }
+});
+</script>
+</html>

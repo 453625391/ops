@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.meitianhui.member.dao.StoresMemberRelDao">
+
+	<insert id="insertMDStoresMemberRel" parameterType="MDStoresMemberRel">
+		INSERT INTO
+		md_stores_member_rel(
+		stores_id
+		,consumer_id
+		,created_date
+		)
+		VALUES(
+		#{stores_id}
+		,#{consumer_id}
+		,#{created_date}
+		)
+	</insert>
+
+
+	<select id="selectMDStoresMemberRel" parameterType="Map"
+		resultType="MDStoresMemberRel">
+		SELECT
+			stores_id
+			,consumer_id
+		FROM md_stores_member_rel
+		<where>
+			<if test="stores_id != null and stores_id != ''">
+				AND stores_id=#{stores_id}
+			</if>
+			<if test="consumer_id != null and consumer_id != ''">
+				AND consumer_id=#{consumer_id}
+			</if>
+		</where>
+	</select>
+
+</mapper>

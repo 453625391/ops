@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name='apple-itunes-app' content='app-id=1076505403'>
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <!-- 删除苹果默认的工具栏和菜单栏 -->
+    <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+    <!-- 设置苹果工具栏颜色 -->
+    <meta name="format-detection" content="telphone=no, email=no" />
+    <!-- 忽略页面中的数字识别为电话，忽略email识别 -->
+    <!-- 启用360浏览器的极速模式(webkit) -->
+    <meta name="renderer" content="webkit">
+    <!-- 避免IE使用兼容模式 -->
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <!-- 针对手持设备优化，主要是针对一些老的不识别viewport的浏览器，比如黑莓 -->
+    <meta name="HandheldFriendly" content="true">
+    <!-- 微软的老式浏览器 -->
+    <meta name="MobileOptimized" content="320">
+    <!-- uc强制竖屏 -->
+    <meta name="screen-orientation" content="portrait">
+    <!-- QQ强制竖屏 -->
+    <meta name="x5-orientation" content="portrait">
+    <!-- windows phone 点击无高光 -->
+    <meta name="msapplication-tap-highlight" content="no">
+    <!-- 禁用iPhone手机浏览器上给电话号码自动加上的link样式 -->
+    <meta name="format-detection" content="telephone=no">
+    <title>领有惠</title>
+    <link rel="stylesheet" type="text/css" href="./css/app.css?v20170324">
+    <script type="text/javascript" src="./js/flexible.js"></script>
+    <script type="text/javascript" src="./js/zepto.min.js"></script>
+    <script type="text/javascript" src="./js/swiper.min.js"></script>
+    <script type="text/javascript" src="./js/bdsh.js"></script>
+</head>
+
+<body>
+    <div class="app-box">
+        <div class="logo">
+            <img src="./image/app_bdsh.png" />
+        </div>
+        <div class="info">
+            <h1 class="name">领有惠</h1>
+            <h3 class="company">深圳市每天惠软件开发有限公司</h3>
+        </div>
+    </div>
+    <div class="detail-box">
+        <div class="swiper-container">
+            <div class="swiper-wrapper">
+                <div class="swiper-slide"><img src="./image/bdsh1.jpg?v2" /></div>
+                <div class="swiper-slide"><img src="./image/bdsh2.jpg?v2" /></div>
+                <div class="swiper-slide"><img src="./image/bdsh3.jpg?v2" /></div>
+                <div class="swiper-slide"><img src="./image/bdsh4.jpg?v2" /></div>
+            </div>
+        </div>
+        <div class="desc">领有惠App是深圳每天惠电子商务有限公司推出的官方消费者应用，提供家居特卖、超级返利、在线直播、兑换商城、优惠联盟等一系列线上服务，以及基于地理位置的便利店、餐饮店、酒店、药店、美容店等会员线下服务。<br><br>百万优品，免费领回家。</div>
+    </div>
+    <!-- <div class="activity-box">
+        <div class="activity"><img src="./image/activity1.png" /></div>
+        <div class="activity"><img src="./image/activity2.png" /></div>
+    </div> -->
+    <div class="foot-box">
+        <a href="javascript: void(0);" class="download" style="background-color: #FF4242;">下载领有惠</a>
+    </div>
+    <div class="mask-layer">
+        <div class="tip-ios"></div>
+        <div class="tip-android"></div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <!-- 删除苹果默认的工具栏和菜单栏 -->
+    <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+    <!-- 设置苹果工具栏颜色 -->
+    <meta name="format-detection" content="telphone=no, email=no" />
+    <!-- 忽略页面中的数字识别为电话，忽略email识别 -->
+    <!-- 启用360浏览器的极速模式(webkit) -->
+    <meta name="renderer" content="webkit">
+    <!-- 避免IE使用兼容模式 -->
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <!-- 针对手持设备优化，主要是针对一些老的不识别viewport的浏览器，比如黑莓 -->
+    <meta name="HandheldFriendly" content="true">
+    <!-- 微软的老式浏览器 -->
+    <meta name="MobileOptimized" content="320">
+    <!-- uc强制竖屏 -->
+    <meta name="screen-orientation" content="portrait">
+    <!-- QQ强制竖屏 -->
+    <meta name="x5-orientation" content="portrait">
+    <!-- windows phone 点击无高光 -->
+    <meta name="msapplication-tap-highlight" content="no">
+    <!-- 禁用iPhone手机浏览器上给电话号码自动加上的link样式 -->
+    <meta name="format-detection" content="telephone=no">
+    <title>惠点收银</title>
+    <link rel="stylesheet" type="text/css" href="./css/app.css?v20170324">
+    <script type="text/javascript" src="./js/flexible.js"></script>
+    <script type="text/javascript" src="./js/zepto.min.js"></script>
+    <script type="text/javascript" src="./js/swiper.min.js"></script>
+    <script type="text/javascript" src="./js/hdsy.js"></script>
+    <style type="text/css">
+        .swiper-container {
+            height: 4.8rem;
+        }
+        .swiper-slide, .swiper-slide img {
+            width: 8.533333rem;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="app-box">
+        <div class="logo">
+            <img src="./image/app_hdsy.png" />
+        </div>
+        <div class="info">
+            <h1 class="name">惠点收银（POS机专用）</h1>
+            <h3 class="company">深圳市每天惠软件开发有限公司</h3>
+        </div>
+    </div>
+    <div class="detail-box">
+        <div class="swiper-container">
+            <div class="swiper-wrapper">
+                <div class="swiper-slide"><img src="./image/hdsy1.jpg" /></div>
+                <div class="swiper-slide"><img src="./image/hdsy2.jpg" /></div>
+                <div class="swiper-slide"><img src="./image/hdsy3.jpg" /></div>
+                <div class="swiper-slide"><img src="./image/hdsy4.jpg" /></div>
+                <div class="swiper-slide"><img src="./image/hdsy5.jpg" /></div>
+            </div>
+        </div>
+        <div class="desc">惠点收银是由每天惠集团为全国加盟每天惠便利店店东开发的一款专业POS收银应用，主要是为了方便每天惠店东进行收银工作。并可同时实现商品扫码入库、销售、促销、结算、进货、库存盘点及会员管理等功能。</div>
+    </div>
+    <!-- <div class="activity-box">
+        <div class="activity"><img src="./image/activity1.png" /></div>
+        <div class="activity"><img src="./image/activity2.png" /></div>
+    </div> -->
+    <div class="foot-box">
+        <a href="javascript: void(0);" class="download" style="background-color: #F56017;">下载惠点收银</a>
+    </div>
+    <div class="mask-layer">
+        <div class="tip-ios"></div>
+        <div class="tip-android"></div>
+    </div>
+</body>
+</html>

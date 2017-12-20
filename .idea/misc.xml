@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="FrameworkDetectionExcludesConfiguration">
+    <file type="web" url="file://$PROJECT_DIR$/ops-community" />
+    <file type="web" url="file://$PROJECT_DIR$/ops-finance" />
+    <file type="web" url="file://$PROJECT_DIR$/ops-goods" />
+    <file type="web" url="file://$PROJECT_DIR$/ops-infrastructure" />
+    <file type="web" url="file://$PROJECT_DIR$/ops-member" />
+    <file type="web" url="file://$PROJECT_DIR$/ops-notification" />
+    <file type="web" url="file://$PROJECT_DIR$/ops-order" />
+    <file type="web" url="file://$PROJECT_DIR$/ops-report" />
+    <file type="web" url="file://$PROJECT_DIR$/ops-schedule" />
+    <file type="web" url="file://$PROJECT_DIR$/ops-service-test" />
+    <file type="web" url="file://$PROJECT_DIR$/ops-storage" />
+    <file type="web" url="file://$PROJECT_DIR$/ops-template" />
+  </component>
+  <component name="MavenProjectsManager">
+    <option name="originalFiles">
+      <list>
+        <option value="$PROJECT_DIR$/ops-common/pom.xml" />
+        <option value="$PROJECT_DIR$/ops-goods/pom.xml" />
+        <option value="$PROJECT_DIR$/ops-community/pom.xml" />
+        <option value="$PROJECT_DIR$/ops-finance/pom.xml" />
+        <option value="$PROJECT_DIR$/ops-data-sync/pom.xml" />
+        <option value="$PROJECT_DIR$/ops-infrastructure/pom.xml" />
+        <option value="$PROJECT_DIR$/ops-member/pom.xml" />
+        <option value="$PROJECT_DIR$/ops-notification/pom.xml" />
+        <option value="$PROJECT_DIR$/ops-order/pom.xml" />
+        <option value="$PROJECT_DIR$/ops-report/pom.xml" />
+        <option value="$PROJECT_DIR$/ops-schedule/pom.xml" />
+        <option value="$PROJECT_DIR$/ops-service-test/pom.xml" />
+        <option value="$PROJECT_DIR$/ops-storage/pom.xml" />
+        <option value="$PROJECT_DIR$/ops-template/pom.xml" />
+      </list>
+    </option>
+  </component>
+  <component name="ProjectRootManager" version="2" project-jdk-name="1.8" project-jdk-type="JavaSDK" />
+  <component name="SvnBranchConfigurationManager">
+    <option name="myConfigurationMap">
+      <map>
+        <entry key="$PROJECT_DIR$">
+          <value>
+            <SvnBranchConfiguration>
+              <option name="branchUrls">
+                <list>
+                  <option value="svn://114.55.56.137/meitianhui/02%20sourcecode/ops/branch" />
+                </list>
+              </option>
+              <option name="trunkUrl" value="svn://114.55.56.137/meitianhui/02%20sourcecode/ops/trunk" />
+            </SvnBranchConfiguration>
+          </value>
+        </entry>
+      </map>
+    </option>
+    <option name="mySupportsUserInfoFilter" value="true" />
+  </component>
+  <component name="WebServicesPlugin" addRequiredLibraries="true" />
+</project>

@@ -1,0 +1,338 @@
+<!-- 我要批新版首页 -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <% include ../../commonHead.html %>
+    <title>我要批</title>
+    <link rel="stylesheet" type="text/css" href="/css/wholesale/list.css?v20170112">
+</head>
+<body>
+    <!-- 广告层 -->
+    <% if(adGoodsList[0]) { %>
+    <div class="ad-container">
+        <a href="/openapi/h5/b/wholesale/detail?goods_id=<%=adGoodsList[0].id %>" class="link">
+            <img src="<%=adGoodsList[0].pic_path %>" />
+        </a>
+        <a href="javascript: void(0);" id="close"></a>
+    </div>
+    <% } %>
+
+    <div class="tab-bar">
+        <ul>
+            <li index="0" data-cate="tj" class="on">推荐</li>
+            <li index="1" data-cate="dczg">大厂直供</li>
+            <li index="2" data-cate="hax">惠安心</li>
+            <li index="3" data-cate="xqt">新奇特</li>
+            <em class="underline"></em>
+        </ul>
+    </div>
+
+    <div class="list-wrap">
+        <div class="category-wrap tj" style="display: block;">
+            <!-- 推荐商品 -->
+            <div class="banner">
+                <div id="tjSlider" class="swipe">
+                    <div class="swipe-wrap">
+                        <% for(var i=0; i<recommendBanner.list.length; i++) { %>
+                        <div>
+                            <img src="<%=recommendBanner.doc_url[recommendBanner.list[i].path_id]%>" banner-url="<%=recommendBanner.list[i].url%>" />
+                        </div>
+                        <% } %>
+                    </div>
+                </div>
+                <nav>
+                    <ul id="tjPosition" class="position">
+                        <%for(var i=0; i<recommendBanner.list.length; i++){%><li></li><%}%>
+                    </ul>
+                </nav>
+            </div>
+            <ul id="topList" class="list">
+                <% for(var i=0; i<activityGoodsList.length; i++) { %>
+                <% if(i%2==0) { %>
+                    <li>
+                <% } %>
+                        <a href="/openapi/h5/b/wholesale/detail?goods_id=<%=activityGoodsList[i].goods_id %>" class="box">
+                            <img src="<%=activityGoodsList[i].pic_info_url %>" />
+                            <div class="txt-wrap">
+                                <h3 class="tit"><%=activityGoodsList[i].title %></h3>
+                                <% if(activityGoodsList[i].supplier) { %>
+                                <p><%=activityGoodsList[i].supplier %></p>
+                                <% } else { %>
+                                <p>配送范围：<%=activityGoodsList[i].delivery_desc || '全国' %></p>
+                                <% } %>
+                                <p>起订：<%=activityGoodsList[i].min_buy_qty %>&nbsp;&nbsp;库存：<%=activityGoodsList[i].sale_qty %></p>
+                                <p>规格：<%=activityGoodsList[i].specification %><%if(activityGoodsList[i].max_buy_qty && activityGoodsList[i].max_buy_qty!=0){%>&nbsp;&nbsp;限购：<%=activityGoodsList[i].max_buy_qty %><%}%></p>
+                                <p>建议零售价：¥<%=activityGoodsList[i].market_price %></p>
+                                <p class="price">¥<em><%=activityGoodsList[i].discount_price %></em></p>
+                            </div>
+                            <% if(activityGoodsList[i].sale_qty <= 0) { %>
+                            <div class="soldout-wrap">
+                                <img src="/image/common/soldout.png" />
+                            </div>
+                            <% } %>
+                        </a>
+                <% if(i%2!=0) { %>
+                    </li>
+                <% } %>
+                <% } %>
+            </ul>
+        </div>
+        <div class="category-wrap dczg">
+            <div class="banner">
+                <div id="dczgSlider" class="swipe">
+                    <div class="swipe-wrap">
+                        <% for(var i=0; i<dczgBanner.list.length; i++) { %>
+                        <div>
+                            <img src="<%=dczgBanner.doc_url[dczgBanner.list[i].path_id]%>" banner-url="<%=dczgBanner.list[i].url%>" />
+                        </div>
+                        <% } %>
+                        <!-- <div>
+                            <img src="/image/wholesale/banner/dczg1.png?v20170306" onclick="goToCategory('日用')" />
+                        </div> -->
+                    </div>
+                </div>
+                <nav>
+                    <ul id="dczgPosition" class="position">
+                        <%for(var i=0; i<dczgBanner.list.length; i++){%><li></li><%}%>
+                    </ul>
+                </nav>
+            </div>
+            <ul id="dczgList" class="list"></ul>
+        </div>
+        <div class="category-wrap hax">
+            <div class="banner">
+                <div id="haxSlider" class="swipe">
+                    <div class="swipe-wrap">
+                        <% for(var i=0; i<haxBanner.list.length; i++) { %>
+                        <div>
+                            <img src="<%=haxBanner.doc_url[haxBanner.list[i].path_id]%>" banner-url="<%=haxBanner.list[i].url%>" />
+                        </div>
+                        <% } %>
+                    </div>
+                </div>
+                <nav>
+                    <ul id="haxPosition" class="position">
+                        <%for(var i=0; i<haxBanner.list.length; i++){%><li></li><%}%>
+                    </ul>
+                </nav>
+            </div>
+            <ul id="haxList" class="list"></ul>
+        </div>
+        <div class="category-wrap xqt">
+            <div class="banner">
+                <div id="xqtSlider" class="swipe">
+                    <div class="swipe-wrap">
+                        <% for(var i=0; i<xqtBanner.list.length; i++) { %>
+                        <div>
+                            <img src="<%=xqtBanner.doc_url[xqtBanner.list[i].path_id]%>" banner-url="<%=xqtBanner.list[i].url%>" />
+                        </div>
+                        <% } %>
+                    </div>
+                </div>
+                <nav>
+                    <ul id="xqtPosition" class="position">
+                        <%for(var i=0; i<xqtBanner.list.length; i++){%><li></li><%}%>
+                    </ul>
+                </nav>
+            </div>
+            <ul id="xqtList" class="list"></ul>
+        </div>
+        <!-- 商品列表模板 -->
+        <script id="goodsTpl" type="text/html">
+            {{each list as goods i}}
+            {{if i%2 == 0}}
+                <li>
+            {{/if}}
+            <a href="/openapi/h5/b/wholesale/detail?goods_id={{goods.goods_id}}" class="box">
+                <img src="{{goods.picUrlArr[0]}}" />
+                <div class="txt-wrap">
+                    <h3 class="tit">{{goods.title}}</h3>
+                    {{if goods.supplier}}
+                    <p>{{goods.supplier}}</p>
+                    {{else}}
+                    <p>配送范围：{{goods.delivery_desc}}</p>
+                    {{/if}}
+                    <p>起订：{{goods.min_buy_qty}}&nbsp;&nbsp;库存：{{goods.sale_qty}}</p>
+                    <p>规格：{{goods.specification}}{{if goods.max_buy_qty && goods.max_buy_qty!=0}}&nbsp;&nbsp;限购：{{goods.max_buy_qty}}{{/if}}</p>
+                    <p>建议零售价：¥{{goods.market_price}}</p>
+                    <p class="price">¥<em>{{goods.discount_price}}</em></p>
+                </div>
+                {{if goods.sale_qty <= 0}}
+                <div class="soldout-wrap">
+                    <img src="/image/common/soldout.png" />
+                </div>
+                {{/if}}
+            </a>
+            {{if i%2 != 0}}
+                </li>
+            {{/if}}
+            {{/each}}
+        </script>
+    </div>
+    <p id="loading">正在加载</p>
+    <div class="no-record" id="nr">
+        <img src="/image/common/no-record.png" />
+        <p>该分类暂无商品</p>
+    </div>
+</body>
+<script type="text/javascript">
+var J = {
+    'top': {
+        display_area : '推荐',
+        container : 'topList'
+    },
+    'dczg': {
+        label_promotion : '大厂直供',
+        container : 'dczgList',
+        page_no : '1',
+        page_size : '8',
+        hasMore : true,
+        isLoading : false,
+        isChannel : true
+    },
+    'hax': {
+        label_promotion : '惠安心',
+        container : 'haxList',
+        page_no : '1',
+        page_size : '8',
+        hasMore : true,
+        isLoading : false,
+        isChannel : true
+    },
+    'xqt': {
+        label_promotion : '新奇特',
+        container : 'xqtList',
+        page_no : '1',
+        page_size : '8',
+        hasMore : true,
+        isLoading : false,
+        isChannel : true
+    }
+};
+
+$(function() {
+    // 展示广告
+    if($('.ad-container').length != 0) {
+        document.addEventListener('touchmove', preventDefault);
+        $('.ad-container').click(function() {
+            $('#mask').remove();
+            $('.ad-container').remove();
+            document.removeEventListener('touchmove', preventDefault);
+        });
+    }
+
+    // 初始化banner图轮播
+    M.initSwipe('tjPosition', 'tjSlider');
+    M.initSwipe('dczgPosition', 'dczgSlider');
+    M.initSwipe('haxPosition', 'haxSlider');
+    M.initSwipe('xqtPosition', 'xqtSlider');
+    // 为banner图绑定广告点击事件
+    M.bindBannerAdClick();
+
+    // 轮播图都加载完成后再隐藏频道，否则会导致轮播图加载异常
+    $('.category-wrap').each(function(i) {
+        if(i != 0) {
+            $(this).hide();
+        }
+    });
+
+    // 切换分类
+    $('.tab-bar li').click(function() {
+        if($(this).hasClass('on')) return;
+        var index = parseInt($(this).attr('index'));
+        var cate = $(this).attr('data-cate');
+        // 当前分类高亮
+        $('.tab-bar li').removeClass('on');
+        $(this).addClass('on');
+        // 动画滚动当前分类下划线
+        $('.underline').animate({
+            left: (2.5*index + 0.85) + 'rem'
+        }, 200);
+        // 展示当前分类商品
+        $('.category-wrap').hide();
+        $('.'+cate).show();
+        // 页面滚动至顶部
+        window.scroll(0,0);
+    });
+
+    loadGoods('dczg');
+    loadGoods('hax');
+    loadGoods('xqt');
+
+    // 向下滑动自动加载数据
+    new AutoLoader().load({triggerCallbackImmediately: false, scrollToTop: true}, function() {
+        var type = $('.tab-bar li.on').attr('data-cate');
+        if (type!='tj') {
+            loadGoods(type);
+        }
+    });
+});
+
+// 加载商品
+function loadGoods(type) {
+    if(J[type].hasMore && !J[type].isLoading) {
+        $.ajax({
+            type: 'POST',
+            url: '/openapi/h5/b/wholesale/getList',
+            data: {
+                display_area: J[type].display_area || '',
+                label_promotion: J[type].label_promotion || '',
+                area_id: '<%=requestParams.area_id %>',
+                page_no: J[type].page_no || '1',
+                page_size: J[type].page_size || '8'
+            },
+            beforeSend: function() {
+                J[type].isLoading = true;
+                if(J[type].page_no > 1) {
+                    $('#loading').show();
+                }
+            },
+            success: function(data) {
+                if(typeof data == 'string') data = JSON.parse(data);
+                if(!data.goodsList || !data.goodsList.length || data.goodsList.length == 0) {
+                    if(J[type].page_no==1) {
+                        J[type].hasMore = false;
+                        var nr =  $('#nr')[0].outerHTML;
+                        $('#' + J[type].container).parent().append(nr);
+                        $('#' + J[type].container).parent().find('.no-record').show();
+                    }
+                    return;
+                }
+                J[type].page_no++;
+                var tdata = {
+                    list: data.goodsList
+                };
+                var html = template('goodsTpl', tdata);
+                $('#' + J[type].container).append(html);
+                if(data.page.page_no == data.page.total_page) {
+                    J[type].hasMore = false;
+                }
+            },
+            complete: function() {
+                J[type].isLoading = false;
+                $('#loading').hide();
+            }
+        });
+    }
+}
+
+function goToCategory(category) {
+    if(window.jsObj) {
+        if(window.jsObj.goToWypCategory) {
+            window.jsObj.goToWypCategory(category);
+        }
+    } else {
+        setupWebViewJavascriptBridge(function(bridge) {
+            bridge.callHandler('goToWypCategory', category);
+        });
+    }
+}
+
+// 阻止默认事件
+function preventDefault(e) {
+    e.preventDefault();
+    return;
+}
+</script>
+
+</html>

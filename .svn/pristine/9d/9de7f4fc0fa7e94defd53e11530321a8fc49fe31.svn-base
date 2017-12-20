@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <% include ../../../commonHead.html %>
+    <title>抽奖</title>
+    <link rel="stylesheet" type="text/css" href="/css/payback/lottery/index.css?v20161117">
+</head>
+
+<body>
+    <div class="activity-container">
+        <% if(activityList.length > 0) { %>
+        <ul>
+            <% for(var i=0; i<activityList.length; i++) { %>
+            <% if(activityList[i].diff_time > 0) { %>
+            <li class="activity-box">
+                <a href="/openapi/h5/c/payback/lottery/detail?member_id=<%=member_id%>&activity_id=<%=activityList[i].activity_id%>" class="activity">
+                    <div class="left-box">
+                        <img src="<%=activityList[i].picArr[0] %>" />
+                    </div>
+                    <div class="right-box">
+                        <p class="tit"><%=activityList[i].title%></p>
+                        <p class="goods-tit"><%=activityList[i].goods_title%></p>
+                        <p class="num">奖品数量：<i><%=activityList[i].prize_qty%></i></p>
+                        <p class="num">达标人次：<i><%=activityList[i].min_num%></i></p>
+                        <% if(activityList[i].diff_time > 0) { %>
+                        <div class="countdown" id="countdownWrap<%=i%>" data-seconds="<%=activityList[i].diff_time%>">
+                            <em class="day">00</em><i>天</i><em class="hour">00</em><i>:</i><em class="minute">00</em><i>:</i><em class="second">00</em><i></i>
+                        </div>
+                        <span class="join-now">立即参与</span>
+                        <% } %>
+                    </div>
+                </a>
+            </li>
+            <% } %>
+            <% } %>
+        </ul>
+        <% } else { %>
+        <div class="no-record">
+            <img src="/image/common/no-record.png" />
+            <p>暂无活动</p>
+        </div>
+        <% } %>
+    </div>
+    <!-- 中奖轮播 -->
+    <% if(luckyList && luckyList.length > 0) { %>
+    <div class="congratuation-wrap">
+        <div class="list-box">
+            <ul>
+                <% for(var i=0; i<luckyList.length; i++) { %>
+                <% if(luckyList[i].mobile && luckyList[i].goods_title) { %>
+                <li>恭喜&nbsp;<%=(luckyList[i].mobile.substring(0,3) + '****' + luckyList[i].mobile.substring(7,11))%>&nbsp;抽中<%=luckyList[i].goods_title.replace('【抽奖】','') %>！</li>
+                <% } %>
+                <% } %>
+            </ul>
+        </div>
+    </div>
+    <% } %>
+    <!-- 剩余抽奖次数 -->
+    <div class="leftcount-wrap">
+        <div class="leftcount"><em><%=leftCounts %></em></div>
+    </div>
+</body>
+<script type="text/javascript">
+$(function() {
+    $('.countdown').each(function() {
+        var difftime = parseInt($(this).attr('data-seconds'));
+        var wrapper = $(this).attr('id');
+        if(difftime > 0) {
+            timer(difftime, wrapper);
+        }
+    });
+
+    $('.leftcount-wrap').click(function() {
+        $(this).remove();
+    });
+
+    // 中奖公告轮播
+    var $ul = $('.congratuation-wrap ul');
+    var tHeight = parseFloat($ul.css('top'));
+    var liHeight = parseFloat($ul.find('li').eq(0).css('height'));
+    var liCount = $ul.find('li').length;
+    setInterval(function() {
+        tHeight = parseFloat($ul.css('top'));
+        if(tHeight <= (liCount-1)*liHeight*-1) {
+            $ul.animate({
+                top: '0.133333rem'
+            });
+        } else {
+            $ul.animate({
+                top: (tHeight - liHeight) + 'px'
+            });
+        }
+    }, 800);
+});
+
+function timer(difftime, wrapper){
+    difftime = difftime / 1000;
+    var id = setInterval(function(){
+        if(difftime <= 0) {
+            clearInterval(id);
+            $('#'+wrapper).closest('.activity-box').remove();
+        }
+        var day=0, hour=0, minute=0, second=0;//时间默认值
+        if(difftime > 0){
+            day = Math.floor(difftime / (60 * 60 * 24));
+            hour = Math.floor(difftime / (60 * 60)) - (day * 24);
+            minute = Math.floor(difftime / 60) - (day * 24 * 60) - (hour * 60);
+            second = Math.floor(difftime) - (day * 24 * 60 * 60) - (hour * 60 * 60) - (minute * 60);
+        }
+        if (day <= 9) day = '0' + day;
+        if (hour <= 9) hour = '0' + hour;
+        if (minute <= 9) minute = '0' + minute;
+        if (second <= 9) second = '0' + second;
+        $('#'+wrapper).find('.day').text(day);
+        $('#'+wrapper).find('.hour').text(hour);
+        $('#'+wrapper).find('.minute').text(minute);
+        $('#'+wrapper).find('.second').text(second);
+        difftime--;
+    }, 1000);
+}
+</script>
+</html>

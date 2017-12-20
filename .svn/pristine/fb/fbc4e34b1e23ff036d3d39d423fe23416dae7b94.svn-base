@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.meitianhui.demo.dao.mysql.DemoDao">
+	<!-- 新增 -->
+	<insert id="insertDemo" parameterType="Demo">
+		INSERT INTO demo
+		(id, name)
+		VALUES
+		(#{id}, #{name})
+	</insert>
+
+	<!-- 查询 -->
+	<select id="selectDemo" parameterType="Map" resultType="Demo">
+		<![CDATA[
+			SELECT
+				id,
+				name
+			FROM
+				demo
+		]]>
+		<where>
+			1=1
+			<if test="name != null and name != ''">
+				AND name=#{name}
+			</if>
+		</where>
+	</select>
+
+	<!-- 查询 -->
+	<select id="selectMdArea" resultType="Map">
+		<![CDATA[
+			select 
+				t.area_id as id,
+				t.area_name as value,
+				t.type_key as type_key,
+				tt.area_id as parentId
+			FROM md_area t 
+			LEFT JOIN md_area tt ON tt.area_id=t.parent_id
+			ORDER BY t.area_code
+		]]>
+	</select>
+
+</mapper>

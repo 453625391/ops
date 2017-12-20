@@ -1,0 +1,198 @@
+/* http://meyerweb.com/eric/tools/css/reset/ 
+   v2.0 | 20110126
+   License: none (public domain)
+*/
+html, body, div, span, applet, object, iframe,
+h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+a, abbr, acronym, address, big, cite, code,
+del, dfn, em, img, ins, kbd, q, s, samp,
+small, strike, strong, sub, sup, tt, var,
+b, u, i, center,
+dl, dt, dd, ol, ul, li,
+fieldset, form, label, legend,
+table, caption, tbody, tfoot, thead, tr, th, td,
+article, aside, canvas, details, embed, 
+figure, figcaption, footer, header, hgroup, 
+menu, nav, output, ruby, section, summary,
+time, mark, audio, video {
+	margin: 0;
+	padding: 0;
+	border: 0;
+	font-size: 100%;
+	font: inherit;
+	vertical-align: baseline;
+	font-family: "微软雅黑", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
+}
+/* HTML5 display-role reset for older browsers */
+article, aside, details, figcaption, figure, 
+footer, header, hgroup, menu, nav, section {
+	display: block;
+}
+body {
+	line-height: 1;
+	background: #f4f4f4;
+}
+ol, ul {
+	list-style: none;
+}
+blockquote, q {
+	quotes: none;
+}
+blockquote:before, blockquote:after,
+q:before, q:after {
+	content: '';
+	content: none;
+}
+table {
+	border-collapse: collapse;
+	border-spacing: 0;
+}
+html * {
+	outline: 0;
+	-webkit-tap-highlight-color: rgba(0,0,0,0);
+}
+input {
+	outline: none;
+}
+a {
+	text-decoration: none;
+}
+
+
+
+.title{
+	width: 100%;
+	overflow: hidden;
+	position: fixed;
+	top: 0;
+	left: 0;
+	background: #ffffff;
+	z-index: 9999;
+}
+
+.title li{
+	float: left;
+	width:33%;
+	text-align: center;
+	font-size:0.434783rem;
+	height:1.136957rem;
+	line-height: 1.136957rem;
+	border-bottom: solid 1px #f4f4f4;
+}
+
+.title li a{
+	color: #333;
+}
+.title li a.sel{
+	border-bottom: solid 3px #F96116;
+	height:1.086957rem;
+	line-height: 1.086957rem;
+	display:inline-block;
+	color: #F96116;
+}
+
+.main{
+	width:100%;
+	overflow: hidden;
+	margin:1.136957rem auto;
+}
+.cutover-detail{
+	width: 100%;
+	overflow: hidden;
+	margin:0 auto;
+}
+.sum{
+	width:100%;
+	overflow: hidden;
+	margin-top: 0.841546rem;
+	border-bottom: solid 0.120773rem #f4f4f4;
+	padding-bottom:0.841546rem;
+}
+.sum li{
+	float: left;
+	width:33.3%;
+	text-align: center;
+	font-size:0.338164rem;
+	color: #666;
+}
+.sum li .number{
+	font-size:0.434783rem;
+	width: 2.263607rem;
+	height: 2.263607rem;
+	border-radius: 2.263607rem;
+	line-height: 2.263607rem;
+	margin:0 auto 0.461031rem;
+	border:solid 1px #F96116;
+	color: #F96116;
+}
+
+.option-title{
+	font-size: 0.583092rem;
+	margin-top: 0.541546rem;
+	text-align: center;
+	color: #666;
+	margin-bottom: 0.261031rem;
+	font-weight: 100;
+}
+#option-sort,#option-sort2,#option-cost,#option-consume,#option-consumeTwo,#option-Member,#option-defray{
+	width:10.0rem;
+	height: 7.025765rem;
+	margin:0 auto;
+	border-bottom: solid 0.120773rem #f4f4f4;
+}
+#option-sellWell,#option-CustomerPrice{
+	width:10.0rem;
+	height: 7.025765rem;
+	margin:0 auto;
+}
+#option-reserve{
+	width:10.0rem;
+	height: 9.025765rem;
+	margin:0 auto;
+}
+#option-Stacking{
+	width:10.0rem;
+	height: 7.025765rem;
+	margin-top: 1.083092rem;
+	border-bottom: solid 0.120773rem #f4f4f4;
+	margin:0 auto;
+}
+.hint{
+	width:80%;
+	height:100%;
+	margin:0 auto;
+	padding:3.220612rem 0.644122rem;
+	color: #666;
+	font-size: 0.4rem;
+	font-weight: 200;
+	line-height: 0.666667rem;
+	overflow: hidden;
+	background: #f4f4f4;
+	text-align: center;
+}
+.hint p{
+	margin-bottom: 0.666667rem;
+	color: #F96116;
+	font-size:0.882061rem;
+	font-weight: 250;
+}
+.refresh{
+	width: 1.449275rem;
+	height: 1.449275rem;
+	font-size: 0.462319rem;
+	color: #ffffff;
+	display: block;
+	position: fixed;
+	bottom: 0.161031rem;
+	left: 0.161031rem;
+	z-index: 9999999;
+	text-align: center;
+	line-height: 1.549275rem;
+	background: #F96116;
+	opacity: 0.7;
+	border-radius: 1.449275rem;
+	background-image: url(/image/inventory/refresh.png);
+	background-repeat: no-repeat;
+	background-position: center;
+	background-size:0.982287rem 0.845411rem;
+}

@@ -1,0 +1,322 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.meitianhui.member.dao.SalesmanDao">
+
+	<insert id="insertSalesman" parameterType="MDSalesman">
+		INSERT INTO
+		md_salesman(
+			salesman_id,
+			name,
+			nick_name,
+			desc1,
+			contact_tel,
+			sex_key,
+			head_pic_path,
+			area_id,
+			address,
+			registered_date,
+			id_card,
+			id_card_pic_path,
+			auth_status,
+			is_driver,
+			is_specialist,
+			is_guider,
+			is_buyer,
+			is_operator,
+			status,
+			created_date,
+			modified_date,
+			remark
+		)VALUES(
+			#{salesman_id},
+			#{name},
+			#{nick_name},
+			#{desc1},
+			#{contact_tel},
+			#{sex_key},
+			#{head_pic_path},
+			#{area_id},
+			#{address},
+			#{registered_date},
+			#{id_card},
+			#{id_card_pic_path},
+			#{auth_status},
+			#{is_driver},
+			#{is_specialist},
+			#{is_guider},
+			#{is_buyer},
+			#{is_operator},
+			#{status},
+			#{created_date},
+			#{modified_date},
+			#{remark}
+		)
+	</insert>
+	
+	<insert id="insertSalesmanLog" parameterType="Map">
+		INSERT INTO
+		md_salesman_log (
+		log_id
+		,salesman_id
+		,category
+		,tracked_date
+		,event_desc
+		)
+		VALUES (
+		#{log_id}
+		,#{salesman_id}
+		,#{category}
+		,#{tracked_date}
+		,#{event_desc}
+		)
+	</insert>
+	
+	
+	<select id="selectSalesmanLogList" parameterType="Map" resultType="Map">
+		<![CDATA[
+		SELECT
+			msl.log_id,
+			msl.tracked_date,
+			msl.event_desc,
+			msl.salesman_id as msl_salesman_id,
+			ms.salesman_id as ms_salesman_id,
+			ms.name,
+			ms.nick_name
+		FROM
+			md_salesman_log msl	
+			LEFT JOIN md_salesman ms ON ms.salesman_id = msl.salesman_id
+		]]>	
+		<where>
+			1=1
+			<if test="salesman_id !=null and salesman_id !=''">
+				AND msl.salesman_id = #{salesman_id}
+			</if>
+		</where>	
+		ORDER BY msl.tracked_date DESC
+	</select>
+	
+	
+	<select id="selectSalesmanList" parameterType="Map" resultType="Map">
+		<![CDATA[
+		SELECT
+			ms.salesman_id,
+			ms.name,
+			ms.nick_name,
+			ms.contact_tel,
+			ms.auth_status,
+			ms.area_id,
+			ms.created_date,
+			ms.id_card,
+			ms.is_driver,
+			ms.is_specialist,
+			ms.is_guider,
+			ms.is_buyer,
+			ms.is_operator,
+			ma.path
+		FROM
+			md_salesman ms	
+			LEFT JOIN md_area ma ON ms.area_id = ma.area_id
+		]]>	
+		<where>
+			<if test="search_like !=null and search_like !=''">
+				AND (ms.name like concat('%',#{search_like},'%') or
+					ms.nick_name like concat('%',#{search_like},'%') or
+					ms.contact_tel like concat('%',#{search_like},'%') or
+					ms.id_card like concat('%',#{search_like},'%'))
+			</if>
+			<if test="is_driver !=null and is_driver !=''">
+				AND ms.is_driver = #{is_driver}
+			</if>
+			<if test="is_specialist !=null and is_specialist !=''">
+				AND ms.is_specialist = #{is_specialist}
+			</if>
+			<if test="is_guider !=null and is_guider !=''">
+				AND ms.is_guider = #{is_guider}
+			</if>
+			<if test="is_buyer !=null and is_buyer !=''">
+				AND ms.is_buyer = #{is_buyer}
+			</if>
+			<if test="is_operator !=null and is_operator !=''">
+				AND ms.is_operator = #{is_operator}
+			</if>
+		</where>	
+		ORDER BY ms.created_date DESC
+	</select>
+		
+	<update id="updateSalesman" parameterType="Map">
+		UPDATE md_salesman SET 
+		<trim suffixOverrides=",">
+			modified_date = SYSDATE(),
+			<if test="nick_name != null and nick_name != ''">
+				nick_name = #{nick_name},
+			</if>
+			<if test="contact_tel != null and contact_tel != ''">
+				contact_tel = #{contact_tel},
+			</if>
+			<if test="sex_key != null and sex_key != ''">
+				sex_key = #{sex_key},
+			</if>
+			<if test="head_pic_path != null and head_pic_path != ''">
+				head_pic_path = #{head_pic_path},
+			</if>
+			<if test="area_id != null and area_id != ''">
+				area_id = #{area_id},
+			</if>
+			<if test="address != null and address != ''">
+				address = #{address},
+			</if>
+			<if test="name != null and name != ''">
+				name = #{name},
+			</if>
+			<if test="id_card != null and id_card != ''">
+				id_card = #{id_card},
+			</if>
+			<if test="id_card_pic_path != null and id_card_pic_path != ''">
+				id_card_pic_path = #{id_card_pic_path},
+			</if>
+			<if test="auth_status != null and auth_status != ''">
+				auth_status = #{auth_status},
+			</if>
+			<if test="is_driver != null and is_driver != ''">
+				is_driver = #{is_driver},
+			</if>
+			<if test="is_specialist != null and is_specialist != ''">
+				is_specialist = #{is_specialist},
+			</if>
+			<if test="is_guider != null and is_guider != ''">
+				is_guider = #{is_guider},
+			</if>
+			<if test="is_buyer != null and is_buyer != ''">
+				is_buyer = #{is_buyer},
+			</if>
+			<if test="is_operator != null and is_operator != ''">
+				is_operator = #{is_operator},
+			</if>
+			<if test="remark != null and remark != ''">
+				remark = #{remark},
+			</if>
+		</trim>	
+		<where>
+			salesman_id = #{salesman_id}
+		</where>
+	</update>
+	
+	<select id="selectSalesman" parameterType="Map" resultType="Map">
+		<![CDATA[
+			SELECT
+			     ms.salesman_id
+				,ms.name
+				,ms.nick_name
+				,ms.desc1
+				,ms.contact_tel
+				,ms.sex_key
+				,ms.head_pic_path
+				,ms.area_id
+				,ms.address
+				,ms.registered_date
+				,ms.id_card
+				,ms.id_card_pic_path
+				,ms.auth_status
+				,ms.is_driver
+				,ms.is_specialist
+				,ms.is_guider
+				,ms.is_buyer
+				,ms.is_operator
+				,ms.status
+				,ms.remark
+				,ma.path
+			FROM
+				md_salesman ms 
+				LEFT JOIN md_area ma ON ms.area_id = ma.area_id
+		]]>
+		<where>
+			<if test="salesman_id != null and salesman_id != ''">
+				AND ms.salesman_id = #{salesman_id}
+			</if>
+			<if test="contact_tel != null and contact_tel != ''">
+				AND ms.contact_tel = #{contact_tel}
+			</if>
+		</where>
+	</select>
+		
+	<insert id="insertUserMember" parameterType="MDUserMember">
+		INSERT INTO
+		md_user_member(
+			user_id,
+			member_type_key,
+			member_id,
+			is_admin
+		)VALUES(
+			#{user_id},
+			#{member_type_key},
+			#{member_id},
+			#{is_admin}
+		)
+	</insert>
+	
+	<select id="selectUserMember" parameterType="Map" resultType="Map">
+		<![CDATA[
+			SELECT 
+				mum.user_id,
+				mum.member_type_key,
+				mum.member_id,
+				mum.is_admin
+			FROM
+				md_user_member mum
+		]]>
+		<where>
+			<if test="user_id != null and user_id != ''">
+				AND mum.user_id = #{user_id}
+			</if>
+			<if test="member_type_key != null and member_type_key != ''">
+				AND mum.member_type_key = #{member_type_key}
+			</if>
+		</where>			
+	</select>
+	
+	<delete id="deleteUserMember" parameterType="Map">
+		DELETE FROM md_user_member
+		<where>
+			user_id = #{user_id} AND  member_type_key = #{member_type_key}
+		</where>
+	</delete>
+	
+	<select id="selectSalesmanMonthNum" parameterType="Map" resultType="Map">
+		SELECT
+			sum(case when ms.created_date > date_sub(date_sub(date_format(curdate(), '%Y%m%d'), 
+			INTERVAL extract(DAY FROM curdate()) - 1 DAY), INTERVAL 0 MONTH) THEN 1 else 0 end ) 'salesman_count',
+			count(mss.salesman_id) 'specialist_count',
+			count(msd.salesman_id) 'driver_count', 
+			count(msg.salesman_id) 'guider_count', 
+			count(msb.salesman_id) 'buyer_count'
+		FROM 
+			md_salesman ms 
+		LEFT JOIN md_salesman_specialist mss on ms.salesman_id = mss.salesman_id and mss.audit_status = 'audit'
+		AND mss.created_date &gt; date_sub(date_sub(date_format(curdate(), '%Y%m%d'), 
+		INTERVAL extract(DAY FROM curdate()) - 1 DAY), INTERVAL 0 MONTH)
+		LEFT JOIN md_salesman_driver msd on  ms.salesman_id = msd.salesman_id and msd.audit_status = 'audit'
+		AND msd.created_date &gt; date_sub(date_sub(date_format(curdate(), '%Y%m%d'), 
+		INTERVAL extract(DAY FROM curdate()) - 1 DAY), INTERVAL 0 MONTH)
+		LEFT JOIN md_salesman_guider msg on  ms.salesman_id = msg.salesman_id and msg.audit_status = 'audit'
+		AND msg.created_date &gt; date_sub(date_sub(date_format(curdate(), '%Y%m%d'), 
+		INTERVAL extract(DAY FROM curdate()) - 1 DAY), INTERVAL 0 MONTH)
+		LEFT JOIN md_salesman_buyer msb on  ms.salesman_id = msb.salesman_id and msb.audit_status = 'audit'
+		AND msb.created_date &gt; date_sub(date_sub(date_format(curdate(), '%Y%m%d'), 
+		INTERVAL extract(DAY FROM curdate()) - 1 DAY), INTERVAL 0 MONTH)
+	</select>
+	
+	<select id="selectSalesmanNum" parameterType="Map" resultType="Map">
+		SELECT
+			count(ms.salesman_id) 'salesman_count',
+			count(mss.salesman_id) 'specialist_count',
+			count(msd.salesman_id) 'driver_count', 
+			count(msg.salesman_id) 'guider_count', 
+			count(msb.salesman_id) 'buyer_count'
+		FROM 
+			md_salesman ms 
+		LEFT JOIN md_salesman_specialist mss on ms.salesman_id = mss.salesman_id and mss.audit_status = 'audit'
+		LEFT JOIN md_salesman_driver msd on  ms.salesman_id = msd.salesman_id and msd.audit_status = 'audit'
+		LEFT JOIN md_salesman_guider msg on  ms.salesman_id = msg.salesman_id and msg.audit_status = 'audit'
+		LEFT JOIN md_salesman_buyer msb on  ms.salesman_id = msb.salesman_id and msb.audit_status = 'audit'
+	</select>
+</mapper>

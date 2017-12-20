@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.meitianhui.member.dao.SaleAssistantHistoryDao">
+
+	<insert id="insertMDSaleAssistantHistory" parameterType="MDSaleAssistantHistory">
+		INSERT INTO
+		md_sale_assistant_history(
+		history_id
+		,member_id
+		,member_type_key
+		,tracked_date
+		,event_desc
+		)
+		VALUES(
+		#{history_id}
+		,#{member_id}
+		,#{member_type_key}
+		,#{tracked_date}
+		,#{event_desc}
+		)
+	</insert>
+
+
+	<select id="selectMDSaleAssistantHistoryList" parameterType="Map"
+		resultType="Map">
+		<![CDATA[
+			SELECT
+			   	history_id
+				,member_id
+				,member_type_key
+				,tracked_date
+				,event_desc
+			FROM
+				md_sale_assistant_history
+		]]>
+		<where>
+			member_id=#{member_id} AND member_type_key=#{member_type_key} 
+		</where>
+		ORDER BY tracked_date DESC
+	</select>
+	
+
+</mapper>

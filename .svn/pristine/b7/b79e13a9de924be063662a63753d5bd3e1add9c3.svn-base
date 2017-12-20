@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <!-- 删除苹果默认的工具栏和菜单栏 -->
+    <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+    <!-- 设置苹果工具栏颜色 -->
+    <meta name="format-detection" content="telphone=no, email=no" />
+    <!-- 忽略页面中的数字识别为电话，忽略email识别 -->
+    <!-- 启用360浏览器的极速模式(webkit) -->
+    <meta name="renderer" content="webkit">
+    <!-- 避免IE使用兼容模式 -->
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <!-- 针对手持设备优化，主要是针对一些老的不识别viewport的浏览器，比如黑莓 -->
+    <meta name="HandheldFriendly" content="true">
+    <!-- 微软的老式浏览器 -->
+    <meta name="MobileOptimized" content="320">
+    <!-- uc强制竖屏 -->
+    <meta name="screen-orientation" content="portrait">
+    <!-- QQ强制竖屏 -->
+    <meta name="x5-orientation" content="portrait">
+    <!-- UC强制全屏 -->
+    <meta name="full-screen" content="yes">
+    <!-- QQ强制全屏 -->
+    <meta name="x5-fullscreen" content="true">
+    <!-- UC应用模式 -->
+    <meta name="browsermode" content="application">
+    <!-- QQ应用模式 -->
+    <meta name="x5-page-mode" content="app">
+    <!-- windows phone 点击无高光 -->
+    <meta name="msapplication-tap-highlight" content="no">
+    <!-- 禁用iPhone手机浏览器上给电话号码自动加上的link样式 -->
+    <meta name="format-detection" content="telephone=no">
+    <title>登录遇到问题</title>
+    <link rel="stylesheet" type="text/css" href="/css/reset.css">
+    <script type="text/javascript" src="/js/third-part/flexible.js"></script>
+    <style>
+        .container {
+            padding: 0.666667rem 1.066667rem;
+        }
+        .container .tit {
+            list-style: disc;
+        }
+        .container {
+            color: #666;
+        }
+        [data-dpr="1"] .container .tit {
+            font-size: 16px;
+            line-height: 24px;
+        }
+        [data-dpr="2"] .container .tit {
+            font-size: 32px;
+            line-height: 48px;
+        }
+        [data-dpr="3"] .container .tit {
+            font-size: 48px;
+            line-height: 72px;
+        }
+        [data-dpr="1"] .container p {
+            font-size: 14px;
+            line-height: 22px;
+        }
+        [data-dpr="2"] .container p {
+            font-size: 28px;
+            line-height: 44px;
+        }
+        [data-dpr="3"] .container p {
+            font-size: 42px;
+            line-height: 66px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <ul>
+            <li class="tit">账号不存在？</li>
+        </ul>
+        <p>如果提示账号或会员不存在，请先申请成为每天惠加盟店或联盟店。</p>
+        <br><br>
+        <ul>
+            <li class="tit">收不到验证码？</li>
+        </ul>
+        <p>您可能屏蔽了来自每天惠的短信通知，请联系手机号码对应的运营商。</p>
+        <br><br>
+        <ul>
+            <li class="tit">验证码不正确？</li>
+        </ul>
+        <p>请联系每天惠集团深圳技术开发中心。</p>
+    </div>
+</body>
+</html>

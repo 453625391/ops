@@ -1,0 +1,253 @@
+package com.meitianhui.test;
+
+import java.util.HashMap;
+import java.util.Map;
+
+import org.junit.Test;
+
+import com.meitianhui.common.util.FastJsonUtil;
+import com.meitianhui.common.util.HttpClientUtil;
+
+public class FgOrderTest {
+
+	//@Test
+	public void fgOrderListPageFind() {
+		try {
+			String url = "http://127.0.0.1:8080/ops-order/order";
+			Map<String, String> requestData = new HashMap<String, String>();
+			requestData.put("service", "order.fgOrderListPageFind");
+			Map<String, String> params = new HashMap<String, String>();
+			params.put("member_id", "12105561");
+			requestData.put("params", FastJsonUtil.toJson(params));
+			String result = HttpClientUtil.post(url, requestData);
+			System.out.println(result);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+//	@Test
+	public void fgOrderViolationCount() {
+		try {
+			String url = "http://127.0.0.1:8080/ops-order/order";
+			Map<String, String> requestData = new HashMap<String, String>();
+			requestData.put("service", "order.fgOrderViolationCount");
+			Map<String, String> params = new HashMap<String, String>();
+			params.put("member_id", "20000001");
+			params.put("member_type_key", "stores");
+			requestData.put("params", FastJsonUtil.toJson(params));
+			String result = HttpClientUtil.post(url, requestData);
+			System.out.println(result);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	
+//	@Test
+	public void qualificationValidate() {
+		try {
+			String url = "http://127.0.0.1:8080/ops-order/order";
+			Map<String, String> requestData = new HashMap<String, String>();
+			requestData.put("service", "tsActivity.consumer.qualificationValidate");
+			Map<String, String> params = new HashMap<String, String>();
+			params.put("consumer_id", "20000001");
+			requestData.put("params", FastJsonUtil.toJson(params));
+			String result = HttpClientUtil.post(url, requestData);
+			System.out.println(result);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+	@Test
+	public void fgOrderSupplyCount() {
+		try {
+			String url = "http://127.0.0.1:8080/ops-order/order";
+			Map<String, String> requestData = new HashMap<String, String>();
+			requestData.put("service", "fgOrder.supply.fgOrderSupplyCount");
+			Map<String, String> params = new HashMap<String, String>();
+			params.put("supplier_id", "17ca2a7a83094fe69da31df5047914ce");
+			requestData.put("params", FastJsonUtil.toJson(params));
+			String result = HttpClientUtil.post(url, requestData);
+			System.out.println(result);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+	//@Test
+	public void fgOrderDetailFind() {
+		try {
+			String url = "http://127.0.0.1:8080/ops-order/order";
+			Map<String, String> requestData = new HashMap<String, String>();
+			requestData.put("service", "order.operation.fgOrderDetailFind");
+			Map<String, String> params = new HashMap<String, String>();
+			params.put("external_order_no", "86483486555555555555");
+			requestData.put("params", FastJsonUtil.toJson(params));
+			String result = HttpClientUtil.post(url, requestData);
+			System.out.println(result);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+
+	//@Test
+	public void fgOrderListForOpPageFind() {
+		try {
+			String url = "http://127.0.0.1:8080/ops-order/order";
+			Map<String, String> requestData = new HashMap<String, String>();
+			requestData.put("service", "order.fgOrderListForOpPageFind");
+			Map<String, String> params = new HashMap<String, String>();
+			requestData.put("params", FastJsonUtil.toJson(params));
+			Map<String, String> page = new HashMap<String, String>();
+			page.put("page_no", "1");
+			page.put("page_size", "20");
+			requestData.put("page", FastJsonUtil.toJson(page));
+			String result = HttpClientUtil.post(url, requestData);
+			System.out.println(result);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	 @Test
+	public void freeGetOrderImport() {
+		try {
+			String url = "http://127.0.0.1:8080/ops-order/order";
+			Map<String, String> requestData = new HashMap<String, String>();
+			requestData.put("service", "order.freeGetOrderImport");
+			Map<String, String> params = new HashMap<String, String>();
+			params.put("data_source", "SJLY_03");
+			params.put("goods_code", "FS149225005844");
+			params.put("external_order_no", "55681236845668441269");
+			params.put("qty", "1");
+			params.put("contact_person", "张三");
+			params.put("external_buyer_name", "18718688437");
+			params.put("contact_tel", "13881237612");
+			params.put("delivery_address", "深圳市福田区车公庙泰然科技园");
+			Map<String, String> params233232 = new HashMap<String, String>();
+			params233232.put("company", "百世汇通");
+			params233232.put("number", "1354546546汇通");
+			params.put("logistics",params233232.toString());
+			params.put("amount", "100");
+			requestData.put("params", FastJsonUtil.toJson(params));
+			String result = HttpClientUtil.post(url, requestData);
+			System.out.println(result);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+//	@Test
+	public void fgOrderSettlement() {
+		try {
+			String url = "http://127.0.0.1:8080/ops-order/order";
+			Map<String, String> requestData = new HashMap<String, String>();
+			requestData.put("service", "order.fgOrderSettlement");
+			Map<String, String> params = new HashMap<String, String>();
+			params.put("order_date", "2016-12-01");
+			params.put("operator", "广东省公司|刘涛");
+			requestData.put("params", FastJsonUtil.toJson(params));
+			String result = HttpClientUtil.post(url, requestData);
+			System.out.println(result);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+//	@Test
+	public void fgOrderRevoke() {
+		try {
+			String url = "http://127.0.0.1:8080/ops-order/order";
+			Map<String, String> requestData = new HashMap<String, String>();
+			requestData.put("service", "order.fgOrderRevoke");
+			Map<String, String> params = new HashMap<String, String>();
+			params.put("order_id", "99031dbdaba94934b40973fa240a8225");
+			params.put("biz_remark", "淘宝去小店");
+			requestData.put("params", FastJsonUtil.toJson(params));
+			String result = HttpClientUtil.post(url, requestData);
+			System.out.println(result);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+//	@Test
+	public void fgOrderCancelled() {
+		try {
+			String url = "http://127.0.0.1:8080/ops-order/order";
+			Map<String, String> requestData = new HashMap<String, String>();
+			requestData.put("service", "order.fgOrderCancelled");
+			Map<String, String> params = new HashMap<String, String>();
+			params.put("data_source", "SJLY_03");
+			params.put("order_id", "fe44bbcd1c154dda983ede8bacf20854");
+			params.put("remark", "广东省公司|刘涛");
+			requestData.put("params", FastJsonUtil.toJson(params));
+			String result = HttpClientUtil.post(url, requestData);
+			System.out.println(result);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+//	@Test
+	public void fgOrderCreateNotity() {
+		try {
+			String url = "http://127.0.0.1:8080/ops-order/order";
+			Map<String, String> requestData = new HashMap<String, String>();
+			requestData.put("service", "order.fgOrderCreateNotity");
+			Map<String, String> params = new HashMap<String, String>();
+			params.put("data_source", "SJLY_01");
+			params.put("order_id", "d4f94cf3621a43c18b87962a45d8e040");
+			params.put("payment_way_key", "ZFFS_01");
+			params.put("delivery_address", "四川省成都市锦江区水碾河南街u37创意仓库7栋");
+			params.put("contact_person", "丁戈");
+			params.put("contact_tel", "13018089936");
+			requestData.put("params", FastJsonUtil.toJson(params));
+			String result = HttpClientUtil.post(url, requestData);
+			System.out.println(result);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+//	@Test
+	public void consumerFreeGetRecordCreate() {
+		try {
+			String url = "http://127.0.0.1:8080/ops-order/order";
+			Map<String, String> requestData = new HashMap<String, String>();
+			requestData.put("service", "order.consumerFreeGetRecordCreate");
+			Map<String, String> params = new HashMap<String, String>();
+			params.put("goods_code", "FS149568026195");
+			params.put("consumer_id", "11603134");
+			params.put("recommend_stores_id", "9654");
+			params.put("mobile", "13018089936");
+			requestData.put("params", FastJsonUtil.toJson(params));
+			String result = HttpClientUtil.post(url, requestData);
+			System.out.println(result);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+//	@Test
+	public void consumerFreeGetOrderCancelled() {
+		try {
+			String url = "http://127.0.0.1:8080/ops-order/order";
+			Map<String, String> requestData = new HashMap<String, String>();
+			requestData.put("service", "order.consumerFreeGetOrderCancelled");
+			Map<String, String> params = new HashMap<String, String>();
+			params.put("order_id", "10e7acea136f4d5aa4657b648e38cb91");
+			params.put("remark", "不想领取了");
+			params.put("data_source", "SJLY_02");
+			requestData.put("params", FastJsonUtil.toJson(params));
+			String result = HttpClientUtil.post(url, requestData);
+			System.out.println(result);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+}

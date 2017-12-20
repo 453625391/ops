@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <% include ../../../commonHead.html %>
+    <title>活动详情</title>
+    <link rel="stylesheet" type="text/css" href="/css/payback/lottery/detail.css?v2016110802">
+</head>
+<body>
+    <div class="banner">
+        <div id="slider" class="swipe">
+            <div class="swipe-wrap">
+                <% for(var i in activityInfo.picArr) { %>
+                    <div>
+                        <img src="<%=activityInfo.picArr[i] %>" />
+                    </div>
+                <% } %>
+            </div>
+        </div>
+        <nav>
+            <ul id="position">
+                <% for(var i in activityInfo.picArr) { %>
+                    <% if(i == 0) { %>
+                        <li class="on"></li>
+                    <% } else { %>
+                        <li></li>
+                    <% } %>    
+                <% } %>
+            </ul>
+        </nav>
+    </div>
+    <div class="cnt-box">
+        <% if(activityInfo.diff_time > 0) { %>
+        <div id="countdown" data-seconds="<%=activityInfo.diff_time %>">
+            开奖倒计时<em class="day">00</em><i>天</i><em class="hour">00</em><i>时</i><em class="minute">00</em><i>分</i><em class="second">00</em><i>秒</i>
+        </div>
+        <% } %>
+        <p class="tit"><%=activityInfo.title %></p>
+        <p class="goods-tit"><%=activityInfo.goods_title %></p>
+        <div class="process-wrap">
+            <div class="process-bg">
+                <em class="process" style="width: <%=((activityInfo.total_num / activityInfo.min_num) * 100) %>%;"></em>
+            </div>
+        </div>
+        <div class="num-wrap">
+            <span>奖品数量：<em><%=activityInfo.prize_qty %></em></span>
+            <span>达标人次：<em><%=activityInfo.min_num %></em></span>
+            <div class="process-txt">已参与<em class="joined"><%=activityInfo.total_num %></em>人</div>
+        </div>
+    </div>
+    <% if(luckyList && luckyList.length>0) { %>
+    <div class="lucky-wrap">
+        <table class="lucky-list">
+            <tr>
+                <td>会员</td>
+                <td>中奖次数</td>
+            </tr>
+            <% for(var i=0; i<luckyList.length; i++) { %>
+            <tr>
+                <td>
+                <% if(luckyList[i].mobile) { %>
+                    <%=(luckyList[i].mobile.substring(0,3) + '****' + luckyList[i].mobile.substring(7,11))%>
+                <% } %>
+                </td>
+                <td><%=luckyList[i].win_num%></td>
+            </tr>
+            <% } %>
+        </table>
+    </div>
+    <% } %>
+    <% if(activityInfo.desc1) { %>
+    <p class="desc">商品描述<br><%=activityInfo.desc1 %></p>
+    <% } %>
+    <% if(activityInfo.detailPicArr && activityInfo.detailPicArr.length > 0) { %>
+    <div class="detail-wrap">
+    <% for(var i=0; i<activityInfo.detailPicArr.length; i++) { %>
+        <div class="detail-img-wrap">
+            <img src="<%=activityInfo.detailPicArr[i] %>" />
+        </div>
+    <% } %>
+    </div>
+    <% } %>
+    <% if(activityInfo.diff_time > 0) { %>
+    <div class="footer-bar">
+        <a href="javascript: void(0);" class="btn" id="joinNow">立即参与</a>
+    </div>
+    <% } %>
+</body>
+<script type="text/javascript">
+$(function() {
+    M.initSwipe();
+
+    // 开奖倒计时
+    if($('#countdown').length > 0) {
+        var difftime = parseInt($('#countdown').attr('data-seconds'));
+        if(difftime > 0) {
+            timer(difftime);
+        }
+    }
+
+    $('#joinNow').click(function() {
+        if($(this).hasClass('disable')) {
+            return;
+        }
+        $.ajax({
+            type: 'POST',
+            url: '/openapi/h5/c/payback/lottery/join',
+            data: {
+                activity_id: '<%=activityInfo.activity_id %>',
+                member_id: '<%=member_id %>'
+            },
+            beforeSend: function() {
+                $('#joinNow').text('提交中...').addClass('disable');
+            },
+            success: function(data) {
+                if(typeof data === 'string') data = JSON.parse(data);
+                if(data.rsp_code == 'succ') {
+                    M.Toast.succ('参与成功');
+                    $('#joinNow').text('参与成功');
+                    setTimeout(function() {
+                        var url = window.location.href;
+                        url = url.replace('/detail', '/joinsucc') + '&r=' + Math.random();
+                        window.location.href = url;
+                    }, 2000);
+                } else {
+                    M.Toast.warn(data.error_msg);
+                }
+            },
+            complete: function() {
+                setTimeout(function() {
+                    $('#joinNow').text('立即参与').removeClass('disable');
+                }, 3000);
+            }
+        });
+    });
+});
+
+// 倒计时
+function timer(difftime){
+    difftime = difftime / 1000;
+    var id = setInterval(function(){
+        if(difftime <= 0) {
+            clearInterval(id);
+            $('#countdown').remove();
+            $('.footer-bar').remove();
+        }
+        var day=0, hour=0, minute=0, second=0;//时间默认值        
+        if(difftime > 0){
+            day = Math.floor(difftime / (60 * 60 * 24));
+            hour = Math.floor(difftime / (60 * 60)) - (day * 24);
+            minute = Math.floor(difftime / 60) - (day * 24 * 60) - (hour * 60);
+            second = Math.floor(difftime) - (day * 24 * 60 * 60) - (hour * 60 * 60) - (minute * 60);
+        }
+        if (day <= 9) day = '0' + day;
+        if (hour <= 9) hour = '0' + hour;
+        if (minute <= 9) minute = '0' + minute;
+        if (second <= 9) second = '0' + second;
+        $('#countdown').find('.day').text(day);
+        $('#countdown').find('.hour').text(hour);
+        $('#countdown').find('.minute').text(minute);
+        $('#countdown').find('.second').text(second);
+        difftime--;
+    }, 1000);
+}
+</script>
+</html>

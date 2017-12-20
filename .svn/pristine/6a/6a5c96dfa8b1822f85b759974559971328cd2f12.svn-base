@@ -1,0 +1,139 @@
+body {
+	font-weight: 300;
+    padding-bottom: 1.333333rem;
+}
+.shop-info {
+    width: 9.466667rem;
+    padding: 0.266667rem 0.266667rem;
+    border-bottom: solid 0.133333rem #f4f4f4;
+    margin: 0 auto;
+}
+
+.borbottom-none {
+    border-bottom: none;
+}
+
+.shop-info li {
+    color: #666666;
+    line-height: 0.613333rem;
+    overflow: hidden;
+}
+
+[data-dpr="1"] .shop-info li {
+    font-size: 14px;
+}
+
+[data-dpr="2"] .shop-info li {
+    font-size: 28px;
+}
+
+[data-dpr="3"] .shop-info li {
+    font-size: 42px;
+}
+
+.shop-info li p.name {
+    float: left;
+}
+
+.shop-info li p.tx {
+    float: right;
+}
+
+.shop-info li p.tx input {
+    text-align: right;
+    border: none;
+    color: #666666;
+    margin-right: 0.106667rem;
+}
+
+[data-dpr="1"] .shop-info li p.tx input {
+    font-size: 14px;
+}
+
+[data-dpr="2"] .shop-info li p.tx input {
+    font-size: 28px;
+}
+
+[data-dpr="3"] .shop-info li p.tx input {
+    font-size: 42px;
+}
+
+.liHeight li {
+    height: 1.333333rem;
+    line-height: 1.333333rem;
+    border-bottom: solid 1px #f4f4f4;
+    padding: 0 0.266667rem;
+}
+
+.liHeight {
+    padding: 0;
+    width: 10.0rem;
+}
+
+.add-img {
+    margin-bottom: 1.6rem;
+    width: 9.466667rem;
+    padding: 0.266667rem 0.266667rem;
+}
+
+.add-img p {
+    position: relative;
+}
+
+.add-img p,
+.add-img p img {
+    float: left;
+    width: 2.933333rem;
+    height: 2.933333rem;
+    margin-right: 0.266667rem;
+    margin-bottom: 0.266667rem;
+}
+.add-img p:nth-child(3n) {
+	margin-right: 0 !important;
+}
+
+.add-img .icon-add {
+    float: left;
+    display: block;
+    width: 2.933333rem;
+    height: 2.933333rem;
+    margin-right: 0;
+    margin-bottom: 0.266667rem;
+    background: url(/image/more/xpx/camera.png) center center no-repeat;
+    background-size: 2.933333rem 2.933333rem;
+}
+
+.add-img p .icon-delete {
+    background: url(/image/more/xpx/icon-delete.png) no-repeat center;
+    background-size: 0.533333rem 0.533333rem;
+    position: absolute;
+    top: -0.2rem;
+    right: -0.2rem;
+    width: 0.6rem;
+    height: 0.6rem;
+}
+
+.icon-qr {
+    width: 100%;
+    color: #ffffff;
+    height: 1.333333rem;
+    line-height: 1.333333rem;
+    background: #ff0000;
+    text-align: center;
+    display: block;
+    position: fixed;
+    bottom: 0;
+    font-weight: 500;
+    letter-spacing: 0.133333rem;
+    z-index: 99;
+}
+[data-dpr="1"] .icon-qr{
+	font-size: 20px;
+
+}
+[data-dpr="2"] .icon-qr{
+	font-size: 40px;
+}
+[data-dpr="3"] .icon-qr{
+	font-size: 60px;
+}

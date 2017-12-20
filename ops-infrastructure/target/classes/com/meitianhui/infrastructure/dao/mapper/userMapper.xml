@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.meitianhui.infrastructure.dao.UserDao">
+
+	<insert id="insertUserLog" parameterType="UserLog">
+		INSERT INTO id_user_log
+		(
+		log_id
+		,user_id
+		,category
+		,tracked_date
+		,event
+		)
+		VALUES(
+		#{log_id}
+		,#{user_id}
+		,#{category}
+		,#{tracked_date}
+		,#{event}
+		)
+	</insert>
+
+	<insert id="insertUser" parameterType="User">
+		INSERT INTO id_user
+		(
+		user_id
+		,user_account
+		,password
+		,mobile
+		,user_name
+		,email
+		,registered_date
+		,status
+		,slat
+		)
+		VALUES
+		(
+		#{user_id},
+		#{user_account},
+		#{password},
+		#{mobile},
+		#{user_name},
+		#{email},
+		#{registered_date},
+		#{status},
+		#{slat}
+		)
+	</insert>
+
+	<insert id="insertMemberLoginLog" parameterType="Map">
+		INSERT INTO
+		id_member_login
+		(
+		member_id
+		,member_type_key
+		,data_source
+		,device_type
+		,alias
+		,last_login_time
+		,remark
+		)
+		VALUES
+		(
+		#{member_id}
+		,#{member_type_key}
+		,#{data_source}
+		,#{device_type}
+		,#{alias}
+		,SYSDATE()
+		,#{remark}
+		)
+	</insert>
+
+	<select id="selectUser" resultType="User" parameterType="Map">
+		SELECT
+		user_id
+		,user_account
+		,password
+		,mobile
+		,user_name
+		,email
+		,slat
+		,registered_date
+		FROM id_user
+		<where>
+			1=1
+			<if test="user_id != null">
+				AND user_id=#{user_id}
+			</if>
+			<if test="mobile != null">
+				AND mobile=#{mobile}
+			</if>
+		</where>
+		LIMIT 0,1
+	</select>
+
+	<update id="updateUser" parameterType="Map">
+		UPDATE id_user SET
+		<trim suffixOverrides=",">
+			<if test="password != null and password != ''">
+				password = #{password},
+			</if>
+			<if test="user_account != null and user_account != ''">
+				user_account = #{user_account},
+			</if>
+			<if test="user_name != null and user_name != ''">
+				user_name = #{user_name},
+			</if>
+			<if test="email != null">
+				email = #{email},
+			</if>
+			<if test="slat != null and slat != ''">
+				slat = #{slat},
+			</if>
+			<if test="status != null and status != ''">
+				status = #{status},
+			</if>
+		</trim>
+		<where>
+			user_id = #{user_id}
+		</where>
+	</update>
+
+	<update id="updateUserMobile" parameterType="Map">
+		UPDATE id_user SET
+		<trim suffixOverrides=",">
+			<if test="mobile != null and mobile != ''">
+				mobile = #{mobile},
+			</if>
+			<if test="user_name != null and user_name != ''">
+				user_name = #{user_name},
+			</if>
+		</trim>
+		<where>
+			user_id = #{user_id}
+		</where>
+	</update>
+
+	<delete id="deleteUser" parameterType="Map">
+		DELETE FROM id_member_login
+		<where>
+			member_id = #{user_id}
+		</where>
+	</delete>
+
+
+	<delete id="deleteMemberLoginInfo" parameterType="Map">
+		DELETE FROM id_member_login
+		<where>
+			member_id=#{member_id}
+			AND member_type_key=#{member_type_key}
+			<if test="data_source != null and data_source != ''">
+				AND data_source=#{data_source}
+			</if>
+		</where>
+	</delete>
+
+
+</mapper>

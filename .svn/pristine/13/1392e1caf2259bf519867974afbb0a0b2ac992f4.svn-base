@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.meitianhui.infrastructure.dao.PaymentSecurityDao">
+
+	<select id="selectPaymentSecurity" parameterType="Map"
+		resultType="PaymentSecurity">
+		select edl.* from id_payment_security edl
+		<where>
+			<if test="user_id">and edl.user_id=#{user_id}</if>
+		</where>
+		order by edl.created_date desc
+	</select>
+
+	<insert id="insertPaymentSecurity" parameterType="Map">
+		insert into id_payment_security (
+		user_id
+		,payment_password
+		,small_direct 
+		,small_direct_amount
+		,sms_notify 
+		,created_date 
+		,remark
+		)values(
+		#{user_id},
+		#{payment_password},
+		#{small_direct},
+		#{small_direct_amount},
+		#{sms_notify},
+		sysdate(),
+		#{remark}
+		)
+	</insert>
+
+	<update id="updatePaymentSecurity">
+		update id_payment_security
+		set
+		<trim suffixOverrides=",">
+			<if test="payment_password !=null ">
+				payment_password = #{payment_password},
+			</if>
+			<if test="small_direct !=null ">
+				small_direct=#{small_direct},
+			</if>
+			<if test="small_direct_amount !=null ">
+				small_direct_amount=#{small_direct_amount},
+			</if>
+			<if test="sms_notify !=null ">
+				sms_notify=#{sms_notify},
+			</if>
+			<if test="remark !=null ">
+				remark=#{remark},
+			</if>
+		</trim>
+		where user_id=#{user_id}
+	</update>
+</mapper>

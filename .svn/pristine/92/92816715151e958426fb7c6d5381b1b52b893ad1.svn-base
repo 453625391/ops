@@ -1,0 +1,605 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.meitianhui.goods.dao.GoodsDao">
+
+	<insert id="insertGdSysitemItem" parameterType="GdSysitemItem">
+		INSERT INTO
+		gd_sysitem_item (
+		item_id
+		,item_code
+		,title
+		,member_type_key
+		,member_id
+		,member_info
+		,keywords
+		,category_id
+		,brand_id
+		,barcode
+		,desc1
+		,pic_path
+		,specification
+		,pack
+		,cost_price
+		,market_price
+		,vip_price
+		,market_price_voucher
+		,market_price_gold
+		,market_price_bonus
+		,producer
+		,weight
+		,stock_qty
+		,expired_date
+		,durability_period
+		,production_date
+		,supplier
+		,manufacturer
+		,sort_order
+		,status
+		,created_date
+		,remark
+		)
+		VALUES (
+		#{item_id}
+		,#{item_code}
+		,#{title}
+		,#{member_type_key}
+		,#{member_id}
+		,#{member_info}
+		,#{keywords}
+		,#{category_id}
+		,#{brand_id}
+		,#{barcode}
+		,#{desc1}
+		,#{pic_path}
+		,#{specification}
+		,#{pack}
+		,#{cost_price}
+		,#{market_price}
+		,#{vip_price}
+		,#{market_price_voucher}
+		,#{market_price_gold}
+		,#{market_price_bonus}
+		,#{producer}
+		,#{weight}
+		,#{stock_qty}
+		,#{expired_date}
+		,#{durability_period}
+		,#{production_date}
+		,#{supplier}
+		,#{manufacturer}
+		,#{sort_order}
+		,#{status}
+		,#{created_date}
+		,#{remark}
+		)
+	</insert>
+
+	<insert id="insertGdSysitemItemCouponProp" parameterType="GdSysitemItemCouponProp">
+		INSERT
+		INTO
+		gd_sysitem_item_coupon_prop (
+		item_id
+		,coupon_prop
+		,voucher_amount
+		,settle_price
+		,limit_amount
+		,per_limit
+		,terms
+		,agreement
+		,issued_date
+		,onsell_date
+		,offsell_date
+		,issued_num
+		,onsell_num
+		,used_num
+		,verified_num
+		,offsell_num
+		,revoked_num
+		,usable_num
+		,is_refund_anytime
+		,is_refund_expired
+		,created_date
+		,modified_date
+		,remark
+		)
+		VALUES (
+		#{item_id}
+		,#{coupon_prop}
+		,#{voucher_amount}
+		,#{settle_price}
+		,#{limit_amount}
+		,#{per_limit}
+		,#{terms}
+		,#{agreement}
+		,#{issued_date}
+		,#{onsell_date}
+		,#{offsell_date}
+		,#{issued_num}
+		,#{onsell_num}
+		,#{used_num}
+		,#{verified_num}
+		,#{offsell_num}
+		,#{revoked_num}
+		,#{usable_num}
+		,#{is_refund_anytime}
+		,#{is_refund_expired}
+		,#{created_date}
+		,#{modified_date}
+		,#{remark}
+		)
+	</insert>
+
+	<insert id="insertGdSysitemItemSku" parameterType="GdSysitemItemSku">
+		INSERT INTO
+		gd_sysitem_item_sku (
+		sku_id
+		,item_id
+		,sku_code
+		,title
+		,expired_date
+		,cost_price
+		,market_price
+		,vip_price
+		,weight
+		,status
+		,created_date
+		,remark
+		)
+		VALUES (
+		#{sku_id}
+		,#{item_id}
+		,#{sku_code}
+		,#{title}
+		,#{expired_date}
+		,#{cost_price}
+		,#{market_price}
+		,#{vip_price}
+		,#{weight}
+		,#{status}
+		,#{created_date}
+		,#{remark}
+		)
+	</insert>
+
+	<insert id="insertGdAdvert" parameterType="Map">
+		INSERT INTO
+		gd_advert
+		(
+		advert_id
+		,placement
+		,media_type_key
+		,pic_info
+		,label
+		,width
+		,height
+		,status
+		,created_date
+		,modified_date
+		,remark
+		)
+		VALUES (
+		#{advert_id}
+		,#{placement}
+		,#{media_type_key}
+		,#{pic_info}
+		,#{label}
+		,#{width}
+		,#{height}
+		,#{status}
+		,#{created_date}
+		,#{modified_date}
+		,#{remark}
+		)
+	</insert>
+
+
+	<select id="selectAreaCodeTree" parameterType="Map" resultType="Map">
+		<![CDATA[
+			SELECT
+				t1.area_code as code,
+				t2.area_code as s_code,
+				t3.area_code as t_code
+			FROM gd_area t1
+			LEFT JOIN gd_area t2 ON t2.area_id=t1.parent_id
+			LEFT JOIN gd_area t3 ON t3.area_id=t2.parent_id
+		]]>
+		<where>
+			1=1
+			<if test="area_code != null and area_code != ''">
+				AND t1.area_code = #{area_code}
+			</if>
+		</where>
+	</select>
+
+	<select id="selectMDArea" parameterType="Map" resultType="Map">
+		<![CDATA[
+			SELECT
+				path
+			FROM gd_area
+		]]>
+		<where>
+			1=1
+			<if test="areaStr != null">
+				AND area_code in
+				<foreach item="item" index="index" collection="areaStr"
+					open="(" separator="," close=")">
+					#{item}
+				</foreach>
+			</if>
+		</where>
+	</select>
+
+
+	<select id="selectCouponItem" parameterType="Map" resultType="Map">
+		<![CDATA[
+			SELECT
+			i.item_id
+			,i.title
+			,i.member_type_key
+			,i.member_id
+			,i.member_info
+			,i.category_id
+			,i.desc1
+			,i.pic_path
+			,i.cost_price
+			,i.market_price
+			,i.vip_price
+			,i.market_price_voucher
+			,i.market_price_gold
+			,i.market_price_bonus
+			,i.expired_date
+			,i.status
+			,i.remark
+			,c.coupon_prop
+			,c.voucher_amount
+			,c.settle_price
+			,c.limit_amount
+			,c.per_limit
+			,c.issued_date
+			,c.onsell_date
+			,c.offsell_date
+			,c.issued_num
+			,c.onsell_num
+			,c.used_num
+			,c.verified_num
+			,c.usable_num
+			,c.is_refund_anytime
+			,c.is_refund_expired
+			,c.modified_date
+			FROM
+				gd_sysitem_item i
+				left join gd_sysitem_item_coupon_prop c on i.item_id = c.item_id
+		]]>
+		<where>
+			1=1
+			<if test="member_id != null and member_id != ''">
+				AND i.member_id = #{member_id}
+			</if>
+			<if test="member_type_key != null and member_type_key != ''">
+				AND i.member_type_key = #{member_type_key}
+			</if>
+			<if test="member_id_in != null">
+				AND i.member_id in
+				<foreach item="item" index="index" collection="member_id_in"
+					open="(" separator="," close=")">
+					#{item}
+				</foreach>
+			</if>
+			<if test="item_id != null and item_id != ''">
+				AND i.item_id = #{item_id}
+			</if>
+			<if test="status != null and status != ''">
+				AND i.status = #{status}
+			</if>
+			<if test="category_id != null and category_id != ''">
+				AND i.category_id = #{category_id}
+			</if>
+			<if test="title != null and title != ''">
+				AND i.title like CONCAT('%',#{title},'%')
+			</if>
+		</where>
+		ORDER BY i.created_date DESC
+	</select>
+
+	<select id="selectCouponSkuCode" parameterType="Map" resultType="Map">
+		<![CDATA[
+		SELECT
+			s.sku_id
+			,s.item_id
+			,s.sku_code
+			,s.expired_date
+			,s.status
+			,i.category_id
+			,i.title
+			,i.desc1
+			,i.pic_path
+			,i.member_id
+			,i.member_type_key
+			,i.member_info
+			,i.market_price
+			,i.market_price_voucher
+			,i.market_price_gold
+			,i.market_price_bonus
+			,p.coupon_prop
+			,p.voucher_amount
+			,p.settle_price
+			,p.limit_amount
+			,p.is_refund_anytime
+			,p.is_refund_expired
+		FROM gd_sysitem_item_sku s
+		left join gd_sysitem_item i on s.item_id = i.item_id
+		left join gd_sysitem_item_coupon_prop p on p.item_id = s.item_id
+		]]>
+		<where>
+			1=1
+			<if test="sku_code != null and sku_code != ''">
+				AND s.sku_code = #{sku_code}
+			</if>
+			<if test="sku_id != null and sku_id != ''">
+				AND s.sku_id = #{sku_id}
+			</if>
+			<if test="status != null and status != ''">
+				AND s.status = #{status}
+			</if>
+		</where>
+	</select>
+
+
+	<select id="selectStoresCouponTotal" parameterType="Map"
+		resultType="Map">
+		<![CDATA[
+			SELECT
+				sum(issued_num) as total_issued_num,
+				sum(onsell_num) as total_onsell_num,
+				sum(used_num) as total_used_num,
+				sum(usable_num) as total_usable_num,
+				sum(verified_num) as total_verified_num
+			FROM gd_sysitem_item i inner join 
+			gd_sysitem_item_coupon_prop p on i.item_id = p.item_id
+		]]>
+		<where>
+			1=1
+			<if test="member_id != null and member_id != ''">
+				AND i.member_id = #{member_id}
+			</if>
+		</where>
+	</select>
+
+
+	<select id="selectStoresCouponCount" parameterType="Map"
+		resultType="Map">
+		<![CDATA[
+			SELECT
+				count(1) as count_num
+			FROM gd_sysitem_item
+		]]>
+		<where>
+			1=1
+			<if test="member_id != null and member_id != ''">
+				AND member_id = #{member_id}
+			</if>
+			<if test="member_id_in != null">
+				AND member_id in
+				<foreach item="item" index="index" collection="member_id_in"
+					open="(" separator="," close=")">
+					#{item}
+				</foreach>
+			</if>
+			<if test="status != null and status != ''">
+				AND status = #{status}
+			</if>
+		</where>
+	</select>
+
+	
+
+	<select id="selectGdAdvert" parameterType="Map" resultType="Map">
+		<![CDATA[
+			SELECT
+				advert_id
+				,placement
+				,media_type_key
+				,pic_info
+				,label
+				,modified_date
+			FROM
+				gd_advert
+		]]>
+		<where>
+			1=1
+			<if test="advert_id != null and advert_id != ''">
+				AND advert_id=#{advert_id}
+			</if>
+			<if test="placement != null and placement != ''">
+				AND placement=#{placement}
+			</if>
+			<if test="status != null and status != ''">
+				AND status=#{status}
+			</if>
+		</where>
+	</select>
+	
+	<update id="updateGdSysitemItem" parameterType="Map">
+		UPDATE gd_sysitem_item SET
+		<trim suffixOverrides=",">
+			<if test="title != null and title != ''">
+				title = #{title},
+			</if>
+			<if test="keywords != null and keywords != ''">
+				keywords = #{keywords},
+			</if>
+			<if test="category_id != null and category_id != ''">
+				category_id = #{category_id},
+			</if>
+			<if test="brand_id != null and brand_id != ''">
+				brand_id = #{brand_id},
+			</if>
+			<if test="desc1 != null and desc1 != ''">
+				desc1 = #{desc1},
+			</if>
+			<if test="pic_path != null and pic_path != ''">
+				pic_path = #{pic_path},
+			</if>
+			<if test="cost_price != null">
+				cost_price = #{cost_price},
+			</if>
+			<if test="market_price != null">
+				market_price = #{market_price},
+			</if>
+			<if test="vip_price != null">
+				vip_price = #{vip_price},
+			</if>
+			<if test="market_price_voucher != null">
+				market_price_voucher = #{market_price_voucher},
+			</if>
+			<if test="market_price_gold != null">
+				market_price_gold = #{market_price_gold},
+			</if>
+			<if test="market_price_bonus != null">
+				market_price_bonus = #{market_price_bonus},
+			</if>
+			<if test="producer != null and producer != ''">
+				producer = #{producer},
+			</if>
+			<if test="weight != null and weight != ''">
+				weight = #{weight},
+			</if>
+			<if test="stock_qty != null and stock_qty != ''">
+				stock_qty = #{stock_qty},
+			</if>
+			<if test="durability_period != null and durability_period != ''">
+				durability_period = #{durability_period},
+			</if>
+			<if test="status != null and status != ''">
+				status = #{status},
+			</if>
+			<if test="remark != null and remark != ''">
+				remark = #{remark},
+			</if>
+		</trim>
+		<where>
+			item_id=#{item_id}
+		</where>
+	</update>
+
+	<update id="updateGdSysitemItemSku" parameterType="Map">
+		UPDATE gd_sysitem_item_sku SET
+		<trim suffixOverrides=",">
+			<if test="status != null and status != ''">
+				status = #{status},
+			</if>
+			<if test="remark != null and remark != ''">
+				remark = #{remark},
+			</if>
+		</trim>
+		<where>
+			sku_id=#{sku_id}
+		</where>
+	</update>
+
+
+	<update id="updateGdSysitemItemCouponProp" parameterType="Map">
+		UPDATE gd_sysitem_item_coupon_prop SET
+		<trim suffixOverrides=",">
+			modified_date = SYSDATE(),
+			<if test="used_num != null">
+			<![CDATA[
+				used_num = used_num + #{used_num},
+				usable_num = onsell_num - used_num,
+			]]>
+			</if>
+			<if test="verified_num != null ">
+			<![CDATA[
+				verified_num = verified_num + #{verified_num},
+				]]>
+			</if>
+		</trim>
+		<where>
+			item_id=#{item_id}
+			<if test="modified_date != null and modified_date != ''">
+				AND modified_date = #{modified_date}
+			</if>
+			<if test="used_num != null">
+				AND used_num + #{used_num} &lt;= issued_num
+			</if>
+		</where>
+	</update>
+
+
+
+	<update id="updateGdAdvert" parameterType="Map">
+		UPDATE gd_advert SET
+		<trim suffixOverrides=",">
+			modified_date = SYSDATE(),
+			<if test="pic_info != null">
+				pic_info = #{pic_info},
+			</if>
+			<if test="status != null and status != ''">
+				status = #{status},
+			</if>
+			<if test="label != null and label != ''">
+				label = #{label},
+			</if>
+		</trim>
+		<where>
+			1=1
+			<if test="advert_id != null and advert_id != ''">
+				AND advert_id = #{advert_id}
+			</if>
+			<if test="modified_date != null and modified_date != ''">
+				AND modified_date = #{modified_date}
+			</if>
+		</where>
+	</update>
+
+	<select id="callMemberLotteryNum" parameterType="Map"
+		resultType="Map">
+		<![CDATA[
+			{CALL usp_member_lottery_num(#{member_type_key},#{member_id})}
+		]]>
+	</select>
+
+	<select id="callMemberGiftCard" parameterType="Map">
+		<![CDATA[
+			{CALL usp_member_gift_card(#{member_type_key},#{member_id},#{gift_type},#{gift_value},#{operator},#{remark})}
+		]]>
+	</select>
+
+	<select id="callMemberGiftCardBatch" parameterType="Map">
+		<![CDATA[
+			{CALL usp_member_gift_card_batch(#{member_type_key},#{criteria_type},#{criteria_value},#{gift_type},#{gift_value},#{operator},#{remark})}
+		]]>
+	</select>
+
+	<update id="updateDisabledSysitemItemStatus" parameterType="Map">
+		UPDATE gd_sysitem_item i INNER JOIN
+		gd_sysitem_item_coupon_prop c ON
+		i.item_id = c.item_id
+		SET i.STATUS =
+		'off_shelf',
+		i.remark =
+		'商品已过期,自动下架',
+		c.offsell_date = SYSDATE(),
+		c.remark = '商品已过期,自动下架'
+		WHERE
+		i.STATUS = 'on_shelf'
+		AND ((i.expired_date &lt; #{lt_date} AND
+		i.expired_date &gt; #{gt_date}) OR c.usable_num = 0)
+	</update>
+
+	<update id="updateDisabledSysitemItemSkuStatus" parameterType="Map">
+		UPDATE gd_sysitem_item_sku SET status = 'revoked',
+		remark = '优惠券已过期'
+		WHERE status = 'activated'
+		AND expired_date &lt; #{lt_date} AND
+		expired_date &gt; #{gt_date}
+	</update>
+
+
+	<update id="updatePsGoodsOffline" parameterType="Map">
+		UPDATE ps_goods 
+		SET modified_date = SYSDATE(),status = 'off_shelf'
+		WHERE status = 'on_shelf' AND offline_date is not null AND offline_date &lt; #{gt_date}
+	</update>
+
+</mapper>

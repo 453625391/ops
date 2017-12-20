@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <% include ../../commonHead.html %>
+    <title>历史记录</title>
+    <link rel="stylesheet" type="text/css" href="/css/reset.css?v20170316">
+    <style type="text/css">
+        .history-container {
+            width: 10rem;
+        }
+        .history {
+            width: 9.2rem;
+            padding: 0.266667rem 0.4rem;
+            border-bottom: 0.026667rem solid #f4f4f4;
+        }
+        .history .remark {
+            color: #333;
+            font-size: 0.373333rem;
+            line-height: 0.48rem;
+            margin-bottom: 0.133333rem;
+        }
+        .history .date {
+            color: #858585;
+            font-size: 0.32rem;
+            line-height: 0.4rem;
+        }
+        .no-record {
+            margin-top: 2rem;
+            text-align: center;
+        }
+        .no-record p {
+            color: #999;
+            font-size: 0.426667rem;
+            padding-top: 0.64rem;
+        }
+        .no-record img {
+            width: 3.76rem;
+        }
+    </style>
+</head>
+<body>
+    <% if(historyList && historyList.length > 0) { %>
+    <ul class="history-container">
+    <% for(var i=0; i<historyList.length; i++) { %>
+        <li class="history">
+            <p class="remark"><%=historyList[i].event%></p>
+            <p class="date"><%=historyList[i].tracked_date%></p>
+        </li>
+    <% } %>
+    </ul>
+    <% } else { %>
+    <div class="no-record">
+        <img src="/image/interests/no-content.png" />
+        <p>暂无记录</p>
+    </div>
+    <% } %>
+</body>
+</html>

@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <!-- 删除苹果默认的工具栏和菜单栏 -->
+    <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+    <!-- 设置苹果工具栏颜色 -->
+    <meta name="format-detection" content="telphone=no, email=no" />
+    <!-- 忽略页面中的数字识别为电话，忽略email识别 -->
+    <!-- 启用360浏览器的极速模式(webkit) -->
+    <meta name="renderer" content="webkit">
+    <!-- 避免IE使用兼容模式 -->
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <!-- 针对手持设备优化，主要是针对一些老的不识别viewport的浏览器，比如黑莓 -->
+    <meta name="HandheldFriendly" content="true">
+    <!-- 微软的老式浏览器 -->
+    <meta name="MobileOptimized" content="320">
+    <!-- uc强制竖屏 -->
+    <meta name="screen-orientation" content="portrait">
+    <!-- QQ强制竖屏 -->
+    <meta name="x5-orientation" content="portrait">
+    <!-- UC强制全屏 -->
+    <meta name="full-screen" content="yes">
+    <!-- QQ强制全屏 -->
+    <meta name="x5-fullscreen" content="true">
+    <!-- UC应用模式 -->
+    <meta name="browsermode" content="application">
+    <!-- QQ应用模式 -->
+    <meta name="x5-page-mode" content="app">
+    <!-- windows phone 点击无高光 -->
+    <meta name="msapplication-tap-highlight" content="no">
+    <!-- 禁用iPhone手机浏览器上给电话号码自动加上的link样式 -->
+    <meta name="format-detection" content="telephone=no">
+    <title>大健康</title>
+    <link rel="stylesheet" type="text/css" href="/css/reset.css">
+    <link rel="stylesheet" type="text/css" href="/css/djk/index.css">
+    <script type="text/javascript" src="/js/third-part/flexible.js"></script>
+    <script type="text/javascript" src="/js/third-part/zepto.min.js"></script>
+</head>
+
+<body>
+    <div class="cate-box" style="display: block;">
+        <div class="cate-name">搜索结果</div>
+        <div class="goods-list">
+        <% if(goodsList.length > 0) { %>
+            <ul>
+            <% for(var i=0; i<goodsList.length; i++) { %>
+                <li>
+                    <a href="/openapi/h5/b/djk/detail?goods_id=<%=goodsList[i].goods_id %>" class="goods-box">
+                        <div class="img-wrap">
+                            <img src="<%=goodsList[i].picUrlArr[0] %>" />
+                        </div>
+                        <div class="txt-wrap">
+                            <div class="name"><%=goodsList[i].title %></div>
+                            <div class="detail">
+                                <p>配送范围：<%=goodsList[i].delivery_desc%>&nbsp;&nbsp;&nbsp;&nbsp;起订：<%=goodsList[i].min_buy_qty%></p>
+                                <p>库存：<%=goodsList[i].sale_qty %>&nbsp;&nbsp;&nbsp;&nbsp;规格：<%=goodsList[i].specification%></p>
+                                <p>建议零售价：¥<%=goodsList[i].market_price%></p>
+                            </div>
+                            <div class="price"><em>¥</em><%=goodsList[i].discount_price%></div>
+                        </div>
+                    </a>
+                </li>
+            <% } %>
+            </ul>
+        <% } else { %>
+            <p class="no-result">没有搜索到相关商品</p>
+        <% } %>
+        </div>
+    </div>
+</body>
+</html>

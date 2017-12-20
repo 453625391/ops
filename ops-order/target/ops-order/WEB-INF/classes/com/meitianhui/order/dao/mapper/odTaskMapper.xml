@@ -1,0 +1,460 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.meitianhui.order.dao.OdTaskDao">
+
+	<!-- 新增任务 -->
+	<insert id="insertOdTask" parameterType="OdTask">
+		INSERT INTO od_task (
+		task_id
+		,task_name
+		,desc1
+		,json_data
+		,payment_way_key
+		,amount
+		,scope
+		,expried_date
+		,suitable_app
+		,status
+		,created_date
+		,modified_date
+		)
+		VALUES (
+		#{task_id}
+		,#{task_name}
+		,#{desc1}
+		,#{json_data}
+		,#{payment_way_key}
+		,#{amount}
+		,#{scope}
+		,#{expried_date}
+		,#{suitable_app}
+		,#{status}
+		,#{created_date}
+		,#{modified_date}
+		)
+	</insert>
+
+	<!-- 更新任务信息 -->
+	<update id="updateOdTask" parameterType="Map">
+		UPDATE od_task
+		<set>
+			modified_date = SYSDATE(),
+			<if test="task_name != null and task_name != ''">
+				task_name = #{task_name},
+			</if>
+			<if test="desc1 != null and desc1 != ''">
+				desc1 = #{desc1},
+			</if>
+			<if test="json_data != null and json_data != ''">
+				json_data = #{json_data},
+			</if>
+			<if test="payment_way_key != null and payment_way_key != ''">
+				payment_way_key = #{payment_way_key},
+			</if>
+			<if test="amount != null and amount != ''">
+				amount = #{amount},
+			</if>
+			<if test="suitable_app != null and suitable_app != ''">
+				suitable_app = #{suitable_app},
+			</if>
+			<if test="scope != null and scope != ''">
+				scope = #{scope},
+			</if>
+			<if test="status != null and status != ''">
+				status = #{status},
+			</if>
+			<if test="expried_date != null and expried_date != ''">
+				expried_date = #{expried_date},
+			</if>
+		</set>
+		<where>
+			<if test="task_id != null and task_id != ''">
+				AND task_id = #{task_id}
+			</if>
+		</where>
+	</update>
+
+	<!-- 查询任务(运营) -->
+	<select id="selectOdTaskListForOp" parameterType="Map"
+		resultType="Map">
+		<![CDATA[
+			SELECT
+				t.task_id
+				,t.task_name
+				,t.desc1
+				,t.json_data
+				,t.payment_way_key
+				,t.amount
+				,t.scope
+				,a.path
+				,t.expried_date
+				,t.suitable_app
+				,t.status
+				,t.created_date
+				,t.modified_date
+			FROM
+				od_task t INNER JOIN od_area a on t.scope = a.area_code
+		]]>
+		<where>
+			<if test="task_name != null and task_name != ''">
+				AND t.task_name like CONCAT('%',#{task_name},'%')
+			</if>
+			<if test="status != null and status != ''">
+				AND t.status = #{status}
+			</if>
+			<if test="created_date_start != null and created_date_start != ''">
+				AND t.created_date &gt;= #{created_date_start}
+			</if>
+			<if test="created_date_end != null and created_date_end != ''">
+				AND t.created_date &lt;
+				date_add(#{created_date_end},interval 1 day)
+			</if>
+		</where>
+		ORDER BY t.created_date DESC
+	</select>
+
+	<!-- 子任务列表查询（运营） -->
+	<select id="selectOdTaskProcessingListForOp" parameterType="Map" resultType="OdTaskProcessing">
+		SELECT
+		processing_id,
+		task_id,
+		task_name,
+		desc1,
+		json_data,
+		payment_way_key,
+		amount,
+		expried_date,
+		submitted_date,
+		member_type_key,
+		member_id,
+		member_info,
+		audited_date,
+		audited_by,
+		audited_result,
+		status,
+		created_date,
+		modified_date,
+		remark
+		FROM
+		od_task_processing
+		<where>
+			<if test="processing_id != null and processing_id != ''">
+				AND processing_id = #{processing_id}
+			</if>
+			<if test="task_name != null and task_name != ''">
+				AND task_name LIKE CONCAT('%',#{task_name},'%')
+			</if>
+			<if test="member_info != null and member_info != ''">
+				AND member_info LIKE CONCAT('%',#{member_info},'%')
+			</if>
+			<if test="status != null and status != ''">
+				AND status = #{status}
+			</if>
+			<if test="status_in != null">
+				AND status in
+				<foreach item="item" index="index" collection="status_in"
+					open="(" separator="," close=")">
+					#{item}
+				</foreach>
+			</if>
+			<if test="submitted_date_start != null and submitted_date_start != ''">
+				AND submitted_date &gt;= #{submitted_date_start}
+			</if>
+			<if test="submitted_date_end != null and submitted_date_end != ''">
+				AND submitted_date &lt;
+				date_add(#{submitted_date_end},interval 1 day)
+			</if>
+		</where>
+		ORDER BY modified_date DESC
+	</select>
+
+	<!-- 新增子任务 -->
+	<insert id="insertOdTaskProcessing" parameterType="OdTaskProcessing">
+		INSERT INTO
+		od_task_processing(
+		processing_id,task_id,task_name,desc1,json_data,payment_way_key,amount,expried_date,
+		submitted_date,member_type_key,member_id,member_info,
+		audited_date,audited_by,audited_result,status,created_date,modified_date,remark
+		) VALUES(
+		#{processing_id}, #{task_id}, #{task_name}, #{desc1},
+		#{json_data}, #{payment_way_key},
+		#{amount}, #{expried_date},
+		#{submitted_date}, #{member_type_key}, #{member_id}, #{member_info},
+		#{audited_date}, #{audited_by}, #{audited_result}, #{status},
+		#{created_date},
+		#{modified_date}, #{remark}
+		)
+	</insert>
+
+	<!-- 更新子任务信息 -->
+	<update id="updateOdTaskProcessing" parameterType="Map">
+		update od_task_processing
+		<set>
+			modified_date = SYSDATE(),
+			<if test="json_data != null and json_data != ''">
+				json_data = #{json_data},
+			</if>
+			<if test="submitted_date != null and submitted_date != ''">
+				submitted_date = #{submitted_date},
+			</if>
+			<if test="audited_date != null and audited_date != ''">
+				audited_date = #{audited_date},
+			</if>
+			<if test="audited_by != null and audited_by != ''">
+				audited_by = #{audited_by},
+			</if>
+			<if test="audited_result != null and audited_result != ''">
+				audited_result = #{audited_result},
+			</if>
+			<if test="status != null and status != ''">
+				status = #{status},
+			</if>
+			<if test="remark != null and remark != ''">
+				remark = #{remark},
+			</if>
+		</set>
+		<where>
+			<if test="processing_id != null and processing_id != ''">
+				AND processing_id = #{processing_id}
+			</if>
+			<if test="task_id != null and task_id != ''">
+				AND task_id = #{task_id}
+			</if>
+			<if test="modified_date != null and modified_date != ''">
+				AND modified_date = #{modified_date}
+			</if>
+		</where>
+	</update>
+
+	<!-- 查询会员任务可领取的任务列表(新任务) -->
+	<select id="selectNewOdTaskListForMember" parameterType="Map"
+		resultType="OdTask">
+		SELECT
+		ot.task_id
+		,ot.task_name
+		,ot.desc1
+		,ot.json_data
+		,ot.payment_way_key
+		,ot.amount
+		,ot.scope
+		,ot.expried_date
+		,ot.suitable_app
+		,ot.status
+		,ot.created_date
+		,ot.remark
+		FROM
+		od_task ot
+		<where>
+			ot.suitable_app = #{suitable_app} AND ot.status = 'processing'
+			AND
+			ot.expried_date &gt;= SYSDATE()
+			<if test="task_id != null and task_id != ''">
+				AND ot.task_id = #{task_id}
+			</if>
+			<if test="areaList != null">
+				AND
+				<foreach item="item" index="index" collection="areaList"
+					open="(" separator="OR" close=")">
+					ot.scope = #{item}
+				</foreach>
+			</if>
+			AND ot.task_id not in (select task_id
+			from od_task_processing otp
+			where
+			otp.member_id = #{member_id} AND
+			otp.member_type_key
+			=#{member_type_key})
+		</where>
+		ORDER BY ot.created_date DESC
+	</select>
+
+	<!-- 查询子任务信息列表 -->
+	<select id="selectOdTaskProcessingList" parameterType="Map"
+		resultType="OdTaskProcessing">
+		SELECT
+			processing_id
+			,task_id
+			,task_name
+			,desc1
+			,member_id
+			,payment_way_key
+			,amount
+			,expried_date
+			,submitted_date
+			,status
+			,audited_result
+			,modified_date
+			,remark
+		FROM
+		od_task_processing
+		<where>
+			<if test="processing_id != null and processing_id != ''">
+				AND processing_id = #{processing_id}
+			</if>
+			<if test="member_id != null and member_id != ''">
+				AND member_id = #{member_id}
+			</if>
+			<if test="member_type_key != null and member_type_key != ''">
+				AND member_type_key = #{member_type_key}
+			</if>
+			<if test="status != null and status != ''">
+				AND status = #{status}
+			</if>
+			<if test="status_in != null">
+				AND status in
+				<foreach item="item" index="index" collection="status_in"
+					open="(" separator="," close=")">
+					#{item}
+				</foreach>
+			</if>
+			<if test="submitted_date_start != null and submitted_date_start != ''">
+				AND submitted_date &gt;= #{submitted_date_start}
+			</if>
+			<if test="submitted_date_end != null and submitted_date_end != ''">
+				AND submitted_date &lt;
+				date_add(#{submitted_date_end},interval 1 day)
+			</if>
+			<if test="task_id != null and task_id != ''">
+				AND task_id = #{task_id}
+			</if>
+		</where>
+		ORDER BY modified_date DESC
+	</select>
+
+	<!-- 查询任务详情列表 -->
+	<select id="selectOdTaskDetailList" parameterType="Map" resultType="OdTask">
+		SELECT
+			t.task_id, t.task_name, t.desc1, t.json_data, t.payment_way_key, t.amount,t.scope, a.path,
+			t.expried_date, t.suitable_app, t.status, t.created_date, t.modified_date,t.remark
+		FROM od_task t INNER JOIN od_area a on t.scope = a.area_code
+		<where>
+			<if test="task_id != null and task_id != ''">
+				AND t.task_id = #{task_id}
+			</if>
+			<if test="suitable_app != null and suitable_app != ''">
+				AND t.suitable_app = #{suitable_app}
+			</if>
+			<if test="status != null and status != ''">
+				AND t.status = #{status}
+			</if>
+		</where>
+		ORDER BY t.created_date DESC
+	</select>
+
+	<!-- 子任务详情信息查询 -->
+	<select id="selectOdTaskProcessingDetailList" parameterType="Map"
+		resultType="OdTaskProcessing">
+		SELECT
+		processing_id
+		,task_id
+		,task_name
+		,desc1
+		,json_data
+		,payment_way_key
+		,amount
+		,expried_date
+		,submitted_date
+		,member_type_key
+		,member_id
+		,member_info
+		,audited_date
+		,audited_by
+		,audited_result
+		,status
+		,created_date
+		,modified_date
+		,remark
+		FROM od_task_processing
+		<where>
+			<if test="processing_id != null and processing_id != ''">
+				processing_id = #{processing_id}
+			</if>
+			<if test="task_id != null and task_id != ''">
+				AND task_id = #{task_id}
+			</if>
+			<if test="member_type_key != null and member_type_key != ''">
+				AND member_type_key = #{member_type_key}
+			</if>
+			<if test="member_id != null and member_id != ''">
+				AND member_id = #{member_id}
+			</if>
+			<if test="audited_result != null and audited_result != ''">
+				AND audited_result = #{audited_result}
+			</if>
+			<if test="status != null and status != ''">
+				AND status = #{status}
+			</if>
+		</where>
+		ORDER BY modified_date DESC
+	</select>
+
+	<!-- 会员可领取的新任务总数查询 -->
+	<select id="odTaskNewCountForMemberFind" parameterType="Map"
+		resultType="long">
+		SELECT
+		count(ot.task_id)
+		FROM
+		od_task ot
+		<where>
+			ot.suitable_app = #{suitable_app} AND ot.status = 'processing'
+			AND
+			ot.expried_date &gt;= SYSDATE()
+			AND
+			<foreach item="item" index="index" collection="areaList"
+				open="(" separator="OR" close=")">
+				ot.scope = #{item}
+			</foreach>
+			AND ot.task_id not in
+			(select task_id from od_task_processing otp
+			where otp.member_id = #{member_id}
+			AND otp.member_type_key
+			=#{member_type_key})
+		</where>
+	</select>
+
+	<!-- 新增任务执行日志 -->
+	<insert id="insertOdTaskProcessingLog" parameterType="OdTaskProcessingLog">
+		INSERT INTO
+		od_task_processing_log(
+		log_id, category, processing_id, tracked_date,
+		event_desc
+		) VALUES(
+		#{log_id}, #{category}, #{processing_id},
+		#{tracked_date}, #{event_desc}
+		)
+	</insert>
+
+	<!-- 查询任务执行日志 -->
+	<select id="selectOdTaskProcessingLogList" parameterType="Map"
+		resultType="Map">
+		SELECT
+		tracked_date, event_desc
+		FROM od_task_processing_log
+		<where>
+			<if test="processing_id != null and processing_id != ''">
+				processing_id = #{processing_id}
+			</if>
+		</where>
+		ORDER BY tracked_date DESC
+	</select>
+
+	<update id="updateTimeoutOdTask" parameterType="Map">
+		UPDATE
+		od_task
+		SET
+		status='finished',modified_date = SYSDATE(),remark='到期自动完成'
+		WHERE
+		status ='processing'
+		AND expried_date &gt; #{gt_date} AND expried_date &lt; #{lt_date}
+	</update>
+
+	<update id="updateTimeoutOdTaskProcessing" parameterType="Map">
+		UPDATE
+		od_task_processing
+		SET
+		status = 'aborted',modified_date = SYSDATE(),remark='超时未提交自动取消'
+		WHERE
+		status = 'submitted' AND expried_date &gt; #{gt_date} AND expried_date &lt; #{lt_date}
+	</update>
+
+</mapper>

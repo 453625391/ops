@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="HandheldFriendly" content="true">
+	<title>注册</title>
+    <link type="text/css" href="/css/main.css" rel="stylesheet" />
+    <script type="text/javascript" src="/js/third-part/jquery-1.11.3.min.js"></script>
+    <script type="text/javascript" src="/js/third-part/layer/layer.js"></script>
+    <script type="text/javascript" src="/js/application.js"></script>
+    <script type="text/javascript" src="/js/utils/ajax.js"></script>
+</head>
+<body>
+    <form id="registerForm">
+        <div class="main-container">
+            <p class="zc">注册</p>
+            <div>
+                <b class="fluid-input">
+                    <b class="fluid-input-inner">
+                        <input type="text" name="mobile" id="mobile" placeholder="请输入手机号" class="required or" />
+                        <p class="err-msg"></p>
+                    </b>
+                </b>
+            </div>
+            <div>
+                <b class="fluid-input">
+                    <b class="fluid-input-inner">
+                        <input type="password" name="password" id="pwd" placeholder="请输入6-16位数字或字母" class="required oy" />
+                        <p class="err-msg"></p>
+                    </b>
+                </b>
+            </div>
+            <div>
+                <b class="fluid-input">
+                    <b class="fluid-input-inner">
+                        <input type="password" id="c_pwd" placeholder="确认密码" class="required oy"/>
+                        <p class="err-msg"></p>
+                    </b>
+                </b>
+            </div>
+            <div>
+                <span>
+                    <label>
+                        <input type="checkbox" id="clause" class="check"> 我已阅读并同意《每天惠开放平台协议》条款
+                    </label>
+                </span>
+            </div>
+            <div>
+                <input type="submit" value="注册" />
+            </div>
+            <!-- <div>
+                <span class="lo">已有账号<a href="/login">去登录！</a></span>
+            </div> -->
+        </div>
+    </form>
+</body>
+<script type="text/javascript">
+$(function() {
+    $('#mobile').on('change', function() {
+        var mobile = $(this).val();
+        if($.trim(mobile) == '') {
+            $(this).addClass('err');
+            $(this).next().text('请输入手机号！');
+            return;
+        }
+        if(!mobile.match(/^(0|86|17951)?(13[0-9]|15[012356789]|17[678]|18[0-9]|14[57])[0-9]{8}$/)) {
+            $(this).addClass('err');
+            $(this).next().text('手机号格式有误！');
+            return;
+        }
+        $(this).removeClass('err');
+        $(this).next().empty();
+    });
+    $('#pwd').on('change', function() {
+        var pwd = $(this).val();
+        if($.trim(pwd) == '') {
+            $(this).addClass('err');
+            $(this).next().text('请输入密码！');
+            return;
+        }
+        if(pwd.length < 6 || pwd.length > 16) {
+            $(this).addClass('err');
+            $(this).next().text('密码长度应该在6到16位之间！');
+            return;
+        }
+        $(this).removeClass('err');
+        $(this).next().empty();
+    });
+    $('#c_pwd').on('change', function() {
+        var pwd = $('#pwd').val();
+        var c_pwd = $(this).val();
+        if(c_pwd != pwd) {
+            $(this).addClass('err');
+            $(this).next().text('两次输入的密码不一致！');
+            return;
+        }
+        $(this).removeClass('err');
+        $(this).next().empty();
+    });
+    $('#registerForm').submit(function() {
+        var validFlag = true;
+        $('#mobile').change();
+        $('#pwd').change();
+        $('#c_pwd').change();
+        $('.required').each(function() {
+            if($(this).hasClass('err')) {
+                validFlag = false;
+            }
+        });
+        if(validFlag) {
+            if(!$('#clause').is(':checked')) {
+                layer.msg('请阅读并同意《每天惠开放平台协议》');
+                return false;
+            }
+            var formData = {
+                mobile: $('#mobile').val(),
+                password: MD5($('#pwd').val())
+            };
+            M.post('/openapi/register', formData, function(data) {
+                $('#registerForm')[0].reset();
+                window.location.href = '/succ.html';
+            }, function(data) {
+                layer.msg(data.error_msg);
+            });
+        }
+        return false;
+    });
+});
+</script>
+</html>

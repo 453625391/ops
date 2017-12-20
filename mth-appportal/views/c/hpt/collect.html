@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<% include ../../commonHead.html %>
+    <title>我的收藏</title>
+    <link rel="stylesheet" type="text/css" href="/css/hpt/index.css?v20170413">
+</head>
+<body style="padding-top: 0;">
+    <div class="goods-container">
+        <% if(goodsList && goodsList.length > 0) { %>
+        <ul id="goodsContainer">
+            <% for(var i=0; i<goodsList.length; i++) { %>
+            <li>
+                <a href="/openapi/h5/c/hpt/detail?member_id=<%=requestParams.member_id%>&goods_id=<%=goodsList[i].goods_id%>&longitude=<%=requestParams.longitude%>&latitude=<%=requestParams.latitude%>&v=1" class="goods">
+                    <div class="left-box">
+                        <img src="<%=goodsList[i].picUrlArr[0]%>" />
+                    </div>
+                    <div class="right-box">
+                        <p class="tit"><%=goodsList[i].title%></p>
+                        <div class="label-wrap">
+                            <% if(goodsList[i].labelArr) { %>
+                            <% for(var j=0; j<goodsList[i].labelArr.length; j++) { %>
+                            <span class="label"><%=goodsList[i].labelArr[j]%></span>
+                            <% } %>
+                            <% } %>
+                        </div>
+                        <div class="price-wrap">
+                            <span class="sale-price"><em>¥</em><%=goodsList[i].ts_price-0%></span>
+                            <del class="market-price">¥<%=goodsList[i].market_price-0%></del>
+                        </div>
+                        <div class="num"><%=goodsList[i].ts_min_num%>人拼团可省<%=(goodsList[i].market_price-goodsList[i].ts_price).toFixed(2)%>元</div>
+                        <span class="join-now">去拼吧<i>﹥</i></span>
+                    </div>
+                </a>
+            </li>
+            <% } %>
+        </ul>
+        <% } else { %>
+        <div class="no-record" style="display: block;">
+            <img src="/image/common/no-record.png" />
+            <p>您还未收藏任何商品</p>
+        </div>
+        <% } %>
+    </div>
+    <% if(requestParams.s) { %>
+    <div>
+        <img src="/image/fan/qr.gif?v2" style="width: 100%; margin-top: 0.133333rem;" />
+    </div>
+    <% } %>
+</body>
+</html>

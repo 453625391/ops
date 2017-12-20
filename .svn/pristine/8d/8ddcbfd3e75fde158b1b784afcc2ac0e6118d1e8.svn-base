@@ -1,0 +1,824 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.meitianhui.finance.dao.TransactionDao">
+
+	<insert id="insertFDMemberAssetLog" parameterType="FDMemberAssetLog">
+		INSERT INTO fd_member_asset_log (
+			log_id
+			,asset_id
+			,member_id
+			,member_type_key
+			,category
+			,pre_balance
+			,amount
+			,balance
+			,tracked_date
+			,remark
+		)
+		VALUES (
+			#{log_id}
+			,#{asset_id}
+			,#{member_id}
+			,#{member_type_key}
+			,#{category}
+			,#{pre_balance}
+			,#{amount}
+			,#{balance}
+			,#{tracked_date}
+			,#{remark}
+		)
+	</insert>
+	
+	<insert id="insertFDMemberCashLog" parameterType="FDMemberCashLog">
+		INSERT INTO fd_member_cash_log (
+			log_id
+			,member_id
+			,member_type_key
+			,category
+			,pre_balance
+			,amount
+			,balance
+			,tracked_date
+			,remark
+		)
+		VALUES (
+			#{log_id}
+			,#{member_id}
+			,#{member_type_key}
+			,#{category}
+			,#{pre_balance}
+			,#{amount}
+			,#{balance}
+			,#{tracked_date}
+			,#{remark}
+		)
+	</insert>
+	
+	<insert id="insertFDMemberGoldLog" parameterType="FDMemberGoldLog">
+		INSERT INTO fd_member_Gold_log (
+			log_id
+			,member_id
+			,member_type_key
+			,category
+			,pre_balance
+			,amount
+			,balance
+			,tracked_date
+			,remark
+		)
+		VALUES (
+			#{log_id}
+			,#{member_id}
+			,#{member_type_key}
+			,#{category}
+			,#{pre_balance}
+			,#{amount}
+			,#{balance}
+			,#{tracked_date}
+			,#{remark}
+		)
+	</insert>
+	
+	
+	<insert id="insertFDMemberVoucherLog" parameterType="FDMemberVoucherLog">
+		INSERT INTO fd_member_voucher_log (
+			log_id
+			,member_id
+			,member_type_key
+			,category
+			,pre_balance
+			,amount
+			,balance
+			,tracked_date
+			,remark
+		)
+		VALUES (
+			#{log_id}
+			,#{member_id}
+			,#{member_type_key}
+			,#{category}
+			,#{pre_balance}
+			,#{amount}
+			,#{balance}
+			,#{tracked_date}
+			,#{remark}
+		)
+	</insert>
+	
+	
+	<insert id="insertFDCashDailyAccount" parameterType="FDCashDailyAccountMember">
+		INSERT INTO fd_cash_daily_account 
+		(
+			daily_account_id
+			,transaction_no
+			,member_id
+			,transaction_member_type
+			,transaction_member_id
+			,transaction_member_name
+			,transaction_member_contact
+			,business_type_key
+			,payment_way_key
+			,account_date
+			,detail
+			,booking_mark
+			,pre_balance
+			,amount
+			,balance
+			,currency_code
+			,created_date
+			,remark
+		)
+		VALUES (
+			#{daily_account_id}
+			,#{transaction_no}
+			,#{member_id}
+			,#{transaction_member_type}
+			,#{transaction_member_id}
+			,#{transaction_member_name}
+			,#{transaction_member_contact}
+			,#{business_type_key}
+			,#{payment_way_key}
+			,#{account_date}
+			,#{detail}
+			,#{booking_mark}
+			,#{pre_balance}
+			,#{amount}
+			,#{balance}
+			,#{currency_code}
+			,#{created_date}
+			,#{remark}
+		)
+	</insert>
+	
+	<insert id="insertFDCashDailyAccountConsumer" parameterType="FDCashDailyAccountMember">
+		INSERT INTO fd_cash_daily_account_consumer (
+			daily_account_id
+			,member_id
+			,transaction_member_type
+			,transaction_member_id
+			,transaction_member_name
+			,transaction_member_contact
+			,transaction_no
+			,data_source
+			,business_type_key
+			,payment_way_key
+			,transaction_date
+			,detail
+			,pre_balance
+			,amount
+			,balance
+			,currency_code
+			,out_trade_no
+			,account_date
+			,booking_mark
+			,created_date
+			,remark
+		)
+		VALUES (
+			#{daily_account_id}
+			,#{member_id}
+			,#{transaction_member_type}
+			,#{transaction_member_id}
+			,#{transaction_member_name}
+			,#{transaction_member_contact}
+			,#{transaction_no}
+			,#{data_source}
+			,#{business_type_key}
+			,#{payment_way_key}
+			,#{transaction_date}
+			,#{detail}
+			,#{pre_balance}
+			,#{amount}
+			,#{balance}
+			,#{currency_code}
+			,#{out_trade_no}
+			,#{account_date}
+			,#{booking_mark}
+			,#{created_date}
+			,#{remark}
+		)
+	</insert>
+	
+	<insert id="insertFDCashDailyAccountStore" parameterType="FDCashDailyAccountMember">
+		INSERT INTO fd_cash_daily_account_store (
+			daily_account_id
+			,member_id
+			,transaction_member_type
+			,transaction_member_id
+			,transaction_member_name
+			,transaction_member_contact
+			,transaction_no
+			,data_source
+			,business_type_key
+			,payment_way_key
+			,transaction_date
+			,detail
+			,pre_balance
+			,amount
+			,balance
+			,currency_code
+			,out_trade_no
+			,account_date
+			,booking_mark
+			,created_date
+			,remark
+		)
+		VALUES (
+			#{daily_account_id}
+			,#{member_id}
+			,#{transaction_member_type}
+			,#{transaction_member_id}
+			,#{transaction_member_name}
+			,#{transaction_member_contact}
+			,#{transaction_no}
+			,#{data_source}
+			,#{business_type_key}
+			,#{payment_way_key}
+			,#{transaction_date}
+			,#{detail}
+			,#{pre_balance}
+			,#{amount}
+			,#{balance}
+			,#{currency_code}
+			,#{out_trade_no}
+			,#{account_date}
+			,#{booking_mark}
+			,#{created_date}
+			,#{remark}
+		)
+	</insert>
+	
+	<insert id="insertFDCashDailyAccountSupplier" parameterType="FDCashDailyAccountMember">
+		INSERT INTO fd_cash_daily_account_supplier (
+			daily_account_id
+			,member_id
+			,transaction_member_type
+			,transaction_member_id
+			,transaction_member_name
+			,transaction_member_contact
+			,transaction_no
+			,data_source
+			,business_type_key
+			,payment_way_key
+			,transaction_date
+			,detail
+			,pre_balance
+			,amount
+			,balance
+			,currency_code
+			,out_trade_no
+			,account_date
+			,booking_mark
+			,created_date
+			,remark
+		)
+		VALUES (
+			#{daily_account_id}
+			,#{member_id}
+			,#{transaction_member_type}
+			,#{transaction_member_id}
+			,#{transaction_member_name}
+			,#{transaction_member_contact}
+			,#{transaction_no}
+			,#{data_source}
+			,#{business_type_key}
+			,#{payment_way_key}
+			,#{transaction_date}
+			,#{detail}
+			,#{pre_balance}
+			,#{amount}
+			,#{balance}
+			,#{currency_code}
+			,#{out_trade_no}
+			,#{account_date}
+			,#{booking_mark}
+			,#{created_date}
+			,#{remark}
+		)
+	</insert>
+	
+	<insert id="insertFDVoucherDailyAccount" parameterType="FDVoucherDailyAccountMember">
+		INSERT INTO fd_voucher_daily_account 
+		(
+			daily_account_id
+			,transaction_no
+			,member_id
+			,transaction_member_type
+			,transaction_member_id
+			,transaction_member_name
+			,transaction_member_contact
+			,business_type_key
+			,payment_way_key
+			,account_date
+			,detail
+			,booking_mark
+			,pre_balance
+			,amount
+			,balance
+			,created_date
+			,remark
+		)
+		VALUES (
+			#{daily_account_id}
+			,#{transaction_no}
+			,#{member_id}
+			,#{transaction_member_type}
+			,#{transaction_member_id}
+			,#{transaction_member_name}
+			,#{transaction_member_contact}
+			,#{business_type_key}
+			,#{payment_way_key}
+			,#{account_date}
+			,#{detail}
+			,#{booking_mark}
+			,#{pre_balance}
+			,#{amount}
+			,#{balance}
+			,#{created_date}
+			,#{remark}
+		)
+	</insert>
+	
+	<insert id="insertFDVoucherDailyAccountConsumer" parameterType="FDVoucherDailyAccountMember">
+		INSERT INTO fd_voucher_daily_account_consumer (
+			daily_account_id
+			,member_id
+			,transaction_member_type
+			,transaction_member_id
+			,transaction_member_name
+			,transaction_member_contact
+			,transaction_no
+			,data_source
+			,business_type_key
+			,payment_way_key
+			,transaction_date
+			,detail
+			,pre_balance
+			,amount
+			,balance
+			,out_trade_no
+			,account_date
+			,booking_mark
+			,created_date
+			,remark
+		)
+		VALUES (
+			#{daily_account_id}
+			,#{member_id}
+			,#{transaction_member_type}
+			,#{transaction_member_id}
+			,#{transaction_member_name}
+			,#{transaction_member_contact}
+			,#{transaction_no}
+			,#{data_source}
+			,#{business_type_key}
+			,#{payment_way_key}
+			,#{transaction_date}
+			,#{detail}
+			,#{pre_balance}
+			,#{amount}
+			,#{balance}
+			,#{out_trade_no}
+			,#{account_date}
+			,#{booking_mark}
+			,#{created_date}
+			,#{remark}
+		)
+	</insert>
+	
+	<insert id="insertFDVoucherDailyAccountStore" parameterType="FDVoucherDailyAccountMember">
+		INSERT INTO fd_voucher_daily_account_store (
+			daily_account_id
+			,member_id
+			,transaction_member_type
+			,transaction_member_id
+			,transaction_member_name
+			,transaction_member_contact
+			,transaction_no
+			,data_source
+			,business_type_key
+			,payment_way_key
+			,transaction_date
+			,detail
+			,pre_balance
+			,amount
+			,balance
+			,out_trade_no
+			,account_date
+			,booking_mark
+			,created_date
+			,remark
+		)
+		VALUES (
+			#{daily_account_id}
+			,#{member_id}
+			,#{transaction_member_type}
+			,#{transaction_member_id}
+			,#{transaction_member_name}
+			,#{transaction_member_contact}
+			,#{transaction_no}
+			,#{data_source}
+			,#{business_type_key}
+			,#{payment_way_key}
+			,#{transaction_date}
+			,#{detail}
+			,#{pre_balance}
+			,#{amount}
+			,#{balance}
+			,#{out_trade_no}
+			,#{account_date}
+			,#{booking_mark}
+			,#{created_date}
+			,#{remark}
+		)
+	</insert>
+	
+	<insert id="insertFDGoldDailyAccount" parameterType="FDGoldDailyAccountMember">
+		INSERT INTO fd_gold_daily_account 
+		(
+			daily_account_id
+			,transaction_no
+			,member_id
+			,transaction_member_type
+			,transaction_member_id
+			,transaction_member_name
+			,transaction_member_contact
+			,business_type_key
+			,payment_way_key
+			,account_date
+			,detail
+			,booking_mark
+			,pre_balance
+			,amount
+			,balance
+			,created_date
+			,remark
+		)
+		VALUES (
+			#{daily_account_id}
+			,#{transaction_no}
+			,#{member_id}
+			,#{transaction_member_type}
+			,#{transaction_member_id}
+			,#{transaction_member_name}
+			,#{transaction_member_contact}
+			,#{business_type_key}
+			,#{payment_way_key}
+			,#{account_date}
+			,#{detail}
+			,#{booking_mark}
+			,#{pre_balance}
+			,#{amount}
+			,#{balance}
+			,#{created_date}
+			,#{remark}
+		)
+	</insert>
+	
+	<insert id="insertFDGoldDailyAccountStore" parameterType="FDGoldDailyAccountMember">
+		INSERT INTO fd_gold_daily_account_store (
+			daily_account_id
+			,member_id
+			,transaction_member_type
+			,transaction_member_id
+			,transaction_member_name
+			,transaction_member_contact
+			,transaction_no
+			,data_source
+			,business_type_key
+			,payment_way_key
+			,transaction_date
+			,detail
+			,pre_balance
+			,amount
+			,balance
+			,out_trade_no
+			,account_date
+			,booking_mark
+			,created_date
+			,remark
+		)
+		VALUES (
+			#{daily_account_id}
+			,#{member_id}
+			,#{transaction_member_type}
+			,#{transaction_member_id}
+			,#{transaction_member_name}
+			,#{transaction_member_contact}
+			,#{transaction_no}
+			,#{data_source}
+			,#{business_type_key}
+			,#{payment_way_key}
+			,#{transaction_date}
+			,#{detail}
+			,#{pre_balance}
+			,#{amount}
+			,#{balance}
+			,#{out_trade_no}
+			,#{account_date}
+			,#{booking_mark}
+			,#{created_date}
+			,#{remark}
+		)
+	</insert>
+	
+	<insert id="insertFDGoldDailyAccountConsumer" parameterType="FDGoldDailyAccountMember">
+		INSERT INTO fd_gold_daily_account_consumer (
+			daily_account_id
+			,member_id
+			,transaction_member_type
+			,transaction_member_id
+			,transaction_member_name
+			,transaction_member_contact
+			,transaction_no
+			,data_source
+			,business_type_key
+			,payment_way_key
+			,transaction_date
+			,detail
+			,pre_balance
+			,amount
+			,balance
+			,out_trade_no
+			,account_date
+			,booking_mark
+			,created_date
+			,remark
+		)
+		VALUES (
+			#{daily_account_id}
+			,#{member_id}
+			,#{transaction_member_type}
+			,#{transaction_member_id}
+			,#{transaction_member_name}
+			,#{transaction_member_contact}
+			,#{transaction_no}
+			,#{data_source}
+			,#{business_type_key}
+			,#{payment_way_key}
+			,#{transaction_date}
+			,#{detail}
+			,#{pre_balance}
+			,#{amount}
+			,#{balance}
+			,#{out_trade_no}
+			,#{account_date}
+			,#{booking_mark}
+			,#{created_date}
+			,#{remark}
+		)
+	</insert>
+		
+	
+	<insert id="insertFDTransactionFlow" parameterType="Map">
+		INSERT INTO fd_transaction_flow (
+			flow_id
+			,flow_key
+			,transaction_no
+			,tracked_date
+			,remark
+		)
+		VALUES (
+			#{flow_id}
+			,#{flow_key}
+			,#{transaction_no}
+			,#{tracked_date}
+			,#{remark}
+		)
+	</insert>
+	
+	<insert id="insertFDTransactionLog" parameterType="Map">
+		INSERT INTO fd_transactions_log (
+			log_id
+			,transaction_no
+			,tracked_date
+			,event
+		)
+		VALUES (
+			#{log_id}
+			,#{transaction_no}
+			,#{tracked_date}
+			,#{event}
+		)
+	</insert>
+	
+	<insert id="insertFDTransactionErrorLog" parameterType="Map">
+		INSERT INTO fd_transactions_error_log (
+			log_id
+			,transaction_no
+			,tracked_date
+			,event
+		)
+		VALUES (
+			#{log_id}
+			,#{transaction_no}
+			,#{tracked_date}
+			,#{event}
+		)
+	</insert>
+	
+	<update id="updateFDTransactionsResult" parameterType="Map">
+		update fd_transactions_result set
+		<trim suffixOverrides=",">
+			<if test="transaction_status != null and transaction_status != ''">
+				transaction_status = #{transaction_status},
+			</if>
+			<if test="remark != null">
+				remark = #{remark},
+			</if>
+			<if test="buyer_name != null">
+				buyer_name = #{buyer_name},
+			</if>
+			<if test="buyer_contact != null">
+				buyer_contact = #{buyer_contact},
+			</if>
+			<if test="buyer_account_no != null">
+				buyer_account_no = #{buyer_account_no},
+			</if>
+			<if test="buyer_account_name != null">
+				buyer_account_name = #{buyer_account_name},
+			</if>
+			<if test="seller_name != null">
+				seller_name = #{seller_name},
+			</if>
+			<if test="seller_contact != null">
+				seller_contact = #{seller_contact},
+			</if>
+			<if test="seller_account_no != null">
+				seller_account_no = #{seller_account_no},
+			</if>
+			<if test="seller_account_name != null">
+				seller_account_name = #{seller_account_name},
+			</if>
+			<if test="out_trade_no != null and out_trade_no != ''">
+				out_trade_no = #{out_trade_no},
+			</if>
+		</trim>
+		<where>
+			transaction_no=#{transaction_no}
+		</where>
+	</update>
+	
+	<!-- 丁忍新增积分表 -->
+	
+	<insert id="insertFDPointDailyAccount" parameterType="FDPointDailyAccountMember">
+		INSERT INTO fd_point_daily_account 
+		(
+			daily_account_id
+			,transaction_no
+			,member_id
+			,transaction_member_type
+			,transaction_member_id
+			,transaction_member_name
+			,transaction_member_contact
+			,business_type_key
+			,payment_way_key
+			,account_date
+			,detail
+			,booking_mark
+			,pre_balance
+			,amount
+			,balance
+			,created_date
+			,remark
+		)
+		VALUES (
+			#{daily_account_id}
+			,#{transaction_no}
+			,#{member_id}
+			,#{transaction_member_type}
+			,#{transaction_member_id}
+			,#{transaction_member_name}
+			,#{transaction_member_contact}
+			,#{business_type_key}
+			,#{payment_way_key}
+			,#{account_date}
+			,#{detail}
+			,#{booking_mark}
+			,#{pre_balance}
+			,#{amount}
+			,#{balance}
+			,#{created_date}
+			,#{remark}
+		)
+	</insert>
+	
+	<insert id="insertFDPointDailyAccountConsumer" parameterType="FDPointDailyAccountMember">
+		INSERT INTO fd_point_daily_account_consumer (
+			daily_account_id
+			,member_id
+			,transaction_member_type
+			,transaction_member_id
+			,transaction_member_name
+			,transaction_member_contact
+			,transaction_no
+			,data_source
+			,business_type_key
+			,payment_way_key
+			,transaction_date
+			,detail
+			,pre_balance
+			,amount
+			,balance
+			,out_trade_no
+			,account_date
+			,booking_mark
+			,created_date
+			,remark
+		)
+		VALUES (
+			#{daily_account_id}
+			,#{member_id}
+			,#{transaction_member_type}
+			,#{transaction_member_id}
+			,#{transaction_member_name}
+			,#{transaction_member_contact}
+			,#{transaction_no}
+			,#{data_source}
+			,#{business_type_key}
+			,#{payment_way_key}
+			,#{transaction_date}
+			,#{detail}
+			,#{pre_balance}
+			,#{amount}
+			,#{balance}
+			,#{out_trade_no}
+			,#{account_date}
+			,#{booking_mark}
+			,#{created_date}
+			,#{remark}
+		)
+	</insert>
+	
+	<insert id="insertFDPointDailyAccountStore" parameterType="FDPointDailyAccountMember">
+		INSERT INTO fd_point_daily_account_store (
+			daily_account_id
+			,member_id
+			,transaction_member_type
+			,transaction_member_id
+			,transaction_member_name
+			,transaction_member_contact
+			,transaction_no
+			,data_source
+			,business_type_key
+			,payment_way_key
+			,transaction_date
+			,detail
+			,pre_balance
+			,amount
+			,balance
+			,out_trade_no
+			,account_date
+			,booking_mark
+			,created_date
+			,remark
+		)
+		VALUES (
+			#{daily_account_id}
+			,#{member_id}
+			,#{transaction_member_type}
+			,#{transaction_member_id}
+			,#{transaction_member_name}
+			,#{transaction_member_contact}
+			,#{transaction_no}
+			,#{data_source}
+			,#{business_type_key}
+			,#{payment_way_key}
+			,#{transaction_date}
+			,#{detail}
+			,#{pre_balance}
+			,#{amount}
+			,#{balance}
+			,#{out_trade_no}
+			,#{account_date}
+			,#{booking_mark}
+			,#{created_date}
+			,#{remark}
+		)
+	</insert>
+	
+	<insert id="insertFDMemberPointLog" parameterType="FDMemberPointLog">
+		INSERT INTO fd_member_point_log (
+			log_id
+			,member_id
+			,member_type_key
+			,category
+			,pre_balance
+			,amount
+			,balance
+			,tracked_date
+			,remark
+		)
+		VALUES (
+			#{log_id}
+			,#{member_id}
+			,#{member_type_key}
+			,#{category}
+			,#{pre_balance}
+			,#{amount}
+			,#{balance}
+			,#{tracked_date}
+			,#{remark}
+		)
+	</insert>
+</mapper>

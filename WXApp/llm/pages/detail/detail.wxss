@@ -1,0 +1,83 @@
+/* banner */
+.banner {
+	width: 750rpx;
+	height: 750rpx;
+	margin-bottom: 0;
+}
+.banner-img {
+	width: 750rpx;
+	height: 750rpx;
+}
+
+.cnt-box {
+	width: 710rpx;
+	padding: 20rpx;
+}
+.cnt-box .tit {
+	color: #333333;
+	font-size: 40rpx;
+	line-height: 52rpx;
+}
+.cnt-box .tit .tag {
+	display: inline-block;
+	font-size: 24rpx;
+	line-height: 40rpx;
+	padding: 0 8rpx;
+	text-align: center;
+	color: #ffffff;
+	background-color: #ff4400;
+	border-radius: 5rpx;
+	float: left;
+	margin-top: 5rpx;
+}
+.cnt-box .price-box {
+	margin-top: 20rpx;
+}
+.cnt-box .price-box .final-price {
+	color: #333333;
+	font-size: 26rpx;
+	display:inline-block;
+}
+.cnt-box .price-box .final-price .money {
+	color: #ff4242;
+	font-size: 52rpx;
+	margin-left: 5rpx;
+	font-weight: bold;
+}
+.cnt-box .price-box .refund {
+	color: #333333;
+	font-size: 26rpx;
+	float: right;
+	line-height: 75rpx;
+}
+.cnt-box .sale-box {
+	color: #666666;
+	font-size: 24rpx;
+	margin-top: 20rpx;
+}
+.cnt-box .sale-box .sold-num,
+.cnt-box .sale-box .left-num {
+	color: #ff4242;
+}
+.cnt-box .guide {
+	width: 750rpx;
+	margin: 8rpx auto;
+}
+.guide .guide-img {
+	width: 750rpx;
+	height: 100rpx;
+}
+.desc {
+	width: 710rpx;
+	color: #333333;
+	font-size: 28rpx;
+	line-height: 36rpx;
+	padding: 20rpx;
+}
+.detail-wrap .detail-bar-img {
+	width: 750rpx;
+	height: 71rpx;
+}
+.detail-wrap .detail-img {
+	width: 750rpx;
+}

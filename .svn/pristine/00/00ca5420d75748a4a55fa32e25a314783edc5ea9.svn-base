@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <% include ../../commonHead.html %>
+    <title>推广</title>
+    <link rel="stylesheet" type="text/css" href="/css/generalize/index.css?v20170309">
+</head>
+
+<body>
+    <div class="detail-bar bor-spread">
+        <div>
+            <p class="title">店东助手</p> 
+            <img src="/image/generalize/ddzs.png?v20170523">
+            <a href="javascript: share('ddzs');" class="icon-fx">分享</a>
+        </div>
+        <div>
+            <p class="title">领有惠</p> 
+            <img src="/image/generalize/bdsh.png?v20170616">
+            <a href="javascript: share('bdsh');" class="icon-fx">分享</a>
+        </div>
+    </div>
+</body>
+<script type="text/javascript">
+var J = {
+    ddzs: {
+        title: '店东助手',
+        desc: '助力店东生意的好帮手！',
+        imgPath: window.location.protocol + '//' + window.location.hostname + '/image/common/app_ddzs.png',
+        url: 'http://mps-static.meitianhui.com/application/ddzs.html'
+    },
+    bdsh: {
+        title: '领有惠',
+        desc: '精品优选，实惠立返',
+        imgPath: window.location.protocol + '//' + window.location.hostname + '/image/common/app_bdsh.png?v2',
+        url: 'http://mps-static.meitianhui.com/application/bdsh.html'
+    }
+}
+
+function share(type) {
+    if(window.jsObj) {  // Android
+        window.jsObj.share(JSON.stringify(J[type]));
+    } else { // iOs
+        setupWebViewJavascriptBridge(function(bridge) {
+            bridge.callHandler('share', J[type]);
+        });
+    }
+}
+</script>
+</html>

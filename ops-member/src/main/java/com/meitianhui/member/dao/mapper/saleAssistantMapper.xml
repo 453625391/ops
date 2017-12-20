@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.meitianhui.member.dao.SaleAssistantDao">
+
+	<insert id="insertMDSaleAssistant" parameterType="MDSaleAssistant">
+		INSERT INTO
+		md_sale_assistant(
+		stores_id
+		,consumer_id
+		,status
+		,created_date
+		,modified_date
+		,remark
+		)
+		VALUES(
+		#{stores_id}
+		,#{consumer_id}
+		,#{status}
+		,#{created_date}
+		,#{modified_date}
+		,#{remark}
+		)
+	</insert>
+
+	<select id="selectMDSaleAssistant" parameterType="Map"
+		resultType="Map">
+		<![CDATA[
+			SELECT
+				stores_id
+				,consumer_id
+				,status
+			FROM
+				md_sale_assistant
+		]]>
+		<where>
+			1=1
+			<if test="stores_id != null and stores_id != ''">
+				AND stores_id=#{stores_id}
+			</if>
+			<if test="consumer_id != null and consumer_id != ''">
+				AND consumer_id=#{consumer_id}
+			</if>
+			<if test="status != null and status != ''">
+				AND status=#{status}
+			</if>
+		</where>
+	</select>
+
+	<select id="selectMDSaleAssistantForConsumerList" parameterType="Map"
+		resultType="Map">
+		<![CDATA[
+			SELECT
+			   	sa.stores_id
+			    ,s.stores_name
+				,s.service_tel
+				,s.address
+				,sa.created_date
+			FROM
+				md_sale_assistant sa INNER JOIN md_stores s ON sa.stores_id = s.stores_id
+		]]>
+		<where>
+			sa.consumer_id=#{consumer_id} AND sa.status=#{status}
+		</where>
+		ORDER BY sa.created_date DESC
+	</select>
+
+	<select id="selectMDSaleAssistantForStoresList" parameterType="Map"
+		resultType="Map">
+		<![CDATA[
+			SELECT
+			    sa.consumer_id
+				,c.nick_name
+			   	,c.mobile
+				,c.address
+				,sa.status
+				,sa.created_date
+			FROM
+				md_sale_assistant sa INNER JOIN md_consumer c ON sa.consumer_id = c.consumer_id
+		]]>
+		<where>
+			sa.stores_id=#{stores_id}
+			<if test="status != null and status != ''">
+				AND sa.status=#{status}
+			</if>
+			<if test="status_in != null">
+				AND sa.status in
+				<foreach collection="status_in" item="item" index="index" 
+					open="(" separator="," close=")">
+					#{item}
+				</foreach>
+			</if>
+		</where>
+		ORDER BY sa.created_date DESC
+	</select>
+
+
+	<update id="updateMDSaleAssistant" parameterType="Map">
+		UPDATE md_sale_assistant SET
+		modified_date=SYSDATE(),status = #{status}
+		<where>
+			stores_id=#{stores_id} AND consumer_id=#{consumer_id}
+		</where>
+	</update>
+	
+	<delete id="deleteMDSaleAssistant" parameterType="Map">
+		DELETE FROM md_sale_assistant 
+		<where>
+			stores_id=#{stores_id} AND consumer_id=#{consumer_id}
+		</where>
+	</delete>
+
+</mapper>

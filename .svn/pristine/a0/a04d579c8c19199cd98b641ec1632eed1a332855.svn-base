@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <!-- 删除苹果默认的工具栏和菜单栏 -->
+    <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+    <!-- 设置苹果工具栏颜色 -->
+    <meta name="format-detection" content="telphone=no, email=no" />
+    <!-- 忽略页面中的数字识别为电话，忽略email识别 -->
+    <!-- 启用360浏览器的极速模式(webkit) -->
+    <meta name="renderer" content="webkit">
+    <!-- 避免IE使用兼容模式 -->
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <!-- 针对手持设备优化，主要是针对一些老的不识别viewport的浏览器，比如黑莓 -->
+    <meta name="HandheldFriendly" content="true">
+    <!-- 微软的老式浏览器 -->
+    <meta name="MobileOptimized" content="320">
+    <!-- uc强制竖屏 -->
+    <meta name="screen-orientation" content="portrait">
+    <!-- QQ强制竖屏 -->
+    <meta name="x5-orientation" content="portrait">
+    <!-- UC强制全屏 -->
+    <meta name="full-screen" content="yes">
+    <!-- QQ强制全屏 -->
+    <meta name="x5-fullscreen" content="true">
+    <!-- UC应用模式 -->
+    <meta name="browsermode" content="application">
+    <!-- QQ应用模式 -->
+    <meta name="x5-page-mode" content="app">
+    <!-- windows phone 点击无高光 -->
+    <meta name="msapplication-tap-highlight" content="no">
+    <!-- 禁用iPhone手机浏览器上给电话号码自动加上的link样式 -->
+    <meta name="format-detection" content="telephone=no">
+    <title>社区</title>
+    <link rel="stylesheet" type="text/css" href="/css/reset.css">
+    <link rel="stylesheet" type="text/css" href="/css/community/test.css">
+    <script type="text/javascript" src="/js/third-part/flexible.js"></script>
+    <script type="text/javascript" src="/js/third-part/fastclick.min.js"></script>
+    <script type="text/javascript" src="/js/third-part/zepto.min.js"></script>
+</head>
+<body>
+    <p>请求参数：</p>
+    <p><%=requestParams %></p>
+    <br>
+    <p>--------------------------------------------------</p>
+    <br>
+    <a href="javascript: void(0);" id="locBtn">获取当前位置信息</a>
+    <p id="loc"></p>
+    <br>
+    <p>--------------------------------------------------</p>
+    <br>
+    <a href="javascript: void(0);" id="imgBtn">上传图片</a>
+    <p id="img"></p>
+    <p id="process"></p>
+    <br>
+    <p>--------------------------------------------------</p>
+    <br>
+    <a href="javascript: void(0);" id="shareBtn">分享</a>
+    <br>
+    <p>--------------------------------------------------</p>
+    <br>
+    <a href="javascript: void(0);" id="closeBtn">关闭</a>
+</body>
+<script type="text/javascript">
+$(function() {
+    FastClick.attach(document.body);
+
+    var shareData = {
+        title : '分享标题',
+        desc : '这是来自社区的分享',
+        url : 'http://cms.meitianhui.com/?p=97',
+        thumbnailUrl : 'http://cms.meitianhui.com/wp-content/uploads/2016/04/1-1-1.png'
+    };
+
+    if(typeof window.jsObj == 'undefined') {    // IOS
+        setupWebViewJavascriptBridge(function(bridge) {
+            // 获取位置信息
+            $('#locBtn').click(function() {
+                bridge.callHandler('getLocation', function(data) {
+                    $('#loc').text(JSON.stringify(data));
+                });
+            });
+
+            // 上传图片
+            $('#imgBtn').click(function() {
+                bridge.callHandler('uploadImg', function(data) {
+                    var imgDom = $('<img src="'+ data.doc_path +'" style="height: 1.333333rem;" />');
+                    var idDom = $('<p>'+ data.doc_id +'</p>');
+                    $('#img').empty();
+                    $('#img').append(imgDom);
+                    $('#img').append(idDom);
+                });
+            });
+
+            // 分享
+            $('#shareBtn').click(function() {
+                bridge.callHandler('share', shareData);
+            });
+
+            // 关闭
+            $('#closeBtn').click(function() {
+                bridge.callHandler('closeWebview');
+            });
+
+            // 上传进度
+            bridge.registerHandler('uploadProgress', function(data) {
+                $('#process').text('上传进度:' + data);
+            });
+        });
+    } else {    // Android
+        // 获取位置信息
+        $('#locBtn').click(function() {
+            console.log('xx');
+            window.jsObj.getLocation('getLocationCb');
+        });
+
+        // 上传图片
+        $('#imgBtn').click(function() {
+            window.jsObj.uploadImg('uploadImgCb');
+        });
+
+        // 分享
+        $('#shareBtn').click(function() {
+            window.jsObj.share(JSON.stringify(shareData));
+        });
+
+        // 关闭
+        $('#closeBtn').click(function() {
+            window.jsObj.closeWebview();
+        });
+    }
+});
+
+// 供Android调用的上传进度
+function uploadProgress(data) {
+    $('#process').text('上传进度:' + data);
+}
+
+// Android获取位置回调函数
+function getLocationCb(data) {
+    console.log(data);
+    $('#loc').text(data);
+}
+
+// Android上传图片回调函数
+function uploadImgCb(data) {
+    data = JSON.parse(data);
+    var imgDom = $('<img src="'+ data.doc_path +'" style="height: 1.333333rem;" />');
+    var idDom = $('<p>'+ data.doc_id +'</p>');
+    $('#img').empty();
+    $('#img').append(imgDom);
+    $('#img').append(idDom);
+}
+
+// IOS初始化
+function setupWebViewJavascriptBridge(callback) {
+    if (window.WebViewJavascriptBridge) {
+        return callback(WebViewJavascriptBridge);
+    }
+    if (window.WVJBCallbacks) {
+        return window.WVJBCallbacks.push(callback);
+    }
+    window.WVJBCallbacks = [callback];
+    var WVJBIframe = document.createElement('iframe');
+    WVJBIframe.style.display = 'none';
+    WVJBIframe.src = 'wvjbscheme://__BRIDGE_LOADED__';
+    document.documentElement.appendChild(WVJBIframe);
+    setTimeout(function() {
+        document.documentElement.removeChild(WVJBIframe)
+    }, 0)
+}
+
+// window.jsObj = {};
+// window.jsObj.getLocation = function(callback) {
+//     var loc = {
+//         area_name : '深圳市,福田区',
+//         area_id : '10010',
+//         longitude : '100.32',
+//         latitude : '23.234'
+//     };
+//     var locS = JSON.stringify(loc);
+//     callback(locS);
+// }
+</script>
+</html>

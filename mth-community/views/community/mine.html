@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="apple-mobile-web-app-capable" content="yes" /><!-- 删除苹果默认的工具栏和菜单栏 -->
+	<meta name="apple-mobile-web-app-status-bar-style" content="black" /><!-- 设置苹果工具栏颜色 -->
+	<meta name="format-detection" content="telphone=no, email=no" /><!-- 忽略页面中的数字识别为电话，忽略email识别 -->
+	<!-- 启用360浏览器的极速模式(webkit) -->
+	<meta name="renderer" content="webkit">
+	<!-- 避免IE使用兼容模式 -->
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<!-- 针对手持设备优化，主要是针对一些老的不识别viewport的浏览器，比如黑莓 -->
+	<meta name="HandheldFriendly" content="true">
+	<!-- 微软的老式浏览器 -->
+	<meta name="MobileOptimized" content="320">
+	<!-- uc强制竖屏 -->
+	<meta name="screen-orientation" content="portrait">
+	<!-- QQ强制竖屏 -->
+	<meta name="x5-orientation" content="portrait">
+	<!-- UC强制全屏 -->
+	<meta name="full-screen" content="yes">
+	<!-- QQ强制全屏 -->
+	<meta name="x5-fullscreen" content="true">
+	<!-- UC应用模式 -->
+	<meta name="browsermode" content="application">
+	<!-- QQ应用模式 -->
+	<meta name="x5-page-mode" content="app">
+	<!-- windows phone 点击无高光 -->
+	<meta name="msapplication-tap-highlight" content="no">
+	<!-- 禁用iPhone手机浏览器上给电话号码自动加上的link样式 -->
+	<meta name="format-detection" content="telephone=no">
+	<title>我的</title>
+	<link rel="stylesheet" type="text/css" href="/css/reset.css">
+	<link rel="stylesheet" type="text/css" href="/css/community/common.css">
+	<link rel="stylesheet" type="text/css" href="/css/community/index.css">
+  	<script type="text/javascript" src="/js/third-part/flexible.js"></script>
+	<script type="text/javascript" src="/js/third-part/jquery.min.js"></script>
+	<script type="text/javascript" src="/js/third-part/fastclick.min.js"></script>
+</head>
+<body>
+	<!-- <header id="header" class="">
+		<div class="head-wrap">
+			<a href="javascript: window.history.go(-1);" class="icon-return"></a>
+			<span class="title">社区</span>
+		</div>
+	</header> -->
+	<div class="content-wrap mt0">
+		<!-- <ul class="find-title">
+			<li class="icon-pyq"><a href="#">生活圈<em>58</em></a></li>
+			<li class="icon-sys"><a href="#">工作圈<em>58</em></a></li>
+			<li class="icon-pyq"><a href="#">家乡圈<em>58</em></a></li>
+			<li class="icon-sys"><a href="#">兴趣圈<em>58</em></a></li>
+		</ul> -->
+		<ul class="find-title">
+			<li class="icon-pyq"><a href="/homepage?mi=<%=member_id %>">分享<em><%=shareCount %></em></a></li>
+			<!-- <li class="icon-sys"><a href="#">话题<em>58</em></a></li>
+			<li class="icon-pyq"><a href="#">签到<em>58</em></a></li> -->
+		</ul>
+		<!-- <ul class="find-title">
+			<li class="icon-pyq"><a href="/h5/community/find">发现</a></li>
+		</ul> -->
+	</div>
+</body>
+<script type="text/javascript">
+$(function() {
+	FastClick.attach(document.body);
+});
+</script>
+</html>
+

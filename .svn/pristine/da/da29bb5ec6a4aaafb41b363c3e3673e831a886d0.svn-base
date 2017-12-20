@@ -1,0 +1,477 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.meitianhui.member.dao.ConsumerDao">
+
+
+	<insert id="insertMDConsumer" parameterType="MDConsumer">
+		INSERT INTO
+		md_consumer (
+		consumer_id
+		,mobile
+		,registered_date
+		,created_date
+		,modified_date
+		,status
+		)
+		VALUES (
+		#{consumer_id}
+		,#{mobile}
+		,#{registered_date}
+		,#{created_date}
+		,#{modified_date}
+		,#{status}
+		)
+	</insert>
+
+	<insert id="insertMDConsumerLog" parameterType="Map">
+		INSERT INTO
+		md_consumer_log (
+		log_id
+		,consumer_id
+		,category
+		,tracked_date
+		,event
+		)
+		VALUES (
+		#{log_id}
+		,#{consumer_id}
+		,#{category}
+		,#{tracked_date}
+		,#{event}
+		)
+	</insert>
+
+
+	<insert id="insertMDConsumerAddress" parameterType="MDConsumerAddress">
+		INSERT INTO
+		md_consumer_address
+		(
+		address_id
+		,consumer_id
+		,area_id
+		,address
+		,zip_code
+		,consignee
+		,mobile
+		,is_major_addr
+		,created_date
+		,remark
+		)
+		VALUES (
+		#{address_id}
+		,#{consumer_id}
+		,#{area_id}
+		,#{address}
+		,#{zip_code}
+		,#{consignee}
+		,#{mobile}
+		,#{is_major_addr}
+		,#{created_date}
+		,#{remark}
+		)
+	</insert>
+	
+	
+	<insert id="insertMDConsumerLocation" parameterType="Map">
+		INSERT INTO
+		md_consumer_location (
+		location_id
+		,consumer_id
+		,area_id
+		,longitude
+		,latitude
+		,created_date
+		)
+		VALUES (
+		#{location_id}
+		,#{consumer_id}
+		,#{area_id}
+		,#{longitude}
+		,#{latitude}
+		,#{created_date}
+		)
+	</insert>
+	
+	
+	<select id="selectMDConsumer" parameterType="Map" resultType="MDConsumer">
+		<![CDATA[
+			SELECT
+				c.consumer_id 
+				,c.nick_name
+				,c.sex_key
+				,c.birthday
+				,c.full_name
+				,c.mobile
+				,c.head_pic_path
+				,c.area_id
+				,a.path as area_desc
+				,c.address
+				,c.marital_status_key
+				,c.montly_income
+				,c.id_card
+				,c.education
+				,c.industry
+				,c.home_circle
+				,c.home_circle_address
+				,c.work_circle
+				,c.work_circle_address
+				,c.life_circle
+				,c.life_circle_address
+				,c.hobby_circle
+				,c.registered_date
+				,c.grade
+				,c.status
+			FROM
+				md_consumer c
+				left join md_area a on a.area_code = c.area_id
+		]]>
+		<where>
+			1=1
+			<if test="member_id != null and member_id != ''">
+				AND consumer_id=#{member_id}
+			</if>
+			<if test="consumer_id != null and consumer_id != ''">
+				AND consumer_id=#{consumer_id}
+			</if>
+			<if test="mobile != null and mobile != ''">
+				AND mobile=#{mobile}
+			</if>
+			<if test="status != null and status != ''">
+				AND status=#{status}
+			</if>
+			<if test="consumer_id_in != null">
+				AND consumer_id in
+				<foreach item="item" index="index" collection="consumer_id_in"
+					open="(" separator="," close=")">
+					#{item}
+				</foreach>
+			</if>
+		</where>
+	</select>
+	
+	<select id="selectMDConsumerById" parameterType="Map" resultType="MDConsumer">
+		<![CDATA[
+			SELECT
+				c.consumer_id 
+				,c.nick_name
+				,c.sex_key
+				,c.birthday
+				,c.full_name
+				,c.mobile
+				,c.head_pic_path
+				,c.area_id
+				,a.path as area_desc
+				,c.address
+				,c.marital_status_key
+				,c.montly_income
+				,c.id_card
+				,c.education
+				,c.industry
+				,c.home_circle
+				,c.home_circle_address
+				,c.work_circle
+				,c.work_circle_address
+				,c.life_circle
+				,c.life_circle_address
+				,c.hobby_circle
+				,c.registered_date
+				,c.grade
+				,c.status
+			FROM
+				md_consumer c
+		]]>
+		<where>
+			1=1
+			<!-- <if test="member_id != null and member_id != ''">
+				AND consumer_id=#{member_id}
+			</if> -->
+			<if test="consumer_id != null and consumer_id != ''">
+				AND consumer_id=#{consumer_id}
+			</if>
+			<!-- <if test="mobile != null and mobile != ''">
+				AND mobile=#{mobile}
+			</if>
+			<if test="status != null and status != ''">
+				AND status=#{status}
+			</if>
+			<if test="consumer_id_in != null">
+				AND consumer_id in
+				<foreach item="item" index="index" collection="consumer_id_in"
+					open="(" separator="," close=")">
+					#{item}
+				</foreach>
+			</if> -->
+		</where>
+	</select>
+
+	<select id="selectMDConsumerList" parameterType="Map"
+		resultType="MDConsumer">
+		<![CDATA[
+			SELECT
+				c.consumer_id 
+				,c.nick_name
+				,c.full_name
+				,c.grade
+				,c.mobile
+				,c.head_pic_path
+				,c.area_id
+				,a.path as area_desc
+				,c.registered_date
+				,c.status
+			FROM
+				md_consumer c
+				left join md_area a on a.area_code = c.area_id
+		]]>
+		<where>
+			1=1
+			<if test="consumer_id != null and consumer_id != ''">
+				AND c.consumer_id=#{consumer_id}
+			</if>
+			<if test="grade != null and grade != ''">
+				AND c.grade=#{grade}
+			</if>
+			<if test="mobile != null and mobile != ''">
+				AND c.mobile=#{mobile}
+			</if>
+		</where>
+	</select>
+	
+	
+	<select id="selectMDConsumerAddress" parameterType="Map"
+		resultType="Map">
+		<![CDATA[
+			SELECT
+				c.address_id
+				,c.consumer_id
+				,c.area_id
+				,a.path as area_desc
+				,c.address
+				,c.zip_code
+				,c.consignee
+				,c.mobile
+				,c.is_major_addr
+				,c.created_date
+				,c.remark
+			FROM
+				md_consumer_address c left join md_area a on a.area_code = c.area_id
+		]]>
+		<where>
+			1=1
+			<if test="consumer_id != null and consumer_id != ''">
+				AND c.consumer_id=#{consumer_id}
+			</if>
+			<if test="address_id != null and address_id != ''">
+				AND c.address_id=#{address_id}
+			</if>
+			<if test="is_major_addr != null and is_major_addr != ''">
+				AND c.is_major_addr=#{is_major_addr}
+			</if>
+		</where>
+		ORDER BY c.created_date DESC
+	</select>
+	
+
+	<select id="selectMDConsumerBaseInfo" parameterType="Map"
+		resultType="MDConsumer">
+		<![CDATA[
+			SELECT
+				c.consumer_id 
+				,c.nick_name
+				,c.mobile
+				,c.grade
+				,c.address
+				,c.head_pic_path
+			FROM
+				md_consumer c
+		]]>
+		<where>
+			1=1
+			<if test="consumer_id != null and consumer_id != ''">
+				AND c.consumer_id=#{consumer_id}
+			</if>
+			<if test="status != null and status != ''">
+				AND c.status=#{status}
+			</if>
+		</where>
+	</select>
+	
+	<update id="updateMDConsumer" parameterType="Map">
+		UPDATE md_consumer SET
+		<trim suffixOverrides=",">
+			modified_date = SYSDATE(),
+			<if test="nick_name != null and nick_name != ''">
+				nick_name = #{nick_name},
+			</if>
+			<if test="sex_key != null and sex_key != ''">
+				sex_key = #{sex_key},
+			</if>
+			<if test="birthday != null and birthday != ''">
+				birthday = #{birthday},
+			</if>
+			<if test="full_name != null and full_name != ''">
+				full_name = #{full_name},
+			</if>
+			<if test="mobile != null and mobile != ''">
+				mobile = #{mobile},
+			</if>
+			<if test="head_pic_path != null and head_pic_path != ''">
+				head_pic_path = #{head_pic_path},
+			</if>
+			<if test="area_id != null and area_id != ''">
+				area_id = #{area_id},
+			</if>
+			<if test="address != null and address != ''">
+				address = #{address},
+			</if>
+			<if test="marital_status_key != null and marital_status_key != ''">
+				marital_status_key = #{marital_status_key},
+			</if>
+			<if test="montly_income != null and montly_income != ''">
+				montly_income = #{montly_income},
+			</if>
+			<if test="id_card != null and id_card != ''">
+				id_card = #{id_card},
+			</if>
+			<if test="education != null and education != ''">
+				education = #{education},
+			</if>
+			<if test="industry != null and industry != ''">
+				industry = #{industry},
+			</if>
+			<if test="home_circle != null">
+				home_circle = #{home_circle},
+			</if>
+			<if test="home_circle_address != null">
+				home_circle_address = #{home_circle_address},
+			</if>
+			<if test="work_circle != null">
+				work_circle = #{work_circle},
+			</if>
+			<if test="work_circle_address != null">
+				work_circle_address = #{work_circle_address},
+			</if>
+			<if test="life_circle != null">
+				life_circle = #{life_circle},
+			</if>
+			<if test="life_circle_address != null">
+				life_circle_address = #{life_circle_address},
+			</if>
+			<if test="hobby_circle != null">
+				hobby_circle = #{hobby_circle},
+			</if>
+			<if test="grade != null and grade != ''">
+				grade = #{grade},
+			</if>
+			<if test="label != null and label != ''">
+				label = #{label},
+			</if>
+			<if test="status != null and status != ''">
+				status = #{status},
+			</if>
+		</trim>
+		<where>
+			1=1
+			<if test="member_id != null and member_id != ''">
+				AND consumer_id=#{member_id}
+			</if>
+			<if test="consumer_id != null and consumer_id != ''">
+				AND consumer_id=#{consumer_id}
+			</if>
+		</where>
+	</update>
+
+
+	<update id="updateMDConsumerAddress" parameterType="Map">
+		UPDATE md_consumer_address SET
+		<trim suffixOverrides=",">
+			<if test="area_id != null and area_id != ''">
+				area_id = #{area_id},
+			</if>
+			<if test="address != null and address != ''">
+				address = #{address},
+			</if>
+			<if test="zip_code != null and zip_code != ''">
+				zip_code = #{zip_code},
+			</if>
+			<if test="consignee != null and consignee != ''">
+				consignee = #{consignee},
+			</if>
+			<if test="mobile != null and mobile != ''">
+				mobile = #{mobile},
+			</if>
+			<if test="is_major_addr != null and is_major_addr != ''">
+				is_major_addr = #{is_major_addr},
+			</if>
+		</trim>
+		<where>
+			1=1
+			<if test="address_id != null and address_id != ''">
+				AND address_id = #{address_id}
+			</if>
+			<if test="consumer_id != null and consumer_id != ''">
+				AND consumer_id = #{consumer_id}
+			</if>
+		</where>
+	</update>
+
+	<delete id="deleteMDConsumerAddress" parameterType="Map">
+		DELETE FROM
+		md_consumer_address WHERE address_id=#{address_id}
+	</delete>
+
+	<insert id="insertUserRecommend" parameterType="Map">
+		INSERT INTO
+		md_user_recommend (
+		recommend_id
+		,reference_type_key
+		,reference_id
+		,reference_mobile
+		,member_type_key
+		,member_id
+		,member_mobile
+		,data_source
+		,reference_type
+		,created_date
+		,remark
+		)
+		VALUES (
+		#{recommend_id}
+		,#{reference_type_key}
+		,#{reference_id}
+		,#{reference_mobile}
+		,#{member_type_key}
+		,#{member_id}
+		,#{member_mobile}
+		,#{data_source}
+		,#{reference_type}
+		,#{created_date}
+		,#{remark}
+		)
+	</insert>
+	
+	<select id="selectUserRecommend" parameterType="Map" resultType="Map">
+		<![CDATA[
+			SELECT
+				c.recommend_id 
+				,c.reference_type_key
+				,c.reference_id
+				,c.reference_mobile
+				,c.member_type_key
+				,c.member_id
+				,c.member_mobile
+				,c.data_source
+				,c.reference_type
+				,c.created_date
+				,c.remark
+			FROM
+				md_user_recommend c
+		]]>
+		<where>
+			1=1
+			<if test="member_id != null and member_id != ''">
+				AND c.member_id=#{member_id}
+			</if>
+		</where>
+	</select>
+
+</mapper>

@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:aop="http://www.springframework.org/schema/aop" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context" xmlns:tx="http://www.springframework.org/schema/tx"
+	xsi:schemaLocation="http://www.springframework.org/schema/aop 
+        http://www.springframework.org/schema/aop/spring-aop-3.0.xsd 
+        http://www.springframework.org/schema/beans 
+        http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+        http://www.springframework.org/schema/context 
+        http://www.springframework.org/schema/context/spring-context-3.0.xsd
+        http://www.springframework.org/schema/tx 
+        http://www.springframework.org/schema/tx/spring-tx-3.0.xsd">
+
+	<!-- 启动自动扫描,排除sprinMVC的Controller中相关的bean -->
+	<context:component-scan base-package="com.meitianhui">
+		<context:exclude-filter type="annotation"
+			expression="org.springframework.stereotype.Controller" />
+	</context:component-scan>
+
+	<!-- 加载配置文件 -->
+	<bean id="propertyConfigurer" class="com.meitianhui.sync.util.PropertiesConfigUtil">
+		<property name="locations">
+			<list>
+				<value>classpath:properties/*.properties</value>
+			</list>
+		</property>
+	</bean>
+
+	 <!-- 配置数据源 -->
+    <bean id="dataSource" class="com.alibaba.druid.pool.DruidDataSource"
+		init-method="init" destroy-method="close">
+		<property name="url" value="${jdbc_url}" />
+		<property name="username" value="${jdbc_username}" />
+		<property name="password" value="${jdbc_password}" />
+		<!-- 初始化连接大小 -->
+		<property name="initialSize" value="${initialSize}"></property>
+		<!-- 连接池最大数量 -->
+		<property name="maxActive" value="${maxActive}"></property>
+		<!-- 连接池最小空闲 -->
+		<property name="minIdle" value="${minIdle}"></property>
+		<!-- 获取连接最大等待时间 -->
+		<property name="maxWait" value="${maxWait}"></property>
+		<!-- 用来检测连接是否有效的sql，要求是一个查询语句-->
+		<property name="validationQuery" value="${validationQuery}" />
+		<!-- 申请连接的时候检测 -->
+		<property name="testWhileIdle" value="true" />
+		<!-- 申请连接时执行validationQuery检测连接是否有效，配置为true会降低性能 -->
+		<property name="testOnBorrow" value="false" />
+		<!-- 归还连接时执行validationQuery检测连接是否有效，配置为true会降低性能  -->
+		<property name="testOnReturn" value="false" />
+		<!-- 配置间隔多久才进行一次检测，检测需要关闭的空闲连接，单位是毫秒 -->
+		<property name="timeBetweenEvictionRunsMillis" value="60000" />
+		<!-- 配置一个连接在池中最小生存的时间，单位是毫秒 -->
+		<property name="minEvictableIdleTimeMillis" value="300000" />
+		<!-- 超过时间限制是否回收 -->
+		<property name="removeAbandoned" value="true" />
+		<!-- 超过时间限制多长 -->
+		<property name="removeAbandonedTimeout" value="360" />
+		<!-- 关闭abanded连接时输出错误日志 -->
+		<property name="logAbandoned" value="true" />
+		<!-- 监控数据库 -->
+		<property name="filters" value="stat" />
+		<!-- 
+		<property name="filters" value="mergeStat" />
+		 -->
+	</bean>
+	
+
+	<!-- spring和MyBatis完美整合，不需要mybatis的配置映射文件 -->
+	<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+		<property name="dataSource" ref="dataSource" />
+		<!-- 自动扫描mapping.xml文件 -->
+		<property name="configLocation" value="classpath:config/mybatis-config.xml" />
+		<property name="typeAliasesPackage" value="com.meitianhui.sync.entity" />
+		<property name="mapperLocations" value="classpath*:com/meitianhui/*/dao/mapper/*.xml" />
+	</bean>
+
+	<!-- DAO接口所在包名，Spring会自动查找其下的类 -->
+	<bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+		<property name="basePackage" value="com.meitianhui.*.dao" />
+		<property name="sqlSessionFactoryBeanName" value="sqlSessionFactory"></property>
+	</bean>
+
+	<!-- (事务管理)transaction manager, use JtaTransactionManager for global tx -->
+	<bean id="transactionManager"
+		class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+		<property name="dataSource" ref="dataSource" />
+	</bean>
+
+	<!-- 配置事务通知规则 -->
+	<tx:advice id="txAdvice" transaction-manager="transactionManager">
+		<tx:attributes>
+			<tx:method name="*Query" propagation="SUPPORTS" read-only="true" />
+			<tx:method name="*Find" propagation="SUPPORTS" read-only="true" />
+			<tx:method name="*Update" propagation="REQUIRED" rollback-for="Exception" />
+			<tx:method name="*Edit" propagation="REQUIRED" rollback-for="Exception" />
+			<tx:method name="*Add" propagation="REQUIRED" rollback-for="Exception" />
+			<tx:method name="*Create" propagation="REQUIRED" rollback-for="Exception" />
+			<tx:method name="*Save" propagation="REQUIRED" rollback-for="Exception" />
+			<tx:method name="handle*" propagation="REQUIRED" rollback-for="Exception" />
+		</tx:attributes>
+	</tx:advice>
+
+	<!-- 事物配置方式： 申明式配置事物 -->
+	<!-- 定义AOP切面 切面为: com.meitianhui.*.service.* -->
+	<aop:config proxy-target-class="false">
+		<aop:advisor pointcut="execution(* com.meitianhui.*.service.*.*(..))"
+			advice-ref="txAdvice" />
+	</aop:config>
+	
+
+	<bean id="consumerInfo" class="com.meitianhui.sync.job.ConsumerInfoSync" />
+	<bean id="consumerInfoDetail"
+		class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+		<property name="targetObject">
+			<ref bean="consumerInfo" />
+		</property>
+		<property name="targetMethod">
+			<value>job</value>
+		</property>
+	</bean>
+		
+	<bean id="consumerInfoTrigger"
+		class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+		<property name="jobDetail">
+			<ref bean="consumerInfoDetail" />
+		</property>
+		<property name="cronExpression">
+			<!-- Cron表达式“10 */1 * * * ?”意为：从10秒开始，每1分钟执行一次。 -->
+			<value>0 0/2 * * * ?</value>  
+		</property>
+	</bean>
+	
+	<!-- 调度的配置结束 -->
+	<!-- 启动触发器的配置开始 -->
+	<bean name="startQuertz" lazy-init="false" autowire="no"
+		class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
+		<property name="triggers">
+			<list>
+				<ref bean="consumerInfoTrigger" />
+			</list>
+		</property>
+	</bean>
+	<!-- 启动触发器的配置结束 -->
+
+
+</beans>

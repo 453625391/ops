@@ -1,0 +1,457 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.meitianhui.order.dao.TsActivityDao">
+
+	<insert id="insertTsActivity" parameterType="TsActivity">
+		INSERT INTO
+		ts_activity (
+		activity_id
+		,activity_no
+		,activity_type
+		,title
+		,goods_id
+		,goods_code
+		,market_price
+		,settled_price
+		,goods_json_data
+		,supplier_id
+		,supplier
+		,manufacturer
+		,min_num
+		,expiried_date
+		,discount_price
+		,cost_allocation
+		,ladder_price
+		,order_qty
+		,sale_price
+		,member_type_key
+		,member_id
+		,member_info
+		,stores_id
+		,stores_info
+		,stores_longitude
+		,stores_latitude
+		,received_mode
+		,consignee_json_data
+		,status
+		,created_date
+		,modified_date
+		)
+		VALUES (
+		#{activity_id}
+		,#{activity_no}
+		,#{activity_type}
+		,#{title}
+		,#{goods_id}
+		,#{goods_code}
+		,#{market_price}
+		,#{settled_price}
+		,#{goods_json_data}
+		,#{supplier_id}
+		,#{supplier}
+		,#{manufacturer}
+		,#{min_num}
+		,#{expiried_date}
+		,#{discount_price}
+		,#{cost_allocation}
+		,#{ladder_price}
+		,#{order_qty}
+		,#{sale_price}
+		,#{member_type_key}
+		,#{member_id}
+		,#{member_info}
+		,#{stores_id}
+		,#{stores_info}
+		,#{stores_longitude}
+		,#{stores_latitude}
+		,#{received_mode}
+		,#{consignee_json_data}
+		,#{status}
+		,#{created_date}
+		,#{modified_date}
+		)
+	</insert>
+
+
+	<insert id="insertTsActivityLog" parameterType="TsActivityLog">
+		INSERT INTO
+		ts_activity_log (
+		log_id
+		,activity_id
+		,category
+		,tracked_date
+		,event
+		)
+		VALUES (
+		#{log_id}
+		,#{activity_id}
+		,#{category}
+		,#{tracked_date}
+		,#{event}
+		)
+	</insert>
+
+	<select id="selectNearbyTsActivityListForConsumer"
+		parameterType="Map" resultType="Map">
+		<![CDATA[
+			SELECT
+				a.activity_id
+				,a.goods_id
+				,a.expiried_date
+				,a.order_qty
+				,a.stores_id
+				,a.stores_info
+				,a.consignee_json_data
+				,a.distance
+			FROM
+				(select 
+					activity_id
+					,goods_id
+					,expiried_date
+					,order_qty
+					,stores_id
+					,stores_info
+					,consignee_json_data
+					,created_date
+				,round(6378.138 * 2 * asin(
+				sqrt(pow(sin((stores_latitude * pi() / 180 - #{latitude} * pi() / 180) / 2),	2) + 
+					cos(stores_latitude * pi() / 180) * cos(#{latitude} * pi()/180)* pow(sin((stores_longitude * pi()/180 - #{longitude} * pi()/180)/2),2))) * 1000) as distance from ts_activity 
+					where goods_id = #{goods_id} AND status = 'activing' AND stores_latitude > #{latitude_gt} and stores_latitude < #{latitude_lt} and stores_longitude > #{longitude_gt} and stores_longitude < #{longitude_lt}) a
+
+		]]>
+		<where>
+			1=1
+			<if test="range != null and range != ''">
+				AND a.distance &lt;= #{range}
+			</if>
+		</where>
+		ORDER BY a.distance DESC,a.created_date DESC
+	</select>
+
+
+	<select id="selectTsActivityListForOp" parameterType="Map"
+		resultType="Map">
+		<![CDATA[
+			SELECT
+				activity_id
+				,activity_no
+				,activity_type
+				,title
+				,min_num
+				,supplier
+				,goods_code
+				,expiried_date
+				,discount_price
+				,cost_allocation
+				,ladder_price
+				,sale_price
+				,order_qty
+				,member_info 
+				,stores_info 
+				,received_mode
+				,consignee_json_data
+				,logistics
+				,created_date
+				,status
+				,remark
+				,biz_remark
+			FROM
+				ts_activity
+		]]>
+		<where>
+			1=1
+			<if test="activity_no != null and activity_no != ''">
+				AND activity_no = #{activity_no}
+			</if>
+			<if test="title != null and title != ''">
+				AND title like CONCAT('%',#{title},'%')
+			</if>
+			<if test="goods_code != null and goods_code != ''">
+				AND goods_code = #{goods_code}
+			</if>
+			<if test="status != null and status != ''">
+				AND status = #{status}
+			</if>
+			<if test="status_in != null">
+				AND status in
+				<foreach collection="status_in" item="item" open="(" close=")"
+					separator=",">
+					#{item}
+				</foreach>
+			</if>
+			<if test="logistics != null and logistics != ''">
+				AND logistics like CONCAT('%',#{logistics},'%')
+			</if>
+			<if test="consignee_json_data != null and consignee_json_data != ''">
+				AND consignee_json_data like
+				CONCAT('%',#{consignee_json_data},'%')
+			</if>
+			<if test="member_info != null and member_info != ''">
+				AND member_info = #{member_info}
+			</if>
+			<if test="created_date_start != null and created_date_start != ''">
+				AND created_date &gt;= #{created_date_start}
+			</if>
+			<if test="created_date_end != null and created_date_end != ''">
+				AND created_date &lt; date_add(#{created_date_end},interval 1 day)
+			</if>
+			<if test="expiried_date_start != null and expiried_date_start != ''">
+				AND expiried_date &gt;= #{expiried_date_start}
+			</if>
+			<if test="expiried_date_end != null and expiried_date_end != ''">
+				AND expiried_date &lt; date_add(#{expiried_date_end},interval 1 day)
+			</if>
+			<if test="supplier_id != null and supplier_id != ''">
+				AND supplier_id = #{supplier_id}
+			</if>
+		</where>
+		ORDER BY created_date DESC
+	</select>
+
+
+	<select id="selectTsActivity" parameterType="Map" resultType="TsActivity">
+		<![CDATA[
+			SELECT
+				activity_id
+				,activity_no
+				,activity_type
+				,goods_id
+				,member_id
+				,member_info
+				,title
+				,min_num
+				,received_mode
+				,order_qty
+				,discount_price
+				,cost_allocation
+				,consignee_json_data
+				,sale_price
+				,modified_date
+				,status
+			FROM
+				ts_activity
+		]]>
+		<where>
+			1=1
+			<if test="activity_id != null and activity_id != ''">
+				AND activity_id = #{activity_id}
+			</if>
+			<if test="status != null and status != ''">
+				AND status = #{status}
+			</if>
+		</where>
+	</select>
+	
+	<select id="selectTsActivityOrderCount" parameterType="Map"
+		resultType="Map">
+		SELECT
+			a.activity_id
+			,a.min_num
+			,a.order_qty
+			,a.ladder_price
+			,a.discount_price
+			,a.cost_allocation
+			,a.sale_price
+			,count(o.order_id) as order_num
+		FROM
+		ts_activity a
+		LEFT JOIN ts_order o ON a.activity_id = o.activity_id
+			<if test="status_neq != null and status_neq != ''">
+				AND o.status != #{status_neq}
+			</if>
+			<if test="status != null and status != ''">
+				AND o.status = #{status}
+			</if>
+		<where>
+			<if test="activity_id != null and activity_id != ''">
+				AND a.activity_id = #{activity_id}
+			</if>
+			<if test="goods_id != null and goods_id != ''">
+				AND a.goods_id = #{goods_id}
+			</if>
+		</where>
+	</select>
+
+	<select id="selectTsActivityListForConsumer" parameterType="Map"
+		resultType="Map">
+		<![CDATA[
+			SELECT
+				activity_id
+				,activity_no
+				,title
+				,goods_json_data
+				,min_num
+				,received_mode
+				,sale_price
+				,expiried_date
+				,stores_info
+				,consignee_json_data
+				,status
+			FROM
+				ts_activity
+		]]>
+		<where>
+			1=1
+			<if test="member_id != null and member_id != ''">
+				AND member_id = #{member_id}
+			</if>
+			<if test="member_type_key != null and member_type_key != ''">
+				AND member_type_key = #{member_type_key}
+			</if>
+			<if test="activity_type != null and activity_type != ''">
+				AND activity_type=#{activity_type}
+			</if>
+		</where>
+		ORDER BY created_date DESC
+	</select>
+
+
+	<select id="selectTsActivityListForStores" parameterType="Map"
+		resultType="Map">
+		<![CDATA[
+			SELECT
+				activity_id
+				,activity_no
+				,title
+				,member_info
+				,goods_json_data
+				,min_num
+				,received_mode
+				,ladder_price
+				,expiried_date
+				,consignee_json_data
+				,status
+			FROM
+				ts_activity
+		]]>
+		<where>
+			1=1
+			<if test="stores_id != null and stores_id != ''">
+				AND stores_id = #{stores_id}
+			</if>
+		</where>
+		ORDER BY created_date DESC
+	</select>
+
+
+
+	<select id="selectTsActivityDetail" parameterType="Map"
+		resultType="TsActivity">
+		<![CDATA[
+			SELECT
+				activity_id
+				,activity_no
+				,activity_type
+				,title
+				,received_mode
+				,order_qty
+				,market_price
+				,settled_price
+				,discount_price
+				,cost_allocation
+				,ladder_price
+				,sale_price
+				,expiried_date
+				,min_num
+				,order_qty
+				,member_info
+				,goods_json_data
+				,goods_id
+				,goods_code
+				,member_id
+				,member_info
+				,stores_id
+				,stores_info
+				,consignee_json_data
+				,status
+				,created_date
+			FROM
+				ts_activity
+		]]>
+		<where>
+			1=1
+			<if test="activity_id != null and activity_id != ''">
+				AND activity_id = #{activity_id}
+			</if>
+			<if test="status != null and status != ''">
+				AND status = #{status}
+			</if>
+		</where>
+	</select>
+
+	<update id="updateTsActivity" parameterType="Map">
+		UPDATE ts_activity SET
+		<trim suffixOverrides=",">
+			modified_date = SYSDATE(),
+			<if test="remark != null and remark != ''">
+				remark = #{remark},
+			</if>
+			<if test="biz_remark != null and biz_remark != ''">
+				biz_remark = #{biz_remark},
+			</if>
+			<if test="status != null and status != ''">
+				status = #{status},
+			</if>
+			<if test="logistics != null and logistics != ''">
+				logistics = #{logistics},
+			</if>
+			<if test="sale_price != null and sale_price != ''">
+				sale_price = #{sale_price},
+			</if>
+			<if test="order_qty != null and order_qty != ''">
+				order_qty = #{order_qty},
+			</if>
+			<if test="order_qty_add != null and order_qty_add != ''">
+				order_qty = order_qty + #{order_qty_add},
+			</if>
+			<if test="created_date != null and created_date != ''">
+				created_date = #{created_date},
+			</if>
+		</trim>
+		<where>
+			<if test="activity_id != null and activity_id != ''">
+				AND activity_id=#{activity_id}
+			</if>
+			<if test="activity_type != null and activity_type != ''">
+				AND activity_type=#{activity_type}
+			</if>
+			<if test="modified_date != null and modified_date != ''">
+				AND modified_date=#{modified_date}
+			</if>
+			<if test="status_where != null and status_where != ''">
+				AND status = #{status_where}
+			</if>
+			<if test="order_qty_add != null and order_qty_add != ''">
+				AND order_qty + #{order_qty_add} &lt;= min_num
+			</if>
+		</where>
+	</update>
+
+	<select id="selectExpiriedActivity" resultType="Map">
+		SELECT
+			activity_id
+			,activity_type
+			,min_num
+			,order_qty
+			,sale_price
+			,status
+			,modified_date
+		FROM
+		ts_activity
+		WHERE expiried_date &lt; #{lt_date} AND expiried_date &gt; #{gt_date}
+		AND status = 'activing'
+	</select>
+
+
+	<update id="updateTimeoutDeliveredActivityForLadder" parameterType="Map">
+		UPDATE
+		ts_activity a, ts_order o
+		SET
+		a.status='received', a.remark='超时自动收货',a.modified_date = SYSDATE(),o.status='delivered',o.modified_date = SYSDATE()
+		WHERE
+		o.activity_id =	a.activity_id AND a.status = 'delivered' AND a.activity_type = 'ladder'
+		AND a.modified_date &gt; #{gt_date} AND a.modified_date &lt; #{lt_date} AND o.status='refunded'
+	</update>
+
+
+</mapper>

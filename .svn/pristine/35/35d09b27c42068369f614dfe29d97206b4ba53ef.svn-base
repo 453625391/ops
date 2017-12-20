@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+    <meta name="applicable-device" content="pc,mobile"/>
+    <title>超级返</title>
+    <link rel="stylesheet" type="text/css" href="/css/fan/base.css">
+</head>
+
+<body>
+    <div id="god-demo">
+        <div id="indemo">
+            <div id="god-demo1">
+                <ul class="god-list">
+                <% for(var i=0; i<goodsList.length; i++) { %>
+                    <li>
+                        <img src="<%=goodsList[i].pic_info_url %>">
+                        <p class="name"><%=goodsList[i].title %></p>
+                        <p class="price">
+                            <span class="money"><i>¥</i><%=goodsList[i].market_price %></span>
+                            <span class="return-money"><i>返</i><%=(goodsList[i].market_price-goodsList[i].discount_price).toFixed(2) %></span>
+                        </p>
+                        <% if(goodsList[i].sale_qty <= 0) { %>
+                        <div class="soldout-wrap">
+                            <img src="/image/common/soldout.png" />
+                        </div>
+                        <% } %>
+                    </li>
+                <% } %>
+                </ul>
+            </div>
+            <div id="god-demo2"></div>
+        </div>
+    </div>
+    <div class="title">超级返 <img src="/image/generalize/bdsh.png" /> 免费领</div>
+</body>
+
+</html>
+<script>
+var speed = 10; //数字越大速度越慢
+var tab = document.getElementById("god-demo");
+var tab1 = document.getElementById("god-demo1");
+var tab2 = document.getElementById("god-demo2");
+tab2.innerHTML = tab1.innerHTML;
+
+function Marquee() {
+    if (tab2.offsetWidth - tab.scrollLeft <= 0)
+        tab.scrollLeft -= tab1.offsetWidth
+    else {
+        tab.scrollLeft++;
+    }
+}
+var MyMar = setInterval(Marquee, speed);
+tab.onmouseover = function() {
+    clearInterval(MyMar)
+};
+tab.onmouseout = function() {
+    MyMar = setInterval(Marquee, speed)
+};
+</script>

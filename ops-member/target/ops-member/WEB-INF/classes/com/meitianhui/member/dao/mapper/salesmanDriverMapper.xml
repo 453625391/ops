@@ -1,0 +1,177 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.meitianhui.member.dao.SalesmanDriverDao">
+
+	<select id="selectSalesmanDriverList" parameterType="Map" resultType="Map">
+		<![CDATA[
+		SELECT
+			ms.name,
+			ms.nick_name,
+			ms.sex_key,
+			ms.contact_tel,
+			ms.area_id,
+			ms.id_card,
+			ma.path,
+			msd.salesman_id,
+			msd.audit_status,
+			msd.created_date
+		FROM
+			md_salesman_driver msd
+			INNER JOIN md_salesman ms ON msd.salesman_id = ms.salesman_id	
+			LEFT JOIN md_area ma ON ms.area_id = ma.area_id
+		]]>	
+		<where>
+			1=1
+			<if test="search_like !=null and search_like !=''">
+				AND (ms.name like concat('%',#{search_like},'%') or
+					ms.contact_tel like concat('%',#{search_like},'%') or
+					ms.id_card like concat('%',#{search_like},'%'))
+			</if>
+			<if test="audit_status_in != null">
+				AND msd.audit_status in
+				<foreach item="item" index="index" collection="audit_status_in"
+					open="(" separator="," close=")">
+					#{item}
+				</foreach>
+			</if>
+		</where>	
+		ORDER BY msd.created_date DESC
+	</select>
+	
+	<select id="selectSalesmanDriverLogList" parameterType="Map" resultType="Map">
+		<![CDATA[
+		SELECT
+			msdl.log_id,
+			msdl.tracked_date,
+			msdl.event_desc,
+			msdl.salesman_id as msdl_salesman_id,
+			msd.salesman_id as msd_salesman_id,
+			ms.salesman_id as ms_salesman_id,
+			ms.nick_name
+		FROM
+			md_salesman_driver_log msdl	
+			LEFT JOIN md_salesman_driver msd ON msdl.salesman_id = msd.salesman_id
+			LEFT JOIN md_salesman ms ON ms.salesman_id = msd.salesman_id
+		]]>	
+		<where>
+			1=1
+			<if test="salesman_id !=null and salesman_id !=''">
+				AND msdl.salesman_id = #{salesman_id}
+			</if>
+			
+		</where>	
+		ORDER BY msdl.tracked_date DESC
+	</select>
+	
+	<select id="selectSalesmanDriver" parameterType="Map" resultType="Map">
+		<![CDATA[
+			SELECT
+			     msd.salesman_id
+				,msd.car_model
+				,msd.car_number
+				,msd.capacity
+				,msd.appearance_pic_path
+				,msd.driving_license_pic_path
+				,msd.driving_permit_pic_path
+				,msd.audit_status
+				,msd.created_date
+				,msd.remark
+			FROM
+				md_salesman_driver msd
+		]]>
+		<where>
+			1=1
+			<if test="salesman_id != null and salesman_id != ''">
+				AND msd.salesman_id = #{salesman_id}
+			</if>
+			<if test="audit_status != null and audit_status != ''">
+				AND msd.audit_status = #{audit_status}
+			</if>
+			<if test="car_number != null and car_number != ''">
+				AND msd.car_number = #{car_number}
+			</if>
+		</where>	
+	</select>
+	
+	<update id="updateSalesmanDriver" parameterType="Map">
+		UPDATE md_salesman_driver SET 
+		<trim suffixOverrides=",">
+			modified_date = SYSDATE(),
+			<if test="audit_status != null and audit_status != ''">
+				audit_status = #{audit_status},
+			</if>
+			<if test="car_model != null and car_model != ''">
+				car_model = #{car_model},
+			</if>
+			<if test="car_number != null and car_number != ''">
+				car_number = #{car_number},
+			</if>
+			<if test="capacity != null and capacity != ''">
+				capacity = #{capacity},
+			</if>
+			<if test="appearance_pic_path != null and appearance_pic_path != ''">
+				appearance_pic_path = #{appearance_pic_path},
+			</if>
+			<if test="driving_license_pic_path != null and driving_license_pic_path != ''">
+				driving_license_pic_path = #{driving_license_pic_path},
+			</if>
+			<if test="driving_permit_pic_path != null and driving_permit_pic_path != ''">
+				driving_permit_pic_path = #{driving_permit_pic_path},
+			</if>
+			<if test="remark != null and remark != ''">
+				remark = #{remark},
+			</if>
+		</trim>	
+		<where>
+			salesman_id = #{salesman_id}
+		</where>
+	</update>
+	
+	<insert id="insertSalesmanDriver" parameterType="MDSalesmanDriver">
+		INSERT INTO
+		md_salesman_driver(
+			salesman_id,
+			car_model,
+			car_number,
+			capacity,
+			appearance_pic_path,
+			driving_license_pic_path,
+			driving_permit_pic_path,
+			audit_status,
+			created_date,
+			modified_date,
+			remark
+		)VALUES(
+			#{salesman_id},
+			#{car_model},
+			#{car_number},
+			#{capacity},
+			#{appearance_pic_path},
+			#{driving_license_pic_path},
+			#{driving_permit_pic_path},
+			#{audit_status},
+			#{created_date},
+			#{modified_date},
+			#{remark}
+		)
+	</insert>
+		
+	<insert id="insertSalesmanDriverLog" parameterType="Map">
+		INSERT INTO
+		md_salesman_driver_log (
+		log_id
+		,salesman_id
+		,category
+		,tracked_date
+		,event_desc
+		)
+		VALUES (
+		#{log_id}
+		,#{salesman_id}
+		,#{category}
+		,#{tracked_date}
+		,#{event_desc}
+		)
+	</insert>
+	
+</mapper>

@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.meitianhui.goods.dao.MobileRechargeDao">
+
+	<select id="selectMobileRechargeType" parameterType="Map" resultType="Map">
+		<![CDATA[
+			SELECT
+			goods_id
+			,title
+			,market_price
+			,discount_price
+			FROM
+				ps_goods
+		]]>
+		<where>
+			display_area = '话费'
+			<if test="label != null and label != ''">
+				AND label = #{label}
+			</if>
+			<if test="goods_id != null and goods_id != ''">
+				AND goods_id = #{goods_id}
+			</if>
+		</where>
+		ORDER BY market_price
+	</select>
+	
+	
+</mapper>

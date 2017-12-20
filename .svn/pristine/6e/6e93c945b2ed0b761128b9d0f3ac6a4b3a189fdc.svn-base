@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.meitianhui.community.dao.IMGroupMapper">
+	
+	<!-- 根据群组编号，查询群组详细信息 -->
+	<select id="queryIMGroupDetail" parameterType="String" resultType="IMGroup">
+		select id, name, head_pic_path, description, public, membersonly, allowinvites, maxusers, affiliations_count, affiliations, owner, created, remark
+		from md_im_group where id = #{group_id}
+	</select>
+	
+	<!-- 创建IM聊天群组信息 -->
+	<insert id="createIMGroup" parameterType="IMGroup">
+		insert into md_im_group
+			(id, name, head_pic_path, description, public, membersonly, allowinvites,
+			 maxusers, affiliations_count, affiliations, owner, created, modified, remark)
+		values
+			(#{id}, #{name}, #{head_pic_path}, #{description}, #{is_public}, #{membersonly}, #{allowinvites},
+			 #{maxusers}, #{affiliations_count}, #{affiliations}, #{owner}, #{created}, #{modified}, #{remark})
+	</insert>
+	
+	<!-- 修改IM聊天群组信息 -->
+	<update id="modifyIMGroup" parameterType="hashmap">
+		update md_im_group
+		<set>
+			<if test="group_name != null and group_name != ''">
+				name = #{group_name},
+			</if>
+			<if test="head_pic_path != null and head_pic_path != ''">
+				head_pic_path = #{head_pic_path},
+			</if>
+			<if test="desc != null and desc != ''">
+				description = #{desc},
+			</if>
+			<if test="modified != null and modified != ''">
+				modified = #{modified},
+			</if>
+			<if test="remark != null and remark != ''">
+				remark = #{remark}
+			</if>
+		</set>
+		where id = #{group_id}
+	</update>
+	
+	<!-- 删除群组信息 -->
+	<delete id="deleteIMGroup" parameterType="String">
+		delete from md_im_group where id=#{group_id} and owner=#{owner}
+	</delete>
+	
+	<!-- 更新群组成员信息 -->
+	<update id="updateIMGroupUsers">
+		update md_im_group set affiliations = #{affiliations}, affiliations_count = #{affiliations_count} where id = #{group_id} and affiliations = #{old_affiliations}
+	</update>
+	
+	<!-- 获取用户的群组列表 -->
+	<select id="getIMUserGroupList" parameterType="String" resultType="hashmap">
+		select mig.id,mig.name,mig.head_pic_path,mig.description,mig.owner,CAST(mig.affiliations_count as CHAR) affiliations_count,CAST(mig.created as CHAR) created from md_im_group mig
+		 where mig.affiliations LIKE CONCAT('%',#{im_user_id},'%') or mig.owner= #{im_user_id}
+		order by created desc;
+	</select>
+</mapper>

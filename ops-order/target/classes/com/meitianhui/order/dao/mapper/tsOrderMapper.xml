@@ -1,0 +1,447 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.meitianhui.order.dao.TsOrderDao">
+
+	<insert id="insertTsOrder" parameterType="TsOrder">
+		INSERT INTO
+		ts_order (
+		order_id
+		,activity_id
+		,order_no
+		,order_date
+		,loaded_code
+		,desc1
+		,item_num
+		,payment_way_key
+		,deposit_fee
+		,sale_price
+		,total_fee
+		,member_type_key
+		,member_id
+		,member_info
+		,consignee_json_data
+		,status
+		,settle_status
+		,created_date
+		,modified_date
+		)
+		VALUES (
+		#{order_id}
+		,#{activity_id}
+		,#{order_no}
+		,#{order_date}
+		,#{loaded_code}
+		,#{desc1}
+		,#{item_num}
+		,#{payment_way_key}
+		,#{deposit_fee}
+		,#{sale_price}
+		,#{total_fee}
+		,#{member_type_key}
+		,#{member_id}
+		,#{member_info}
+		,#{consignee_json_data}
+		,#{status}
+		,#{settle_status}
+		,#{created_date}
+		,#{modified_date}
+		)
+	</insert>
+
+	<select id="selectTsOrderListForOp" parameterType="Map"
+		resultType="Map">
+			SELECT
+				o.order_id
+				,o.order_no
+				,o.order_date
+				,o.desc1
+				,o.desc2
+				,o.item_num
+				,o.payment_way_key
+				,o.settle_status
+				,o.deposit_fee
+				,o.total_fee
+				,o.member_info
+				,o.consignee_json_data
+				,o.status
+				,o.remark
+				,o.biz_remark
+				,a.activity_no
+				,a.goods_code
+				,a.supplier
+				,a.manufacturer
+			FROM
+				ts_order o INNER JOIN ts_activity a on o.activity_id = a.activity_id
+		<where>
+			1=1
+			<if test="order_no != null and order_no != ''">
+				AND o.order_no = #{order_no}
+			</if>
+			<if test="status != null and status != ''">
+				AND o.status = #{status}
+			</if>
+			<if test="status_in != null">
+				AND o.status in
+				<foreach collection="status_in" item="item" open="(" close=")"
+					separator=",">
+					#{item}
+				</foreach>
+			</if>
+			<if test="desc1 != null and desc1 != ''">
+				AND o.desc1 like CONCAT('%',#{desc1},'%')
+			</if>
+			<if test="consignee_json_data != null and consignee_json_data != ''">
+				AND o.consignee_json_data like
+				CONCAT('%',#{consignee_json_data},'%')
+			</if>
+			<if test="member_info != null and member_info != ''">
+				AND o.member_info = #{member_info}
+			</if>
+			<if test="order_date_start != null and order_date_start != ''">
+				AND o.order_date &gt;= #{order_date_start}
+			</if>
+			<if test="order_date_end != null and order_date_end != ''">
+				AND o.order_date &lt; date_add(#{order_date_end},interval 1 day)
+			</if>
+			<if test="activity_no != null and activity_no != ''">
+				AND a.activity_no = #{activity_no}
+			</if>
+			<if test="supplier_id != null and supplier_id != ''">
+				AND a.supplier_id = #{supplier_id}
+			</if>
+			<if test="goods_code != null and goods_code != ''">
+				AND a.goods_code = #{goods_code}
+			</if>
+		</where>
+		ORDER BY o.order_date DESC
+	</select>
+
+	<select id="selectTsOrderList" parameterType="Map" resultType="Map">
+		SELECT
+			o.order_id
+			,o.activity_id
+			,o.order_no
+			,o.order_date
+			,o.loaded_code
+			,o.consignee_json_data
+			,o.status
+		FROM
+		ts_order o
+		<where>
+			1=1
+			<if test="activity_id != null and activity_id != ''">
+				AND o.activity_id = #{activity_id}
+			</if>
+			<if test="status != null and status != ''">
+				AND o.status = #{status}
+			</if>
+		</where>
+		ORDER BY o.order_date DESC
+	</select>
+
+	<select id="selectTsOrderListForConsumer" parameterType="Map"
+		resultType="Map">
+		SELECT
+			o.order_id
+			,o.activity_id
+			,o.order_no
+			,o.order_date
+			,o.loaded_code
+			,o.desc1
+			,o.deposit_fee
+			,o.consignee_json_data as consumer_consignee
+			,o.status
+			,a.received_mode
+			,a.goods_json_data
+			,a.consignee_json_data as stores_consignee
+			,a.stores_info
+			,a.logistics
+		FROM
+		ts_order o INNER JOIN ts_activity a	ON o.activity_id = a.activity_id
+		<where>
+			1=1
+			<if test="member_id != null and member_id != ''">
+				AND o.member_id = #{member_id}
+			</if>
+			<if test="member_type_key != null and member_type_key != ''">
+				AND o.member_type_key = #{member_type_key}
+			</if>
+		</where>
+		ORDER BY o.order_date DESC
+	</select>
+
+	<select id="selectTsOrderDetail" parameterType="Map" resultType="Map">
+			SELECT
+				o.order_id
+				,o.activity_id
+				,o.order_no
+				,o.order_date
+				,o.desc1
+				,o.payment_way_key
+				,o.item_num
+				,o.total_fee
+				,o.deposit_fee
+				,o.consignee_json_data as consumer_consignee
+				,o.status
+				,a.expiried_date
+				,a.received_mode
+				,a.member_info
+				,a.goods_json_data
+				,a.consignee_json_data as stores_consignee
+				,a.stores_info
+				,a.sale_price as activity_sale_price
+				,a.ladder_price as activity_ladder_price
+			FROM
+				ts_order o inner join ts_activity a on o.activity_id = a.activity_id
+		<where>
+			1=1
+			<if test="order_id != null and order_id != ''">
+				AND o.order_id = #{order_id}
+			</if>
+		</where>
+	</select>
+
+	<select id="selectTsOrder" parameterType="Map" resultType="TsOrder">
+			SELECT
+				order_id
+				,order_no
+				,activity_id
+				,member_id
+				,payment_way_key
+				,deposit_fee
+				,total_fee
+				,status
+				,modified_date
+			FROM
+				ts_order
+		<where>
+			1=1
+			<if test="order_id != null and order_id != ''">
+				AND order_id = #{order_id}
+			</if>
+			<if test="activity_id != null and activity_id != ''">
+				AND activity_id = #{activity_id}
+			</if>
+			<if test="member_id != null and member_id != ''">
+				AND member_id = #{member_id}
+			</if>
+			<if test="status != null and status != ''">
+				AND status = #{status}
+			</if>
+		</where>
+		ORDER BY order_date DESC
+	</select>
+
+	<select id="selectTsOrderCount" parameterType="Map" resultType="Map">
+			SELECT
+				count(o.order_id) as count_num
+			FROM
+				ts_order o INNER JOIN  ts_activity a on o.activity_id = a.activity_id
+		<where>
+			<if test="goods_id != null and goods_id != ''">
+				AND a.goods_id = #{goods_id}
+			</if>
+			<if test="member_id != null and member_id != ''">
+				AND o.member_id = #{member_id}
+			</if>
+			<if test="status_in != null">
+				AND o.status in
+				<foreach collection="status_in" item="item" open="(" close=")"
+					separator=",">
+					#{item}
+				</foreach>
+			</if>
+		</where>
+	</select>
+	
+	
+	<select id="selectTsOrderForStoresCount" parameterType="Map" resultType="Map">
+			SELECT
+				count(DISTINCT o.member_id) AS participate_member_num,
+				count(o.order_id) AS order_num,
+				sum(o.total_fee) AS totle_amount,
+				count(o.order_id) AS totle_earnings
+			FROM
+				ts_order o INNER JOIN  ts_activity a on o.activity_id = a.activity_id
+		<where>
+			<if test="stores_id != null and stores_id != ''">
+				AND a.stores_id = #{stores_id}
+			</if>
+			<if test="status_in != null">
+				AND o.status in
+				<foreach collection="status_in" item="item" open="(" close=")"
+					separator=",">
+					#{item}
+				</foreach>
+			</if>
+		</where>
+	</select>
+
+
+	<select id="selectSettleTsOrderListForOp" parameterType="Map"
+		resultType="Map">
+			SELECT
+				o.order_id
+				,o.order_no
+				,o.order_date
+				,o.desc1
+				,o.member_info
+				,o.consignee_json_data
+				,o.settle_status
+				,a.activity_no
+				,a.settled_price
+				,a.supplier
+			FROM
+				ts_order o INNER JOIN ts_activity a on o.activity_id = a.activity_id
+		<where>
+			o.status = 'received' AND o.settle_status = 'pending'
+			<if test="activity_no != null and activity_no != ''">
+				AND a.activity_no = #{activity_no}
+			</if>
+			<if test="supplier != null and supplier != ''">
+				AND a.supplier = #{supplier}
+			</if>
+			<if test="order_date_start != null and order_date_start != ''">
+				AND o.order_date &gt;= #{order_date_start}
+			</if>
+			<if test="order_date_end != null and order_date_end != ''">
+				AND o.order_date &lt; date_add(#{order_date_end},interval 1 day)
+			</if>
+		</where>
+		ORDER BY a.activity_no,o.order_date DESC
+	</select>
+
+
+	<select id="selectSettleTsOrderCount" parameterType="Map"
+		resultType="Map">
+		<![CDATA[
+			SELECT
+				sum(a.settled_price) as total_fee
+				,count(o.order_id) as count_num
+			FROM
+				ts_order o inner join ts_activity a ON o.activity_id = a.activity_id
+		]]>
+		<where>
+			o.status = 'received' AND o.settle_status = 'pending'
+			<if test="activity_no != null and activity_no != ''">
+				AND a.activity_no = #{activity_no}
+			</if>
+			<if test="supplier != null and supplier != ''">
+				AND a.supplier = #{supplier}
+			</if>
+			<if test="order_date_start != null and order_date_start != ''">
+				AND o.order_date &gt;= #{order_date_start}
+			</if>
+			<if test="order_date_end != null and order_date_end != ''">
+				AND o.order_date &lt; date_add(#{order_date_end},interval
+				1 day)
+			</if>
+		</where>
+	</select>
+
+	<select id="selectSettleTsOrderList" parameterType="Map"
+		resultType="Map">
+		<![CDATA[
+			SELECT
+				o.order_id
+				,o.order_no
+				,a.goods_id
+				,a.goods_code
+				,a.title as goods_title
+				,a.market_price
+				,a.discount_price
+				,a.sale_price
+				,a.settled_price
+				,a.supplier_id
+				,a.supplier
+				,o.modified_date
+			FROM
+				ts_order o inner join ts_activity a ON o.activity_id = a.activity_id
+		]]>
+		<where>
+			o.status = 'received' AND o.settle_status = 'pending'
+			<if test="order_date_start != null and order_date_start != ''">
+				AND o.order_date &gt;= #{order_date_start}
+			</if>
+			<if test="order_date_end != null and order_date_end != ''">
+				AND o.order_date &lt; date_add(#{order_date_end},interval
+				1 day)
+			</if>
+		</where>
+		ORDER BY o.order_date DESC
+	</select>
+
+
+	<select id="selectTsOrderJoinList" parameterType="Map"
+		resultType="Map">
+		SELECT
+		activity_id
+		,order_date
+		,member_info
+		,consignee_json_data
+		FROM
+		ts_order
+		<where>
+			status != 'cancelled' AND activity_id = #{activity_id}
+		</where>
+		ORDER BY order_date
+	</select>
+
+	<update id="updateTsOrder" parameterType="Map">
+		UPDATE ts_order SET
+		<trim suffixOverrides=",">
+			modified_date = SYSDATE(),
+			<if test="remark != null and remark != ''">
+				remark = #{remark},
+			</if>
+			<if test="biz_remark != null and biz_remark != ''">
+				biz_remark = #{biz_remark},
+			</if>
+			<if test="desc2 != null and desc2 != ''">
+				desc2 = #{desc2},
+			</if>
+			<if test="status != null and status != ''">
+				status = #{status},
+			</if>
+			<if test="settle_status != null and settle_status != ''">
+				settle_status = #{settle_status},
+			</if>
+			<if test="sale_price != null and sale_price != ''">
+				sale_price = #{sale_price},
+			</if>
+			<if test="total_fee != null and total_fee != ''">
+				total_fee = #{total_fee},
+			</if>
+		</trim>
+		<where>
+			1=1
+			<if test="order_id != null and order_id != ''">
+				AND order_id = #{order_id}
+			</if>
+			<if test="activity_id != null and activity_id != ''">
+				AND activity_id = #{activity_id}
+			</if>
+			<if test="modified_date != null and modified_date != ''">
+				AND modified_date = #{modified_date}
+			</if>
+			<if test="status_where != null and status_where != ''">
+				AND status = #{status_where}
+			</if>
+		</where>
+	</update>
+
+	<select id="selectTimeoutDeliveredTsOrder" parameterType="Map"
+		resultType="Map">
+		SELECT
+		o.activity_id,
+		o.order_id
+		FROM ts_activity a INNER JOIN ts_order o ON o.activity_id =
+		a.activity_id
+		AND a.status = 'received' AND o.status = 'delivered' AND a.activity_type
+		= #{activity_type}
+		AND o.modified_date &gt; #{gt_date} AND
+		o.modified_date &lt; #{lt_date}
+	</select>
+
+
+</mapper>

@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <!-- 删除苹果默认的工具栏和菜单栏 -->
+    <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+    <!-- 设置苹果工具栏颜色 -->
+    <meta name="format-detection" content="telphone=no, email=no" />
+    <!-- 忽略页面中的数字识别为电话，忽略email识别 -->
+    <!-- 启用360浏览器的极速模式(webkit) -->
+    <meta name="renderer" content="webkit">
+    <!-- 避免IE使用兼容模式 -->
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <!-- 针对手持设备优化，主要是针对一些老的不识别viewport的浏览器，比如黑莓 -->
+    <meta name="HandheldFriendly" content="true">
+    <!-- 微软的老式浏览器 -->
+    <meta name="MobileOptimized" content="320">
+    <!-- uc强制竖屏 -->
+    <meta name="screen-orientation" content="portrait">
+    <!-- QQ强制竖屏 -->
+    <meta name="x5-orientation" content="portrait">
+    <!-- UC强制全屏 -->
+    <meta name="full-screen" content="yes">
+    <!-- QQ强制全屏 -->
+    <meta name="x5-fullscreen" content="true">
+    <!-- UC应用模式 -->
+    <meta name="browsermode" content="application">
+    <!-- QQ应用模式 -->
+    <meta name="x5-page-mode" content="app">
+    <!-- windows phone 点击无高光 -->
+    <meta name="msapplication-tap-highlight" content="no">
+    <!-- 禁用iPhone手机浏览器上给电话号码自动加上的link样式 -->
+    <meta name="format-detection" content="telephone=no">
+    <title>大健康</title>
+    <link rel="stylesheet" type="text/css" href="/css/reset.css">
+    <link rel="stylesheet" type="text/css" href="/css/djk/index.css">
+    <script type="text/javascript" src="/js/third-part/flexible.js"></script>
+    <script type="text/javascript" src="/js/third-part/zepto.min.js"></script>
+    <script type="text/javascript" src="/js/third-part/fastclick.min.js"></script>
+    <script type="text/javascript" src="/js/third-part/template.js"></script>
+</head>
+
+<body>
+    <div class="cate-box">
+        <!-- <div class="cate-name">保&nbsp;健</div> -->
+        <div class="goods-list" id="healthList"></div>
+    </div>
+    <div class="no-record">
+        <img src="/image/common/no-record.png" />
+        <p>附近暂无相关商品</p>
+    </div>
+    <!-- <div class="cate-box">
+        <div class="cate-name">滋&nbsp;补</div>
+        <div class="goods-list" id="nutritionList"></div>
+    </div>
+    <div class="cate-box">
+        <div class="cate-name">计&nbsp;生</div>
+        <div class="goods-list" id="contraceptiveList"></div>
+    </div> -->
+
+    <!-- 模板 -->
+    <script id="goodsListTpl" type="text/html">
+        <ul>
+        {{each list as goods i}}
+            <li>
+                <a href="/openapi/h5/b/djk/detail?goods_id={{goods.goods_id}}" class="goods-box">
+                    <div class="img-wrap">
+                        <img src="{{goods.picUrlArr[0]}}" />
+                        {{if goods.sale_qty <= 0}}
+                        <div class="sold-out">
+                            <img src="/image/common/soldout.png" />
+                        </div>
+                        {{/if}}
+                    </div>
+                    <div class="txt-wrap">
+                        <div class="name">{{goods.title}}</div>
+                        <div class="detail">
+                            <p>配送范围：{{goods.delivery_desc}}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;起订：{{goods.min_buy_qty}}</p>
+                            <p>库存：{{goods.sale_qty}}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;规格：{{goods.specification}}</p>
+                            <p>建议零售价：¥{{goods.market_price}}</p>
+                        </div>
+                        <div class="price"><em>¥</em>{{goods.discount_price}}</div>
+                    </div>
+                </a>
+            </li>
+        {{/each}}
+        </ul>
+    </script>
+</body>
+<script type="text/javascript">
+var J = {
+    'health': {
+        display_area: '健康',
+        container: 'healthList'
+    },
+    'nutrition': {
+        display_area: '滋补',
+        container: 'healthList'
+        // container: 'nutritionList'
+    },
+    'contraceptive': {
+        display_area: '计生',
+        container: 'healthList'
+        // container: 'contraceptiveList'
+    }
+};
+var loaded = 0;
+
+// 加载商品
+function loadGoods(type) {
+    $.ajax({
+        type: 'POST',
+        url: '/openapi/h5/b/djk/getList',
+        data: {
+            display_area: J[type].display_area || '',
+            area_id: '<%=area_id %>'
+        },
+        success: function(data) {
+            var jsonData = JSON.parse(data);
+            if(jsonData.goodsList && jsonData.goodsList.length != 0) {
+                var tdata = {
+                    list: jsonData.goodsList
+                };
+                var html = template('goodsListTpl', tdata);
+                $('#' + J[type].container).append(html);
+            }
+            loaded++;
+            if(loaded == 3 && $('#healthList').html() == '') {
+                $('.no-record').show();
+            }
+        }
+    });
+}
+
+$(function() {
+    loadGoods('health');
+    loadGoods('nutrition');
+    loadGoods('contraceptive');
+});
+</script>
+
+</html>

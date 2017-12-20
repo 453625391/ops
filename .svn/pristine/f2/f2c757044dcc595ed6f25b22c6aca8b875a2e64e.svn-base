@@ -1,0 +1,520 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.meitianhui.goods.dao.ItemStoreDao">
+
+	<insert id="insertGdItemStore" parameterType="GdItemStore">
+		INSERT INTO
+		gd_item_store (
+		item_store_id
+		,store_id
+		,store_info
+		,item_id
+		,item_code
+		,item_name
+		,category_id
+		,brand_id
+		,barcode
+		,desc1
+		,image_info
+		,image_detail
+		,specification
+		,weight
+		,cost_price
+		,market_price
+		,vip_price
+		,rebate
+		,product_source
+		,sale_qty
+		,stock_qty
+		,durability_period
+		,production_date
+		,supplier
+		,manufacturer
+		,keywords
+		,is_show
+		,is_sell
+		,is_exchange
+		,is_activity
+		,is_track_stock
+		,stock_warning
+		,is_discount
+		,is_offline
+		,is_weighed
+		,expired_warning
+		,is_recommend
+		,status
+		,created_date
+		,modified_date
+		,remark
+		)
+		VALUES (
+		#{item_store_id}
+		,#{store_id}
+		,#{store_info}
+		,#{item_id}
+		,#{item_code}
+		,#{item_name}
+		,#{category_id}
+		,#{brand_id}
+		,#{barcode}
+		,#{desc1}
+		,#{image_info}
+		,#{image_detail}
+		,#{specification}
+		,#{weight}
+		,#{cost_price}
+		,#{market_price}
+		,#{market_price}
+		,#{rebate}
+		,#{product_source}
+		,#{sale_qty}
+		,#{stock_qty}
+		,#{durability_period}
+		,#{production_date}
+		,#{supplier}
+		,#{manufacturer}
+		,#{keywords}
+		,#{is_show}
+		,#{is_sell}
+		,#{is_exchange}
+		,#{is_activity}
+		,#{is_track_stock}
+		,#{stock_warning}
+		,#{is_discount}
+		,#{is_offline}
+		,#{is_weighed}
+		,#{expired_warning}
+		,#{is_recommend}
+		,#{status}
+		,#{created_date}
+		,#{modified_date}
+		,#{remark}
+		)
+	</insert>
+
+	<select id="selectGdItem" parameterType="Map" resultType="GdItem">
+		<![CDATA[
+			SELECT
+			item_id
+			,item_code
+			,item_name
+			,keywords
+			,category_id
+			,brand_id
+			,barcode
+			,desc1
+			,specification
+			,pack
+			,cost_price
+			,market_price
+			,vip_price
+			,producer
+			,supplier
+			,manufacturer
+			,status
+			FROM
+				gd_item
+		]]>
+		<where>
+			barcode=#{barcode}
+		</where>
+	</select>
+
+	<select id="selectGdItemStore" parameterType="Map" resultType="GdItemStore">
+		<![CDATA[
+			SELECT
+			item_store_id
+			,store_id
+			,store_info
+			,item_id
+			,item_code
+			,item_name
+			,keywords
+			,category_id
+			,brand_id
+			,barcode
+			,desc1
+			,image_info
+			,image_detail
+			,specification
+			,pack
+			,cost_price
+			,market_price
+			,vip_price
+			,rebate
+			,product_source
+			,producer
+			,weight
+			,sale_qty
+			,stock_qty
+			,durability_period
+			,production_date
+			,supplier
+			,manufacturer
+			,is_show
+			,is_sell
+			,is_exchange
+			,is_virtual
+			,is_best
+			,is_new
+			,is_hot
+			,is_activity
+			,is_track_stock
+			,stock_warning
+			,is_discount
+			,is_offline
+			,is_weighed
+			,expired_warning
+			,is_recommend
+			,created_date
+			,modified_date
+			,status
+			,remark
+			FROM
+				gd_item_store
+		]]>
+		<where>
+			1=1
+			<if test="item_store_id != null and item_store_id != ''">
+				AND item_store_id = #{item_store_id}
+			</if>
+			<if test="store_id != null and store_id != ''">
+				AND store_id = #{store_id}
+			</if>
+			<if test="category_id != null and category_id != ''">
+				AND category_id = #{category_id}
+			</if>
+			<if test="barcode != null and barcode != ''">
+				AND barcode = #{barcode}
+			</if>
+			<if test="item_name != null and item_name != ''">
+				AND item_name like CONCAT('%',#{item_name},'%')
+			</if>
+			<if test="is_show != null and is_show != ''">
+				AND is_show = #{is_show}
+			</if>
+			<if test="is_sell != null and is_sell != ''">
+				AND is_sell = #{is_sell}
+			</if>
+			<if test="is_exchange != null and is_exchange != ''">
+				AND is_exchange = #{is_exchange}
+			</if>
+			<if test="is_recommend != null and is_recommend != ''">
+				AND is_recommend = #{is_recommend}
+			</if>
+		</where>
+		ORDER BY created_date DESC
+	</select>
+
+	<select id="selectGdItemStoreForOrder" parameterType="Map"
+		resultType="Map">
+		<![CDATA[
+			SELECT
+			item_store_id
+			,item_name
+			,image_info
+			,specification
+			,cost_price
+			,market_price
+			,rebate
+			FROM
+				gd_item_store
+		]]>
+		<where>
+			item_store_id = #{item_store_id} AND store_id = #{store_id}
+		</where>
+	</select>
+
+
+	<select id="selectIsSellGoodsCount" parameterType="Map"
+		resultType="Map">
+		<![CDATA[
+			SELECT
+				count(item_store_id) as count_num
+			FROM
+				gd_item_store
+		]]>
+		<where>
+			is_sell = 'Y' AND is_offline='Y'
+			<if test="stores_id != null and stores_id != ''">
+				AND store_id = #{stores_id}
+			</if>
+		</where>
+	</select>
+
+
+
+	<select id="selectGdItemStoreList" parameterType="Map"
+		resultType="GdItemStore">
+		<![CDATA[
+			SELECT
+			item_store_id
+			,item_name
+			,category_id
+			,barcode
+			,desc1
+			,image_info
+			,image_detail
+			,specification
+			,pack
+			,cost_price
+			,market_price
+			,vip_price
+			,rebate
+			,product_source
+			,weight
+			,sale_qty
+			,stock_qty
+			,specification
+			FROM
+				gd_item_store
+		]]>
+		<where>
+			1=1
+			<if test="store_id != null and store_id != ''">
+				AND store_id = #{store_id}
+			</if>
+			<if test="category_id != null and category_id != ''">
+				AND category_id = #{category_id}
+			</if>
+			<if test="barcode != null and barcode != ''">
+				AND barcode = #{barcode}
+			</if>
+			<if test="item_name != null and item_name != ''">
+				AND item_name like CONCAT('%',#{item_name},'%')
+			</if>
+			<if test="is_show != null and is_show != ''">
+				AND is_show = #{is_show}
+			</if>
+			<if test="is_sell != null and is_sell != ''">
+				AND is_sell = #{is_sell}
+			</if>
+			<if test="product_source != null and product_source != ''">
+				AND product_source = #{product_source}
+			</if>
+			<if test="is_recommend != null and is_recommend != ''">
+				AND is_recommend = #{is_recommend}
+			</if>
+			<if test="is_discount != null and is_discount != ''">
+				AND is_discount = #{is_discount}
+			</if>
+		</where>
+		ORDER BY created_date DESC
+	</select>
+
+	<select id="selectGdItemStoreTypeGroup" parameterType="Map"
+		resultType="Map">
+		<![CDATA[
+			SELECT
+				category_id
+			FROM
+				gd_item_store
+		]]>
+		<where>
+			category_id IS NOT NULL AND is_sell = 'Y'
+			<if test="store_id != null and store_id != ''">
+				AND store_id = #{store_id}
+			</if>
+		</where>
+		GROUP BY category_id
+	</select>
+
+	<select id="selectGdItemStoreForNearByExchange" parameterType="Map"
+		resultType="Map">
+		<![CDATA[
+			SELECT
+			item_store_id
+			,store_id
+			,store_info
+			,item_id
+			,item_code
+			,item_name
+			,keywords
+			,category_id
+			,brand_id
+			,barcode
+			,desc1
+			,image_info
+			,specification
+			,pack
+			,cost_price
+			,market_price
+			,vip_price
+			,producer
+			,weight
+			,sale_qty
+			,stock_qty
+			,durability_period
+			,production_date
+			,supplier
+			,manufacturer
+			,is_show
+			,is_sell
+			,is_exchange
+			,is_virtual
+			,is_best
+			,is_new
+			,is_hot
+			,is_activity
+			,created_date
+			,status
+			,remark
+			FROM
+				gd_item_store
+		]]>
+		<where>
+			is_exchange = #{is_exchange}
+			<if test="stores_id_in != null">
+				AND store_id in
+				<foreach item="item" index="index" collection="stores_id_in"
+					open="(" separator="," close=")">
+					#{item}
+				</foreach>
+			</if>
+		</where>
+	</select>
+
+
+	<update id="updateGdItemStore" parameterType="Map">
+		UPDATE gd_item_store SET
+		<trim suffixOverrides=",">
+			modified_date = SYSDATE(),
+			<if test="barcode != null and barcode != ''">
+				barcode = #{barcode},
+			</if>
+			<if test="item_name != null and item_name != ''">
+				item_name = #{item_name},
+			</if>
+			<if test="stock_qty != null">
+				stock_qty = #{stock_qty},
+			</if>
+			<if test="sale_qty != null">
+				sale_qty = #{sale_qty},
+			</if>
+			<if test="market_price != null">
+				market_price = #{market_price},
+			</if>
+			<if test="cost_price != null">
+				cost_price = #{cost_price},
+			</if>
+			<if test="vip_price != null">
+				vip_price = #{vip_price},
+			</if>
+			<if test="rebate != null and rebate != ''">
+				rebate = #{rebate},
+			</if>
+			<if test="keywords != null and keywords != ''">
+				keywords = #{keywords},
+			</if>
+			<if test="specification != null and specification != ''">
+				specification = #{specification},
+			</if>
+			<if test="pack != null and pack != ''">
+				pack = #{pack},
+			</if>
+			<if test="desc1 != null">
+				desc1 = #{desc1},
+			</if>
+			<if test="image_info != null">
+				image_info = #{image_info},
+			</if>
+			<if test="image_detail != null">
+				image_detail = #{image_detail},
+			</if>
+			<if test="category_id != null and category_id != ''">
+				category_id = #{category_id},
+			</if>
+			<if test="durability_period != null and durability_period != ''">
+				durability_period = #{durability_period},
+			</if>
+			<if test="production_date != null and production_date != ''">
+				production_date = #{production_date},
+			</if>
+			<if test="brand_id != null and brand_id != ''">
+				brand_id = #{brand_id},
+			</if>
+			<if test="supplier != null and supplier != ''">
+				supplier = #{supplier},
+			</if>
+			<if test="manufacturer != null and manufacturer != ''">
+				manufacturer = #{manufacturer},
+			</if>
+			<if test="is_show != null and is_show != ''">
+				is_show = #{is_show},
+			</if>
+			<if test="is_sell != null and is_sell != ''">
+				is_sell = #{is_sell},
+			</if>
+			<if test="is_exchange != null and is_exchange != ''">
+				is_exchange = #{is_exchange},
+			</if>
+			<if test="is_virtual != null and is_virtual != ''">
+				is_virtual = #{is_virtual},
+			</if>
+			<if test="is_best != null and is_best != ''">
+				is_best = #{is_best},
+			</if>
+			<if test="is_new != null and is_new != ''">
+				is_new = #{is_new},
+			</if>
+			<if test="is_hot != null and is_hot != ''">
+				is_hot = #{is_hot},
+			</if>
+			<if test="is_activity != null and is_activity != ''">
+				is_activity = #{is_activity},
+			</if>
+			<if test="is_track_stock != null and is_track_stock != ''">
+				is_track_stock = #{is_track_stock},
+			</if>
+			<if test="stock_warning != null and stock_warning != ''">
+				stock_warning = #{stock_warning},
+			</if>
+			<if test="is_discount != null and is_discount != ''">
+				is_discount = #{is_discount},
+			</if>
+			<if test="is_offline != null and is_offline != ''">
+				is_offline = #{is_offline},
+			</if>
+			<if test="is_weighed != null and is_weighed != ''">
+				is_weighed = #{is_weighed},
+			</if>
+			<if test="expired_warning != null and expired_warning != ''">
+				expired_warning = #{expired_warning},
+			</if>
+			<if test="is_recommend != null and is_recommend != ''">
+				is_recommend = #{is_recommend},
+			</if>
+			<if test="status != null and status != ''">
+				status = #{status},
+			</if>
+			<if test="remark != null and remark != ''">
+				remark = #{remark},
+			</if>
+		</trim>
+		<where>
+			item_store_id=#{item_store_id}
+		</where>
+	</update>
+
+	<update id="updateGdItemStoreSaleQtyRestore" parameterType="Map">
+		UPDATE
+		gd_item_store SET sale_qty = sale_qty+#{restore_qty}
+		WHERE
+		item_store_id=#{item_store_id}
+	</update>
+
+	<update id="updateGdItemStoreSaleQtyDeduction" parameterType="Map">
+		UPDATE
+		gd_item_store SET
+		sale_qty = sale_qty - #{sell_qty}
+		WHERE
+		item_store_id=#{item_store_id} AND (sale_qty-#{sell_qty}) &gt;= 0
+	</update>
+
+	<delete id="deletedItemStore" parameterType="Map">
+		<![CDATA[
+             DELETE FROM gd_item_store WHERE item_store_id = #{item_store_id}
+          ]]>
+	</delete>
+
+</mapper>

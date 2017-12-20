@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="CompilerConfiguration">
+    <annotationProcessing>
+      <profile name="Maven default annotation processors profile" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <module name="ops-common" />
+        <module name="ops-community" />
+        <module name="ops-data-sync" />
+        <module name="ops-finance" />
+        <module name="ops-goods" />
+        <module name="ops-infrastructure" />
+        <module name="ops-member" />
+        <module name="ops-notification" />
+        <module name="ops-order" />
+        <module name="ops-report" />
+        <module name="ops-schedule" />
+        <module name="ops-service-test" />
+        <module name="ops-storage" />
+        <module name="ops-template" />
+      </profile>
+    </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="ops-common" target="1.5" />
+      <module name="ops-community" target="1.7" />
+      <module name="ops-data-sync" target="1.6" />
+      <module name="ops-finance" target="1.7" />
+      <module name="ops-goods" target="1.7" />
+      <module name="ops-infrastructure" target="1.7" />
+      <module name="ops-member" target="1.7" />
+      <module name="ops-notification" target="1.7" />
+      <module name="ops-order" target="1.7" />
+      <module name="ops-report" target="1.7" />
+      <module name="ops-schedule" target="1.7" />
+      <module name="ops-service-test" target="1.7" />
+      <module name="ops-storage" target="1.7" />
+      <module name="ops-template" target="1.7" />
+    </bytecodeTargetLevel>
+  </component>
+</project>

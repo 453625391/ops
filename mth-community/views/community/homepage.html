@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<% include commonHeader.html %>
+	<title>我的</title>
+	<link rel="stylesheet" type="text/css" href="/css/community/index.css">
+</head>
+<body>
+	<!-- <div class="dt-attention pb10">
+		<em class="dt-img">
+			<img src="<%=memberInfo.doc_url[memberInfo.head_pic_path] %>" />
+		</em>
+		<div class="dt-xq">
+			<p class="dt-name"><%=memberInfo.nick_name || '匿名' %></p>
+			<p class="dt-q"><%-memberInfo.full_name || '&nbsp;' %></p>
+		</div>
+		<a class="dt-gz">关注</a>
+	</div> -->
+	<div class="article-wrap">
+	<% for(var i=0; i<articleList.length; i++) { %>
+		<a href="/detail?id=<%=articleList[i]._id %>" class="article-box">
+			<div class="top">
+				<div class="face-icon">
+					<img src="<%=articleList[i].head_path %>" />
+				</div>
+				<div class="name-addr">
+				<% if(articleList[i].location && articleList[i].location != '') { %>
+					<p class="name"><%=articleList[i].nick_name || '匿名' %></p>
+					<p class="addr"><%=articleList[i].location %></p>
+				<% } else { %>
+					<p class="name name-mid"><%=articleList[i].nick_name || '匿名' %></p>
+				<% } %>
+				</div>
+			</div>
+			<div class="text">
+			<% if(articleList[i].title && articleList[i].title != '') { %>
+				<p class="title"><%=articleList[i].title %></p>
+			<% } %>
+			<!-- <% if(articleList[i].content && articleList[i].content != '') {
+				articleList[i].content = articleList[i].content.substring(0, 45) + '...'
+			 %>
+				<p class="content"><%=articleList[i].content %></p>
+			<% } %> -->
+			</div>
+			<div class="img" style="background-image: url(<%=articleList[i].cover_path[0] %>)">
+			</div>
+			<div class="bottom">
+				<div class="statistics like"><%=articleList[i].like.length %></div>
+				<div class="statistics comment"><%=articleList[i].comment.length %></div>
+				<div class="statistics view"><%=articleList[i].view_count %></div>
+				<div class="time"><%=articleList[i].create_date_formatted %></div>
+			</div>
+		</a>
+	<% } %>
+	</div>
+	<!-- <ul class="shop-list">
+		<li>
+			<div class="shop-img">
+				<img src="/image/community/shop-img.jpg" alt="">
+			</div>
+			<div class="shop-ab">
+				<img src="/image/community/shop-logo.png" alt="">
+				<p class="ti">小黑牛涮涮锅</p>
+			</div>
+		</li>
+		<li>
+			<div class="shop-img"><img src="/image/community/shop-img.jpg" alt=""></div>
+			<div class="shop-ab">
+				<img src="/image/community/shop-logo2.png" alt="">
+				<p class="ti">小黑牛涮涮锅</p>
+			</div>
+		</li>
+	</ul> -->
+</body>
+  
+</html>
+<script>
+FastClick.attach(document.body);
+</script>
+

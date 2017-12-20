@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <% include ../../commonHead.html %>
+    <title>新人礼包</title>
+    <link rel="stylesheet" type="text/css" href="/css/payback/freshman.css?v20170517">
+</head>
+
+<body>
+    <div id="app">
+        <div class="banner">
+            <div>
+                <img src="/image/payback/freshman-banner1.png" />
+            </div>
+        </div>
+        <div class="goods-container">
+            <ul>
+                <li v-for="goods in goodsList">
+                    <a v-bind:href="'/openapi/h5/c/payback/detail?goods_id='+goods.goods_id+'<%if(requestParams.s){%>&s=1<%}%><%if(requestParams.mi){%>&mi=<%=requestParams.mi%><%}%>'" class="goods">
+                        <div class="left-box">
+                            <img v-bind:src="goods.pic_info_url" />
+                            <div class="soldout-wrap" v-if="goods.sale_qty<=0">
+                                <img src="/image/common/soldout.png" />
+                            </div>
+                        </div>
+                        <div class="right-box">
+                            <p class="tit">
+                                <em class="tag tb" v-if="goods.data_source=='taobao' || goods.data_source=='merchants'">淘宝</em>
+                                <em class="tag zy" v-if="goods.data_source=='meitianhui'">官方</em>
+                                {{goods.title}}
+                            </p>
+                            <p class="num">库存：<i>{{goods.sale_qty}}/{{goods.stock_qty}}</i></p>
+                            <p class="num">规格：<i>{{goods.specification}}</i></p>
+                            <div class="price-wrap">
+                                <span class="price">¥<em>{{goods.market_price}}</em></span>
+                                <span class="payback">¥<em>{{(goods.market_price-goods.discount_price).toFixed(2)}}</em></span>
+                            </div>
+                        </div>
+                    </a>
+                </li>
+            </ul>
+            <div class="no-record" v-if="goodsList.length==0">
+                <img src="/image/common/no-record.png" />
+                <p>暂无相关商品</p>
+            </div>
+            <p class="loading" v-if="page.isLoading">正在加载</p>
+        </div>
+    </div>
+</body>
+<script type="text/javascript">
+var app = new Vue({
+    el: '#app',
+    data: function() {
+        return {
+            requestParams: JSON.parse('<%-JSON.stringify(requestParams)%>'),
+            page: {
+                page_no: '1',
+                page_size: '10',
+                hasMore: true,
+                isLoading: false
+            },
+            goodsList: []
+        }
+    },
+    methods: {
+        getGoodsList: function() {
+            var self = this;
+            if(self.isLoading || !self.page.hasMore) return;
+            $.ajax({
+                type: 'POST',
+                url: '/openapi/h5/c/payback/freshman/getGoodsList',
+                data: {
+                    page: JSON.stringify({
+                        page_no: self.page.page_no,
+                        page_size: self.page.page_size
+                    })
+                },
+                beforeSend: function() {
+                    self.isLoading = true;
+                },
+                success: function(data) {
+                    var jsonData = (typeof data == 'string' ? JSON.parse(data) : data) || [];
+                    if(jsonData.goodsList.length == 0) {
+                        self.page.hasMore = false;
+                        return;
+                    }
+                    self.page.page_no++;
+                    self.goodsList.push.apply(self.goodsList, jsonData.goodsList);
+                },
+                complete: function() {
+                    self.isLoading = false;
+                }
+            });
+        }
+    },
+    mounted: function() {
+        new AutoLoader().load({scrollToTop: true}, this.getGoodsList);
+    }
+});
+</script>
+</html>

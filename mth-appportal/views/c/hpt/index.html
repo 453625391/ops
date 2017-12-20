@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<% include ../../commonHead.html %>
+    <title>拼团领</title>
+    <link rel="stylesheet" type="text/css" href="/css/hpt/index.css?v2017052601">
+</head>
+<body>
+    <div id="app">
+        <div class="category-bar">
+            <ul>
+                <li class="category" v-bind:class="{'on': currentCategory=='all'}" v-on:click="currentCategory='all'" data-category="">全部</li>
+                <li class="category" v-bind:class="{'on': currentCategory=='department'}" v-on:click="currentCategory='department'" data-category="百货">百货</li>
+                <li class="category" v-bind:class="{'on': currentCategory=='food'}" v-on:click="currentCategory='food'" data-category="美食">美食</li>
+                <li class="category" v-bind:class="{'on': currentCategory=='costume'}" v-on:click="currentCategory='costume'" data-category="服饰">服饰</li>
+                <li class="category" v-bind:class="{'on': currentCategory=='mother'}" v-on:click="currentCategory='mother'" data-category="母婴">母婴</li>
+                <li class="category" v-bind:class="{'on': currentCategory=='digital'}" v-on:click="currentCategory='digital'" data-category="数码">数码</li>
+            </ul>
+        </div>
+        <my-banner v-bind:banner-data="bannerData"></my-banner>
+        <div class="goods-container">
+            <goods-list v-show="currentCategory=='all'" v-bind:category="category.all" v-bind:request-params="requestParams"></goods-list>
+            <goods-list v-show="currentCategory=='department'" v-bind:category="category.department" v-bind:request-params="requestParams"></goods-list>
+            <goods-list v-show="currentCategory=='food'" v-bind:category="category.food" v-bind:request-params="requestParams"></goods-list>
+            <goods-list v-show="currentCategory=='costume'" v-bind:category="category.costume" v-bind:request-params="requestParams"></goods-list>
+            <goods-list v-show="currentCategory=='mother'" v-bind:category="category.mother" v-bind:request-params="requestParams"></goods-list>
+            <goods-list v-show="currentCategory=='digital'" v-bind:category="category.digital" v-bind:request-params="requestParams"></goods-list>
+        </div>
+        <div v-if="requestParams.s">
+            <img src="/image/fan/qr.gif?v2" style="width: 100%; margin-top: 0.133333rem;" />
+        </div>
+        <a v-if="!requestParams.s" v-bind:href="'/openapi/h5/c/hpt/collect?member_id='+requestParams.member_id+'&longitude='+requestParams.longitude+'&latitude='+requestParams.latitude+'<%if(requestParams.v){%>&v=<%=requestParams.v%><%}%>'" class="collect-entry"></a>
+    </div>
+    <script type="text/html" id="listTpl">
+        <ul>
+            <li v-for="goods in category.goodsList">
+                <a v-bind:href="'/openapi/h5/c/hpt/detail?member_id='+requestParams.member_id+'&goods_id='+goods.goods_id+'&longitude='+requestParams.longitude+'&latitude='+requestParams.latitude+'<%if(requestParams.s){%>&s=1<%}%><%if(requestParams.v){%>&v=<%=requestParams.v%><%}%>'" class="goods">
+                    <div class="left-box">
+                        <img v-bind:src="goods.picUrlArr[0]" />
+                    </div>
+                    <div class="right-box">
+                        <p class="tit">{{goods.title}}</p>
+                        <div class="label-wrap">
+                            <span class="label" v-for="label in goods.labelArr">{{label}}</span>
+                        </div>
+                        <div class="price-wrap">
+                            <span class="sale-price"><em>¥</em>{{goods.ts_price-0}}</span>
+                            <del class="market-price">¥{{goods.market_price-0}}</del>
+                        </div>
+                        <div class="num">{{goods.ts_min_num}}人拼团可省{{(goods.market_price-goods.ts_price).toFixed(2)}}元</div>
+                        <span class="join-now">去拼吧<i>﹥</i></span>
+                    </div>
+                </a>
+            </li>
+            <div class="loading" v-if="category.pageParams.isLoading">正在加载</div>
+            <div class="no-record" v-if="category.pageParams.noRecord">
+                <img src="/image/common/no-record.png" />
+                <p>暂无活动</p>
+            </div>
+        </ul>
+    </script>
+</body>
+<script type="text/javascript">
+Vue.component('goods-list', {
+    props: ['category', 'requestParams'],
+    template: document.getElementById('listTpl').innerHTML
+});
+var app = new Vue({
+    el: '#app',
+    data: function() {
+        return {
+            requestParams: JSON.parse('<%-JSON.stringify(requestParams)%>'),
+            bannerData: JSON.parse('<%-JSON.stringify(banner)%>'),
+            currentCategory: (window.localStorage && window.localStorage.hpt_category) || 'all',
+            category: {
+                all: {
+                    label_promotion: '',
+                    goodsList: [],
+                    pageParams: {
+                        page_no: "1",
+                        page_size: "10",
+                        hasMore: true,
+                        isLoading: false,
+                        noRecord: false
+                    }
+                },
+                department: {
+                    label_promotion: '百货',
+                    goodsList: [],
+                    pageParams: {
+                        page_no: "1",
+                        page_size: "10",
+                        hasMore: true,
+                        isLoading: false,
+                        noRecord: false
+                    }
+                },
+                food: {
+                    label_promotion: '美食',
+                    goodsList: [],
+                    pageParams: {
+                        page_no: "1",
+                        page_size: "10",
+                        hasMore: true,
+                        isLoading: false,
+                        noRecord: false
+                    }
+                },
+                costume: {
+                    label_promotion: '服饰',
+                    goodsList: [],
+                    pageParams: {
+                        page_no: "1",
+                        page_size: "10",
+                        hasMore: true,
+                        isLoading: false,
+                        noRecord: false
+                    }
+                },
+                mother: {
+                    label_promotion: '母婴',
+                    goodsList: [],
+                    pageParams: {
+                        page_no: "1",
+                        page_size: "10",
+                        hasMore: true,
+                        isLoading: false,
+                        noRecord: false
+                    }
+                },
+                digital: {
+                    label_promotion: '数码',
+                    goodsList: [],
+                    pageParams: {
+                        page_no: "1",
+                        page_size: "10",
+                        hasMore: true,
+                        isLoading: false,
+                        noRecord: false
+                    }
+                }
+            }
+        }
+    },
+    methods: {
+        loadGoods: function() {
+            var self = this;
+            var cate = self.currentCategory;
+            if(self.category[cate].pageParams.hasMore && !self.category[cate].pageParams.isLoading) {
+                $.ajax({
+                    type: 'POST',
+                    url: '/openapi/h5/c/hpt/queryGoods',
+                    data: {
+                        area_id: self.requestParams.area_id,
+                        label_promotion: self.category[cate].label_promotion,
+                        page: JSON.stringify({
+                            page_no: self.category[cate].pageParams.page_no,
+                            page_size: self.category[cate].pageParams.page_size
+                        })
+                    },
+                    beforeSend: function() {
+                        self.category[cate].pageParams.isLoading = true;
+                    },
+                    success: function(data) {
+                        var jsonData = (typeof data == 'string' ? JSON.parse(data) : data) || [];
+                        self.category[cate].goodsList.push.apply(self.category[cate].goodsList, jsonData.goodsList);
+                        if(jsonData.page.total_page == 0 || jsonData.page.total_page == self.category[cate].pageParams.page_no) {
+                            self.category[cate].pageParams.hasMore = false;
+                        }
+                        if(self.category[cate].goodsList.length == 0) {
+                            self.category[cate].pageParams.noRecord = true;
+                            return;
+                        }
+                        self.category[cate].pageParams.page_no++;
+                    },
+                    complete: function() {
+                        self.category[cate].pageParams.isLoading = false;
+                    }
+                });
+            }
+        }
+    },
+    watch: {
+        currentCategory: function(newCategory, oldCategory) {
+            window.scroll(0, 0);
+            if(window.localStorage) {
+                window.localStorage.hpt_category = newCategory;
+            }
+            if(this.category[newCategory].goodsList.length == 0 && this.category[newCategory].pageParams.hasMore) {
+                this.loadGoods();
+            }
+        }
+    },
+    mounted: function() {
+        new AutoLoader().load(this.loadGoods);
+    }
+});
+</script>
+</html>

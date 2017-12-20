@@ -1,0 +1,185 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.meitianhui.member.dao.AssistantDao">
+
+	<insert id="insertAssistant" parameterType="MDAssistant">
+		INSERT INTO
+		md_assistant(
+		assistant_id
+		,assistant_name
+		,desc1
+		,id_card
+		,head_pic_path
+		,sex_key
+		,area_id
+		,address
+		,contact_tel
+		,registered_date
+		,status
+		,created_date
+		,modified_date
+		,remark
+		)
+		VALUES(
+		#{assistant_id}
+		,#{assistant_name}
+		,#{desc1}
+		,#{id_card}
+		,#{head_pic_path}
+		,#{sex_key}
+		,#{area_id}
+		,#{address}
+		,#{contact_tel}
+		,sysdate()
+		,#{status}
+		,sysdate()
+		,sysdate()
+		,#{remark}
+		)
+	</insert>
+
+
+	<select id="selectStoresAssistantList" parameterType="Map"
+		resultType="Map">
+		<![CDATA[
+		select a.*,b.store_num,'' developer_num
+		FROM (
+		SELECT
+			   ma.assistant_id
+				,ma.assistant_name
+				,ma.desc1
+				,ma.id_card
+				,ma.head_pic_path
+				,ma.sex_key
+				,ma.area_id
+				,ma.address
+				,ma.contact_tel
+				,ma.registered_date
+				,ma.status
+				,ma.created_date
+				,ma.modified_date
+				,ma.remark
+				,ea.path
+			from
+				md_assistant ma
+				LEFT JOIN md_area ea ON ma.area_id = ea.area_id) a
+		 LEFT JOIN (select s.assistant_id ,count(1) store_num from md_stores s where s.business_status_key<>'TDJD_04' GROUP BY s.assistant_id) b on a.assistant_id = b.assistant_id
+		]]>
+		<where>
+			1=1
+			<if test="assistant_id != null and assistant_id != ''">
+				AND a.assistant_id=#{assistant_id}
+			</if>
+			<if test="condition != null and condition != ''">
+				AND (a.contact_tel like concat('%',#{condition},'%') or
+				a.assistant_name like concat('%',#{condition},'%'))
+			</if>
+		</where>
+		ORDER BY a.created_date DESC
+	</select>
+
+
+	<select id="selectAssistantServiceStoresList" parameterType="Map"
+		resultType="Map">
+		<![CDATA[
+			SELECT
+				 ms.stores_id
+				,ms.stores_no
+				,ms.stores_name
+				,ms.stores_type_key
+				,ms.business_type_key
+				,ms.contact_person
+				,ms.contact_tel
+				,ea.path
+			    ,ma.contact_tel assistant
+			    ,ma.name assistant_name
+			    ,ms.business_status_key
+			FROM md_stores ms 
+				LEFT JOIN mddb.md_area ea ON ms.area_id = ea.area_code
+				LEFT JOIN md_salesman ma on ma.salesman_id=ms.assistant_id
+		]]>
+		<where>
+			ms.business_status_key &lt;&gt; 'TDJD_04'
+			<if test="assistant_id != null and assistant_id != ''">
+				AND ms.assistant_id=#{assistant_id}
+			</if>
+			<if test="condition != null and condition != ''">
+				AND (ms.contact_tel like concat('%',#{condition},'%') or
+				ms.stores_name like concat('%',#{condition},'%'))
+			</if>
+			<if test="area_id != null and area_id != ''">
+				AND ea.path LIKE CONCAT((select path from md_area where area_id=#{area_id}) ,'%')
+			</if>
+		</where>
+	</select>
+
+	<update id="updateAssistant" parameterType="Map">
+		UPDATE md_assistant SET
+		<trim suffixOverrides=",">
+			modified_date=SYSDATE(),
+			<if test="assistant_name != null and assistant_name != ''">
+				assistant_name = #{assistant_name},
+			</if>
+			<if test="id_card != null and id_card != ''">
+				id_card = #{id_card},
+			</if>
+			<if test="head_pic_path != null and head_pic_path != ''">
+				head_pic_path = #{head_pic_path},
+			</if>
+			<if test="sex_key != null and sex_key != ''">
+				sex_key = #{sex_key},
+			</if>
+			<if test="remark != null and remark != ''">
+				remark = #{remark},
+			</if>
+			<if test="area_id != null and area_id != ''">
+				area_id = #{area_id},
+			</if>
+			<if test="address != null and address != ''">
+				address = #{address},
+			</if>
+			<if test="contact_tel != null and contact_tel != ''">
+				contact_tel = #{contact_tel},
+			</if>
+		</trim>
+		<where>
+			assistant_id=#{assistant_id}
+		</where>
+	</update>
+
+	<select id="selectAssistant" parameterType="Map" resultType="Map">
+		<![CDATA[
+			SELECT
+			     a.assistant_id
+				,a.assistant_name
+				,a.desc1
+				,a.id_card
+				,a.head_pic_path
+				,a.sex_key
+				,a.area_id
+				,a.address
+				,a.contact_tel
+				,a.registered_date
+				,a.remark
+			FROM
+				md_assistant a 
+		]]>
+		<where>
+			1=1
+			<if test="assistant_id != null and assistant_id != ''">
+				AND a.assistant_id = #{assistant_id}
+			</if>
+			<if test="contact_tel != null and contact_tel != ''">
+				AND a.contact_tel = #{contact_tel}
+			</if>
+		</where>
+	</select>
+
+	<delete id="deleteAssistant" parameterType="Map">
+		DELETE FROM md_assistant
+		<where>
+			assistant_id = #{assistant_id}
+		</where>
+	</delete>
+
+</mapper>

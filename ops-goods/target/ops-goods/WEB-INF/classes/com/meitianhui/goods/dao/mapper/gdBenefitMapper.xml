@@ -1,0 +1,176 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.meitianhui.goods.dao.GdBenefitDao">
+
+
+	<insert id="insertGdBenefit" parameterType="GdBenefit">
+		INSERT INTO
+		gd_benefit (
+		benefit_id
+		,benefit_type
+		,private_key
+		,expired_date
+		,member_id
+		,limited_price
+		,amount
+		,status
+		,created_date
+		,modified_date
+		,remark
+		)
+		VALUES (
+		#{benefit_id}
+		,#{benefit_type}
+		,#{private_key}
+		,#{expired_date}
+		,#{member_id}
+		,#{limited_price}
+		,#{amount}
+		,#{status}
+		,#{created_date}
+		,#{modified_date}
+		,#{remark}
+		)
+	</insert>
+
+	<select id="selectGdBenefitListForConsumer" parameterType="Map"
+		resultType="Map">
+		SELECT
+		benefit_id
+		,benefit_type
+		,private_key
+		,expired_date
+		,limited_price
+		,amount
+		,status
+		,remark
+		FROM gd_benefit
+		<where>
+			expired_date &gt;= SYSDATE()
+			<if test="member_id != null and member_id != ''">
+				AND member_id = #{member_id}
+			</if>
+			<if test="benefit_type != null and benefit_type != ''">
+				AND benefit_type = #{benefit_type}
+			</if>
+			<if test="status != null and status != ''">
+				AND status = #{status}
+			</if>
+		</where>
+	</select>
+
+	<select id="selectGdBenefit" parameterType="Map" resultType="Map">
+		SELECT
+		benefit_id
+		,benefit_type
+		,private_key
+		,expired_date
+		,member_id
+		,limited_price
+		,amount
+		,status
+		,modified_date
+		FROM gd_benefit
+		<where>
+			expired_date &gt;= SYSDATE()
+			<if test="benefit_id != null and benefit_id != ''">
+				AND benefit_id = #{benefit_id}
+			</if>
+			<if test="member_id != null and member_id != ''">
+				AND member_id = #{member_id}
+			</if>
+			<if test="benefit_type != null and benefit_type != ''">
+				AND benefit_type = #{benefit_type}
+			</if>
+			<if test="status != null and status != ''">
+				AND status = #{status}
+			</if>
+		</where>
+	</select>
+
+	<select id="selectGdBenefitCount" parameterType="Map" resultType="Map">
+		SELECT
+			count(1) as count_num
+		FROM gd_benefit
+		<where>
+			expired_date &gt;= SYSDATE()
+			<if test="member_id != null and member_id != ''">
+				AND member_id = #{member_id}
+			</if>
+			<if test="status != null and status != ''">
+				AND status = #{status}
+			</if>
+		</where>
+	</select>
+
+
+	<update id="updateGdBenefit" parameterType="Map">
+		UPDATE gd_benefit SET
+		<trim suffixOverrides=",">
+			modified_date = SYSDATE(),
+			<if test="status != null and status != ''">
+				status = #{status},
+			</if>
+			<if test="remark != null and remark != ''">
+				remark = #{remark},
+			</if>
+			<if test="member_id != null and member_id != ''">
+				member_id = #{member_id},
+			</if>
+		</trim>
+		<where>
+			1=1
+			<if test="benefit_id != null and benefit_id != ''">
+				AND benefit_id = #{benefit_id}
+			</if>
+			<if test="modified_date != null and modified_date != ''">
+				AND modified_date = #{modified_date}
+			</if>
+		</where>
+	</update>
+
+	<update id="updateExpiredGdBenefit" parameterType="Map">
+		UPDATE gd_benefit SET
+			modified_date = SYSDATE(),status = 'expired',remark = '过期自动失效'
+		WHERE status = 'normal'  AND expired_date &lt; #{lt_date} AND
+		expired_date &gt; #{gt_date}
+	</update>
+
+
+	<insert id="insertGdBenefitLog" parameterType="Map">
+		INSERT INTO
+		gd_benefit_log (
+		log_id
+		,member_id
+		,benefit_id
+		,category
+		,tracked_date
+		,event
+		)
+		VALUES (
+		#{log_id}
+		,#{member_id}
+		,#{benefit_id}
+		,#{category}
+		,#{tracked_date}
+		,#{event}
+		)
+	</insert>
+
+
+	<select id="selectGdBenefitLog" parameterType="Map" resultType="Map">
+		SELECT
+		tracked_date
+		,event
+		FROM gd_benefit_log
+		<where>
+			1=1
+			<if test="member_id != null and member_id != ''">
+				AND member_id = #{member_id}
+			</if>
+		</where>
+		ORDER BY tracked_date DESC
+	</select>
+
+
+</mapper>

@@ -1,0 +1,174 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.meitianhui.goods.dao.GdActivityDeliveryDao">
+
+	<insert id="insertGdActivityDelivery" parameterType="GdActivityDelivery">
+		INSERT INTO
+		gd_activity_delivery (
+		delivery_id
+		,activity_id
+		,member_type_key
+		,member_id
+		,member_mobile
+		,amount
+		,benefit_id
+		,benefit_type
+		,contact_person
+		,contact_tel
+		,delivery_area_id
+		,delivery_address
+		,logistics
+		,status
+		,created_date
+		,modified_date
+		,remark
+		,order_no
+		)
+		VALUES (
+		#{delivery_id}
+		,#{activity_id}
+		,#{member_type_key}
+		,#{member_id}
+		,#{member_mobile}
+		,#{amount}
+		,#{benefit_id}
+		,#{benefit_type}
+		,#{contact_person}
+		,#{contact_tel}
+		,#{delivery_area_id}
+		,#{delivery_address}
+		,#{logistics}
+		,#{status}
+		,#{created_date}
+		,#{modified_date}
+		,#{remark}
+		,#{order_no}
+		)
+	</insert>
+
+	<select id="selectGdActivityDeliveryList" parameterType="Map"
+		resultType="Map">
+		SELECT
+			gad.delivery_id
+			,gad.activity_id
+			,gad.member_type_key
+			,gad.member_id
+			,gad.member_mobile
+			,gad.amount
+			,gad.benefit_type
+			,gad.contact_person
+			,gad.contact_tel
+			,gad.delivery_address
+			,gad.logistics
+			,gad.status
+			,gad.created_date
+			,gad.order_no
+			,ga.title
+			,ga.goods_title
+			,ga.json_data
+			,ga.goods_id
+			,ga.limited_point	
+		FROM gd_activity_delivery gad inner join gd_activity ga on gad.activity_id=ga.activity_id
+		<where>
+			1=1
+			<if test="activity_id != null and activity_id != ''">
+				AND gad.activity_id = #{activity_id}
+			</if>
+			<if test="goods_id != null and goods_id != ''">
+				AND ga.goods_id = #{goods_id}
+			</if>
+			<if test="member_id != null and member_id != ''">
+				AND gad.member_id = #{member_id}
+			</if>
+			<if test="member_type_key != null and member_type_key != ''">
+				AND gad.member_type_key = #{member_type_key}
+			</if>
+			<if test="member_mobile != null and member_mobile != ''">
+				AND gad.member_mobile = #{member_mobile}
+			</if>
+			<if test="title != null and title != ''">
+				AND ga.title like CONCAT('%',#{title},'%')
+			</if>
+			<if test="goods_title != null and goods_title != ''">
+				AND ga.goods_title like CONCAT('%',#{goods_title},'%')
+			</if>
+			<if test="contact_tel != null and contact_tel != ''">
+				AND gad.contact_tel = #{contact_tel}
+			</if>
+			<if test="start_date != null and start_date != ''">
+				AND DATE_FORMAT(ga.created_date, '%Y-%m-%d')  &gt;= DATE_FORMAT(#{start_date}, '%Y-%m-%d')
+			</if>
+			<if test="end_date != null and end_date != ''">
+				AND DATE_FORMAT(ga.created_date, '%Y-%m-%d')  &lt;= DATE_FORMAT(#{end_date}, '%Y-%m-%d')
+			</if>
+			<if test="status != null and status != ''">
+				AND gad.status = #{status}
+			</if>
+			<if test="status_in != null">
+				AND gad.status in
+				<foreach item="item" index="index" collection="status_in"
+					open="(" separator="," close=")">
+					#{item}
+				</foreach>
+			</if>
+			<if test="created_date_strat != null and created_date_strat != ''">
+				AND DATE_FORMAT(gad.created_date, '%Y-%m-%d')  &gt;= DATE_FORMAT(#{created_date_strat}, '%Y-%m-%d')
+			</if>
+			<if test="created_date_end != null and created_date_end != ''">
+				AND DATE_FORMAT(gad.created_date, '%Y-%m-%d')  &lt;= DATE_FORMAT(#{created_date_end}, '%Y-%m-%d')
+			</if>
+			
+		</where>
+		ORDER BY gad.created_date DESC
+	</select>
+
+	<select id="selectGdActivityDelivery" parameterType="Map"
+		resultType="Map">
+		SELECT
+			gad.delivery_id
+			,gad.contact_person
+			,gad.contact_tel
+			,gad.delivery_address
+			,gad.logistics
+			,gad.status
+			,gad.modified_date
+			,gad.order_no
+		FROM gd_activity_delivery gad
+		<where>
+			1=1
+			<if test="delivery_id != null and delivery_id != ''">
+				AND gad.delivery_id = #{delivery_id}
+			</if>
+			<if test="status != null and status != ''">
+				AND gad.status = #{status}
+			</if>
+		</where>
+	</select>
+
+
+	<update id="updateGdActivityDelivery" parameterType="Map">
+		UPDATE gd_activity_delivery SET
+		<trim suffixOverrides=",">
+			<if test="status != null and status != ''">
+			modified_date = SYSDATE(),
+				status = #{status},
+			</if>
+			<if test="remark != null and remark != ''">
+				remark = #{remark},
+			</if>
+			<if test="logistics != null and logistics != ''">
+				logistics = #{logistics},
+			</if>
+		</trim>
+		<where>
+			1=1
+			<if test="delivery_id != null and delivery_id != ''">
+				AND delivery_id = #{delivery_id}
+			</if>
+			<if test="modified_date != null and modified_date != ''">
+				AND modified_date = #{modified_date}
+			</if>
+		</where>
+	</update>
+
+</mapper>

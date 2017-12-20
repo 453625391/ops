@@ -1,0 +1,43 @@
+/*
+===============COPYRIGHT=============
+Author:Janda.Lau;
+Contact:
+	QQ:210465;
+	E-Mail:ifanny@qq.com;
+	Phone:132-;
+Thank you for your support!
+*/
+@charset "utf-8";
+body{}
+.content{
+	padding: 20px;
+}
+.content .information-title{
+	/*text-align: center;*/
+	color: #000;
+	font-size: 24px;
+	font-weight: bold;
+}
+.content .information-info{
+	font-size: 14px;
+	color: #999;
+	border-bottom: 1px #eee solid;
+	/*line-height: 30px;*/
+	padding: 10px 0;
+}
+.content .information-info i{
+	margin-right: 20px;
+}
+.content .information-content{
+	padding: 20px 0;
+	font-size: 18px;
+	line-height: 32px;
+	color: #333;
+}
+.content .information-content p{
+	padding-bottom: 10px;
+	/*text-indent: 2em;*/
+}
+.content .information-content .img-content{
+	text-align: center;
+}

@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <% include ../../commonHead.html %>
+    <title>团购预售</title>
+    <link rel="stylesheet" type="text/css" href="/css/presell/detail.css">
+</head>
+
+<body>
+    <div class="banner">
+        <div id="slider" class="swipe">
+            <div class="swipe-wrap">
+                <!-- 不展示第一张图片 -->
+                <% if(goods.picUrlArr.length > 1) { %>
+                    <% for(var i=1; i < goods.picUrlArr.length; i++) { %>
+                        <div>
+                            <img src="<%=goods.picUrlArr[i] %>" />
+                        </div>
+                    <% } %>
+                <% } else { %>
+                    <% for(var i in goods.picUrlArr) { %>
+                        <div>
+                            <img src="<%=goods.picUrlArr[i] %>" />
+                        </div>
+                    <% } %>
+                <% } %>
+            </div>
+        </div>
+        <nav>
+            <ul id="position">
+                <% if(goods.picUrlArr.length > 1) { %>
+                    <% for(var i=1; i < goods.picUrlArr.length; i++) { %>
+                       <li></li>
+                    <% } %>
+                <% } else { %>
+                    <% for(var i in goods.picUrlArr) { %>
+                        <li></li>
+                    <% } %>
+                <% } %>
+            </ul>
+        </nav>
+    </div>
+    <div class="cnt-box">
+        <p class="tit"><%=goods.goods_title %></p>
+        <p class="spec deadline">截止时间：<%=goods.closing_time %></p>
+        <div class="price-box">
+            <span class="price">¥<em><%=goods.retail_price %></em></span>
+            <span class="spec"><%if(goods.specification){%>规格：<%=goods.specification %><%}%></span>
+        </div>
+        <div class="process-bg">
+            <em class="process" style="width: <%=((goods.sub_order_qty / goods.qty_limit) * 100) %>%;"></em>
+        </div>
+        <div class="process-txt">
+            <em class="joined">已售&nbsp;<%=goods.sub_order_qty %></em>
+            <% if((goods.qty_limit-goods.sub_order_qty) > 0) { %>
+            <em class="needed">还需&nbsp;<%=(goods.qty_limit-goods.sub_order_qty) %></em>
+            <% } else { %>
+            <em class="needed">已达成</em>
+            <% } %>
+        </div>
+    </div>
+    <% if(goods.goods_desc1) { %>
+    <p class="delivery">商品描述：<%=goods.goods_desc1 %></p>
+    <% } %>
+    <p class="delivery">
+    <span>门店名称：<%=goods.stores_name %><em class="distance"><%=requestParams.distance%></em></span>
+    </p>
+    <p class="delivery">
+        <span>详细地址：<%=goods.stores_delivery_address %></span>
+    </p>
+    <% if(goods.picDetailArr) { %>
+    <div class="detail-wrap">
+    <% for(var i=0; i<goods.picDetailArr.length; i++) { %>
+        <p><%=goods.picDetailArr[i].title %></p>
+        <div class="detail-img-wrap">
+            <img src="<%=goods.picDetailArr[i].url %>" />
+        </div>
+    <% } %>
+    </div>
+    <% } %>
+    <!-- 非分享页下才展示购买按钮 -->
+    <% if(!requestParams.s) { %>
+    <div class="footer-bar">
+        <a href="tel:<%=goods.stores_contact_tel %>" class="tel"></a>
+        <a href="javascript: void(0);" class="chat disable"></a>
+        <a href="javascript: void(0);" class="btn able" id="buyNow">立即购买</a>
+    </div>
+    <% } else { %>
+    <div style="margin-bottom: -1.733333rem; margin-top: 0.666667rem;">
+        <img src="/image/fan/qr.gif?v2" style="width: 100%;" />
+    </div>
+    <% } %>
+</body>
+<script type="text/javascript">
+$(function() {
+    M.initSwipe();
+    var invitationCode = '<%=goods.invitation_code %>';
+    var shareData = {
+        title: '<%=goods.goods_title %>',
+        desc: '<%=goods.goods_desc1 ? goods.goods_desc1.replace(/\r\n/g," ").replace(/\n/g, " ") : "" %>',
+        imgPath: '<%=goods.picUrlArr ? (goods.picUrlArr[1] ? goods.picUrlArr[1] : goods.picUrlArr[0]) : "" %>',
+        url: window.location.href + '&s=1'
+    };
+    if(window.jsObj) {  // Android
+        // 传递分享数据
+        window.jsObj.share(JSON.stringify(shareData));
+        // 点击立即购买
+        $('#buyNow').click(function(){
+            window.jsObj.buyGroupGoods(invitationCode);
+        });
+    } else {    // IOS
+        setupWebViewJavascriptBridge(function(bridge) {
+            // 传递分享数据
+            bridge.callHandler('share', shareData);
+            // 点击立即购买
+            $('#buyNow').click(function() {
+                bridge.callHandler('buyGroupGoods', invitationCode);
+            });
+        });
+    }
+});
+</script>
+</html>

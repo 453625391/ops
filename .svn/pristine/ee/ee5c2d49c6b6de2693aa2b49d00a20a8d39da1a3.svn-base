@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.meitianhui.finance.dao.WechatBillLogDao">
+
+	<insert id="insertFDWechatBillLog" parameterType="List">
+		INSERT INTO
+		fd_wechat_bill_log (
+		log_id
+		,trade_no
+		,out_trade_no
+		,bill_date
+		,app_type
+		,desc1
+		,trade_date
+		,trade_account
+		,order_amount
+		,status
+		,created_date
+		,modified_date
+		)
+		VALUES
+		<foreach collection="list" item="item" index="index"
+			separator=",">
+			( #{item.log_id}
+			,#{item.trade_no}
+			,#{item.out_trade_no}
+			,#{item.bill_date}
+			,#{item.app_type}
+			,#{item.desc1}
+			,#{item.trade_date}
+			,#{item.trade_account}
+			,#{item.order_amount}
+			,#{item.status}
+			,#{item.created_date}
+			,#{item.modified_date}
+			)
+		</foreach>
+	</insert>
+
+
+	<select id="selectWechatBillLogCount" parameterType="Map"
+		resultType="Integer">
+		SELECT
+		count(trade_no) as count_num
+		FROM
+		fd_wechat_bill_log
+		<where>
+			bill_date=#{bill_date} AND app_type=#{app_type}
+		</where>
+	</select>
+
+
+	<delete id="deleteWechatBillLog" parameterType="Map">
+		DELETE FROM
+		fd_wechat_bill_log WHERE bill_date=#{bill_date} AND
+		app_type=#{app_type}
+	</delete>
+
+
+
+	<insert id="insertOpsBillCheckLog" parameterType="Map">
+		INSERT INTO
+		fd_bill_check_log (
+		transaction_no
+		,bill_type
+		,bill_date
+		,data_source
+		,order_type_key
+		,business_type_key
+		,payment_way_key
+		,transaction_date
+		,detail
+		,amount
+		,out_trade_no
+		,buyer_id
+		,buyer_member_type
+		,buyer_name
+		,buyer_contact
+		,seller_id
+		,seller_member_type
+		,seller_name
+		,seller_contact
+		,transaction_status
+		)
+		SELECT
+		t.transaction_no
+		,'ZDLX_02' bill_type
+		,#{bill_date}
+		,t.data_source
+		,t.order_type_key
+		,t.business_type_key
+		,t.payment_way_key
+		,t.transaction_date
+		,t.detail
+		,t.amount
+		,t.out_trade_no
+		,t.buyer_id
+		,t.buyer_member_type
+		,t.buyer_name
+		,t.buyer_contact
+		,t.seller_id
+		,t.seller_member_type
+		,t.seller_name
+		,t.seller_contact
+		,t.transaction_status
+		FROM fd_transactions_result t
+		WHERE t.payment_way_key IN	('ZFFS_02','ZFFS_11','ZFFS_17','ZFFS_18')
+		AND t.transaction_status='completed'
+		AND t.transaction_date &gt;= #{bill_date} AND t.transaction_date &lt; date_add(#{bill_date},interval 1 day)
+		AND NOT EXISTS (SELECT 1 from fd_wechat_bill_log log WHERE	t.transaction_no = log.out_trade_no)
+	</insert>
+
+
+	<insert id="insertWechatBillCheckLog" parameterType="Map">
+		INSERT INTO
+		fd_bill_check_log (
+		transaction_no
+		,bill_type
+		,bill_date
+		,data_source
+		,order_type_key
+		,business_type_key
+		,payment_way_key
+		,transaction_date
+		,detail
+		,amount
+		,out_trade_no
+		,buyer_id
+		,seller_id
+		,transaction_status
+		)
+		SELECT
+		t.transaction_no
+		,'ZDLX_02' bill_type
+		,#{bill_date}
+		,t.data_source
+		,t.order_type_key
+		,t.business_type_key
+		,t.payment_way_key
+		,t.transaction_date
+		,t.detail
+		,t.amount
+		,t.out_trade_no
+		,t.buyer_id
+		,t.seller_id
+		,'error' transaction_status
+		FROM fd_wechat_bill_log log
+		INNER JOIN fd_transactions t on log.out_trade_no = t.transaction_no
+		where log.bill_date=#{bill_date} 
+		AND NOT EXISTS (SELECT 1 from fd_transactions_result r WHERE r.transaction_no = log.out_trade_no)
+	</insert>
+
+
+	<delete id="deleteWechatBillCheckLog" parameterType="Map">
+		DELETE FROM
+		fd_bill_check_log WHERE bill_date=#{bill_date} AND bill_type='ZDLX_02'
+	</delete>
+
+
+</mapper>

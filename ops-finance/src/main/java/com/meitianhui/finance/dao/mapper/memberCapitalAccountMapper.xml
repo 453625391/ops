@@ -1,0 +1,284 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.meitianhui.finance.dao.MemberCapitalAccountDao">
+
+	<insert id="insertFDMemberCapitalAccount" parameterType="FDMemberCapitalAccount">
+		INSERT
+		INTO fd_member_capital_account (
+		capital_account_id
+		,member_type_key
+		,member_id
+		,capital_account_type_key
+		,capital_account
+		,cardholder
+		,publishing_institutions
+		,binded_date
+		,remark
+		)
+		VALUES (
+		#{capital_account_id}
+		,#{member_type_key}
+		,#{member_id}
+		,#{capital_account_type_key}
+		,#{capital_account}
+		,#{cardholder}
+		,#{publishing_institutions}
+		,#{binded_date}
+		,#{remark}
+		)
+	</insert>
+
+	<insert id="insertFDMemberCapitalAccountLog" parameterType="Map">
+		INSERT
+		INTO fd_member_capital_account_log (
+		log_id
+		,capital_account_id
+		,category
+		,tracked_date
+		,event
+		)
+		VALUES (
+		#{log_id}
+		,#{capital_account_id}
+		,#{category}
+		,#{tracked_date}
+		,#{event}
+		)
+	</insert>
+
+	<insert id="insertFdMemberCapitalAccountApplication"
+		parameterType="FDMemberCapitalAccountApplication">
+		INSERT INTO
+		fd_member_capital_account_application
+		(
+		application_id
+		,member_type_key
+		,member_id
+		,json_data
+		,capital_account_type_key
+		,capital_account
+		,cardholder
+		,organization_code
+		,publishing_institutions
+		,pic_info
+		,status
+		,created_date
+		,modified_date
+		,remark
+		)
+		VALUES (
+		#{application_id}
+		,#{member_type_key}
+		,#{member_id}
+		,#{json_data}
+		,#{capital_account_type_key}
+		,#{capital_account}
+		,#{cardholder}
+		,#{organization_code}
+		,#{publishing_institutions}
+		,#{pic_info}
+		,#{status}
+		,#{created_date}
+		,#{modified_date}
+		,#{remark}
+		)
+	</insert>
+
+
+	<select id="selectFDMemberCapitalAccount" parameterType="Map"
+		resultType="FDMemberCapitalAccount">
+		<![CDATA[
+			SELECT
+				member_type_key
+				,member_id
+				,capital_account_type_key
+				,capital_account
+				,cardholder
+				,publishing_institutions
+				,binded_date
+				,remark
+			FROM
+				fd_member_capital_account
+		]]>
+		<where>
+			1=1
+			<if test="member_id != null and member_id != ''">
+				AND member_id=#{member_id}
+			</if>
+			<if test="member_type_key != null and member_type_key != ''">
+				AND member_type_key=#{member_type_key}
+			</if>
+		</where>
+	</select>
+
+
+
+
+	<select id="selectFDMemberCapitalAccountApplicationApply"
+		parameterType="Map" resultType="Map">
+		<![CDATA[
+			SELECT
+				application_id
+				,member_type_key
+				,member_id
+				,json_data
+				,capital_account_type_key
+				,capital_account
+				,cardholder
+				,publishing_institutions
+				,pic_info
+				,status
+				,created_date
+				,remark
+			FROM
+				fd_member_capital_account_application
+		]]>
+		<where>
+			status = 'unprocess'
+			<if test="member_id != null and member_id != ''">
+				AND member_id=#{member_id}
+			</if>
+			<if test="member_type_key != null and member_type_key != ''">
+				AND member_type_key=#{member_type_key}
+			</if>
+			<if test="application_id != null and application_id != ''">
+				AND application_id=#{application_id}
+			</if>
+			<if test="member_like != null and member_like != ''">
+				AND json_data like CONCAT('%',#{member_like},'%')
+			</if>
+			<if test="status != null and status != ''">
+				AND status = #{status}
+			</if>
+		</where>
+		ORDER BY created_date
+	</select>
+
+	<select id="selectFDMemberCapitalAccountApplication"
+		parameterType="Map" resultType="Map">
+		<![CDATA[
+			SELECT
+				application_id
+				,member_type_key
+				,member_id
+				,json_data
+				,capital_account_type_key
+				,capital_account
+				,cardholder
+				,publishing_institutions
+				,pic_info
+				,status
+				,created_date
+				,remark
+			FROM
+				fd_member_capital_account_application
+		]]>
+		<where>
+			status != 'unprocess'
+			<if test="member_id != null and member_id != ''">
+				AND member_id=#{member_id}
+			</if>
+			<if test="member_type_key != null and member_type_key != ''">
+				AND member_type_key=#{member_type_key}
+			</if>
+			<if test="application_id != null and application_id != ''">
+				AND application_id=#{application_id}
+			</if>
+			<if test="member_like != null and member_like != ''">
+				AND json_data like CONCAT('%',#{member_like},'%')
+			</if>
+			<if test="status != null and status != ''">
+				AND status = #{status}
+			</if>
+		</where>
+		ORDER BY modified_date DESC
+	</select>
+
+	<select id="selectFDBank" parameterType="Map" resultType="Map">
+		<![CDATA[
+			SELECT
+				bank_code
+				,bank_name
+			FROM
+				fd_bank
+		]]>
+		<where>
+			1=1
+			<if test="bank_code != null and bank_code != ''">
+				AND bank_code=#{bank_code}
+			</if>
+		</where>
+		ORDER BY bank_code
+	</select>
+
+
+
+	<update id="updateFDMemberCapitalAccount" parameterType="Map">
+		update fd_member_capital_account set
+		<trim suffixOverrides=",">
+			<if
+				test="capital_account_type_key != null and capital_account_type_key != ''">
+				capital_account_type_key = #{capital_account_type_key},
+			</if>
+			<if test="capital_account != null">
+				capital_account = #{capital_account},
+			</if>
+			<if test="cardholder != null and cardholder != ''">
+				cardholder = #{cardholder},
+			</if>
+			<if
+				test="publishing_institutions != null and publishing_institutions != ''">
+				publishing_institutions = #{publishing_institutions},
+			</if>
+			<if test="remark != null and remark != ''">
+				remark = #{remark},
+			</if>
+		</trim>
+		<where>
+			1=1
+			<if test="member_id != null and member_id != ''">
+				AND member_id = #{member_id}
+			</if>
+			<if test="member_type_key != null and member_type_key != ''">
+				AND member_type_key = #{member_type_key}
+			</if>
+		</where>
+	</update>
+
+	<update id="updateFDMemberCapitalAccountApplication"
+		parameterType="Map">
+		update fd_member_capital_account_application set
+		<trim suffixOverrides=",">
+			modified_date = SYSDATE(),
+			<if test="status != null and status != ''">
+				status = #{status},
+			</if>
+			<if test="operator != null and operator != ''">
+				operator = #{operator},
+			</if>
+			<if test="remark != null and remark != ''">
+				remark = #{remark},
+			</if>
+		</trim>
+		<where>
+			1=1
+			<if test="member_id != null and member_id != ''">
+				AND member_id = #{member_id}
+			</if>
+			<if test="member_type_key != null and member_type_key != ''">
+				AND member_type_key = #{member_type_key}
+			</if>
+			<if test="application_id != null and application_id != ''">
+				AND application_id = #{application_id}
+			</if>
+		</where>
+	</update>
+
+	<delete id="deleteFdMemberCapitalAccount" parameterType="Map">
+		DELETE
+		FROM fd_member_capital_account WHERE member_id = #{member_id} AND
+		member_type_key = #{member_type_key}
+	</delete>
+
+
+</mapper>

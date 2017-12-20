@@ -1,0 +1,1187 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.meitianhui.order.dao.PsOrderDao">
+
+	<insert id="insertPsOrder" parameterType="PsOrder">
+		INSERT INTO
+		ps_order (
+		order_id
+		,order_no
+		,order_type
+		,order_date
+		,loaded_code
+		,desc1
+		,desc2
+		,item_num
+		,supplier_id
+		,supplier
+		,warehouse
+		,warehouse_id
+		,payment_way_key
+		,total_fee
+		,discount_fee
+		,sale_fee
+		,delivery_fee
+		,member_type_key
+		,member_id
+		,member_info
+		,delivery_address
+		,contact_person
+		,contact_tel
+		,logistics
+		,status
+		,settle_status
+		,created_date
+		,modified_date
+		,remark
+		)
+		VALUES (
+		#{order_id}
+		,#{order_no}
+		,#{order_type}
+		,#{order_date}
+		,#{loaded_code}
+		,#{desc1}
+		,#{desc2}
+		,#{item_num}
+		,#{supplier_id}
+		,#{supplier}
+		,#{warehouse}
+		,#{warehouse_id}
+		,#{payment_way_key}
+		,#{total_fee}
+		,#{discount_fee}
+		,#{sale_fee}
+		,#{delivery_fee}
+		,#{member_type_key}
+		,#{member_id}
+		,#{member_info}
+		,#{delivery_address}
+		,#{contact_person}
+		,#{contact_tel}
+		,#{logistics}
+		,#{status}
+		,#{settle_status}
+		,#{created_date}
+		,#{modified_date}
+		,#{remark}
+		)
+	</insert>
+
+	<insert id="insertPsOrderItem" parameterType="PsOrderItem">
+		INSERT INTO
+		ps_order_item (
+		order_item_id
+		,order_id
+		,goods_id
+		,goods_code
+		,goods_stock_id
+		,sku
+		,goods_title
+		,goods_desc1
+		,goods_pic_info
+		,goods_pic_detail_info
+		,specification
+		,supplier_id
+		,supplier
+		,manufacturer
+		,contact_person
+		,contact_tel
+		,qty
+		,goods_unit
+		,sale_price
+		,discount_fee
+		,total_fee
+		,settled_price
+		,service_fee
+		,created_date
+		,modified_date
+		,remark
+		)
+		VALUES
+		(
+		#{order_item_id}
+		,#{order_id}
+		,#{goods_id}
+		,#{goods_code}
+		,#{goods_stock_id}
+		,#{sku}
+		,#{goods_title}
+		,#{goods_desc1}
+		,#{goods_pic_info}
+		,#{goods_pic_detail_info}
+		,#{specification}
+		,#{supplier_id}
+		,#{supplier}
+		,#{manufacturer}
+		,#{contact_person}
+		,#{contact_tel}
+		,#{qty}
+		,#{goods_unit}
+		,#{sale_price}
+		,#{discount_fee}
+		,#{total_fee}
+		,#{settled_price}
+		,#{service_fee}
+		,#{created_date}
+		,#{modified_date}
+		,#{remark}
+		)
+	</insert>
+
+	<insert id="insertPsOrderExtra" parameterType="PsOrderExtra">
+		INSERT INTO
+		ps_order_extra (
+		order_id
+		,activity_no
+		,invitation_code
+		,retail_price
+		,qty_limit
+		,sub_order_qty
+		,closing_time
+		,created_date
+		,modified_date
+		,remark
+		)
+		VALUES (
+		#{order_id}
+		,#{activity_no}
+		,#{invitation_code}
+		,#{retail_price}
+		,#{qty_limit}
+		,#{sub_order_qty}
+		,#{closing_time}
+		,#{created_date}
+		,#{modified_date}
+		,#{remark}
+		)
+	</insert>
+
+	<insert id="insertPsSubOrder" parameterType="PsSubOrder">
+		INSERT INTO
+		ps_sub_order (
+		order_id
+		,order_no
+		,parent_order_id
+		,invitation_code
+		,order_date
+		,loaded_code
+		,desc1
+		,desc2
+		,member_type_key
+		,member_id
+		,member_info
+		,goods_id
+		,goods_code
+		,stores_id
+		,stores_name
+		,payment_way_key
+		,qty
+		,retail_price
+		,total_fee
+		,contact_person
+		,contact_tel
+		,status
+		,created_date
+		,modified_date
+		,remark
+		)
+		VALUES (
+		#{order_id}
+		,#{order_no}
+		,#{parent_order_id}
+		,#{invitation_code}
+		,#{order_date}
+		,#{loaded_code}
+		,#{desc1}
+		,#{desc2}
+		,#{member_type_key}
+		,#{member_id}
+		,#{member_info}
+		,#{goods_id}
+		,#{goods_code}
+		,#{stores_id}
+		,#{stores_name}
+		,#{payment_way_key}
+		,#{qty}
+		,#{retail_price}
+		,#{total_fee}
+		,#{contact_person}
+		,#{contact_tel}
+		,#{status}
+		,#{created_date}
+		,#{modified_date}
+		,#{remark}
+		)
+	</insert>
+
+
+	<select id="selectPsOrder" parameterType="Map" resultType="PsOrder">
+		<![CDATA[
+			SELECT
+			order_id
+			,order_no
+			,order_date
+			,order_type
+			,desc1
+			,desc2
+			,item_num
+			,payment_way_key
+			,total_fee
+			,discount_fee
+			,sale_fee
+			,member_type_key
+			,member_id
+			,delivery_address
+			,contact_person
+			,contact_tel
+			,logistics
+			,status
+			,settle_status
+			,created_date
+			,modified_date
+			,remark
+			,biz_remark
+			FROM
+				ps_order
+		]]>
+		<where>
+			1=1
+			<if test="order_id != null and order_id != ''">
+				AND order_id = #{order_id}
+			</if>
+			<if test="order_no != null and order_no != ''">
+				AND order_no = #{order_no}
+			</if>
+			<if test="status != null and status != ''">
+				AND status = #{status}
+			</if>
+			<if test="member_id != null and member_id != ''">
+				AND member_id = #{member_id}
+			</if>
+			<if test="member_info != null and member_info != ''">
+				AND member_info like CONCAT('%',#{member_info},'%')
+			</if>
+			<if test="order_date != null and order_date != ''">
+				AND DATE_FORMAT(order_date, '%Y-%m-%d') =
+				DATE_FORMAT(#{order_date}, '%Y-%m-%d')
+			</if>
+			<if test="order_date_start != null and order_date_start != ''">
+				AND order_date &gt;= #{order_date_start}
+			</if>
+			<if test="order_date_end != null and order_date_end != ''">
+				AND order_date &lt;= date_add(#{order_date_end},interval
+				1 day)
+			</if>
+		</where>
+		ORDER BY order_date DESC
+	</select>
+
+	<select id="selectWypOrderForOp" parameterType="Map" resultType="PsOrder">
+		<![CDATA[
+			SELECT
+			order_id
+			,order_no
+			,order_date
+			,order_type
+			,desc1
+			,desc2
+			,item_num
+			,payment_way_key
+			,total_fee
+			,discount_fee
+			,sale_fee
+			,delivery_fee
+			,supplier
+			,warehouse
+			,member_type_key
+			,member_id
+			,delivery_address
+			,contact_person
+			,contact_tel
+			,logistics
+			,status
+			,settle_status
+			,remark
+			,biz_remark
+			FROM
+				ps_order
+		]]>
+		<where>
+			1=1
+			<if test="order_id != null and order_id != ''">
+				AND order_id = #{order_id}
+			</if>
+			<if test="order_like != null and order_like != ''">
+				AND (order_no like CONCAT('%',#{order_like},'%') or
+				desc1
+				like CONCAT('%',#{order_like},'%') or
+				contact_person like
+				CONCAT('%',#{order_like},'%') or
+				contact_tel like
+				CONCAT('%',#{order_like},'%') or
+				supplier like
+				CONCAT('%',#{order_like},'%'))
+			</if>
+			<if test="supplier_id != null and supplier_id != ''">
+				AND supplier_id = #{supplier_id}
+			</if>
+			<if test="status != null and status != ''">
+				AND status = #{status}
+			</if>
+			<if test="settle_status != null and settle_status != ''">
+				AND settle_status = #{settle_status}
+			</if>
+			<if test="status_in != null">
+				AND status in
+				<foreach item="item" index="index" collection="status_in"
+					open="(" separator="," close=")">
+					#{item}
+				</foreach>
+			</if>
+			<if test="order_date_start != null and order_date_start != ''">
+				AND order_date &gt;= #{order_date_start}
+			</if>
+			<if test="order_date_end != null and order_date_end != ''">
+				AND order_date &lt;= date_add(#{order_date_end},interval
+				1 day)
+			</if>
+		</where>
+		ORDER BY order_date DESC
+	</select>
+
+	<select id="selectWypOrderForStores" parameterType="Map"
+		resultType="Map">
+		<![CDATA[
+			SELECT
+				o.order_id
+				,o.order_no
+				,o.order_date
+				,o.order_type
+				,o.desc1
+				,o.item_num
+				,o.payment_way_key
+				,o.supplier
+				,o.warehouse
+				,o.total_fee
+				,o.discount_fee
+				,o.sale_fee
+				,o.delivery_fee
+				,o.contact_person
+				,o.contact_tel
+				,o.delivery_address
+				,o.logistics
+				,o.status
+				,o.remark
+				,o.biz_remark
+				,(SELECT GROUP_CONCAT( CONCAT(oi.goods_pic_info) SEPARATOR '|') from ps_order_item oi where o.order_id = oi.order_id limit 4) as item_info
+			FROM
+				ps_order o
+		]]>
+		<where>
+			1=1
+			<if test="member_id != null and member_id != ''">
+				AND o.member_id = #{member_id}
+			</if>
+		</where>
+		ORDER BY o.order_date DESC
+	</select>
+
+	<select id="selectWypOrderItem" parameterType="Map" resultType="PsOrderItem">
+		<![CDATA[
+			SELECT
+				goods_id
+				,goods_code
+				,goods_stock_id
+				,sku
+				,goods_title
+				,contact_person
+				,contact_tel
+				,goods_pic_info
+				,specification
+				,qty
+				,sale_price
+				,total_fee
+				,discount_fee
+				,settled_price
+				,service_fee
+			FROM
+				ps_order_item
+		]]>
+		<where>
+			1=1
+			<if test="order_id != null and order_id != ''">
+				AND order_id = #{order_id}
+			</if>
+			<if test="goods_id != null and goods_id != ''">
+				AND goods_id = #{goods_id}
+			</if>
+			<if test="goods_id_in != null">
+				AND goods_id in
+				<foreach item="item" index="index" collection="goods_id_in"
+					open="(" separator="," close=")">
+					#{item}
+				</foreach>
+			</if>
+			<if test="supplier_id != null and supplier_id != ''">
+				AND supplier_id = #{supplier_id}
+			</if>
+		</where>
+		ORDER BY created_date
+	</select>
+
+	<select id="selectPsOrderItem" parameterType="Map" resultType="Map">
+		<![CDATA[
+			SELECT
+				o.order_id
+				,o.order_no
+				,o.order_date
+				,o.order_type
+				,o.desc1
+				,o.desc2
+				,o.item_num
+				,o.payment_way_key
+				,o.total_fee
+				,o.discount_fee
+				,o.sale_fee
+				,o.member_type_key
+				,o.member_id
+				,o.delivery_address
+				,o.contact_person
+				,o.contact_tel
+				,o.logistics
+				,o.modified_date
+				,o.remark
+				,o.biz_remark
+				,o.status
+				,o.settle_status
+				,oi.goods_id as item_goods_id
+				,oi.goods_code as item_goods_code
+				,oi.goods_title as item_goods_title
+				,oi.contact_person as item_contact_person
+				,oi.contact_tel as item_contact_tel
+				,oi.goods_pic_info as item_goods_pic_info
+				,oi.supplier as item_supplier
+				,oi.supplier_id as item_supplier_id
+				,oi.manufacturer as item_manufacturer
+				,oi.qty as item_qty
+				,oi.goods_unit as item_goods_unit
+				,oi.sale_price as item_sale_price
+				,oi.total_fee as item_total_fee
+				,oi.discount_fee as item_discount_fee
+				,oi.settled_price as item_settled_price
+				,oi.service_fee as item_service_fee
+				,oi.goods_pic_info as goods_pic_info
+				,e.closing_time as closing_time 
+				,e.retail_price as retail_price 
+				,e.qty_limit as qty_limit
+				,e.sub_order_qty as sub_order_qty
+			FROM
+				ps_order o inner join ps_order_item oi on oi.order_id = o.order_id
+				left join ps_order_extra e on o.order_id = e.order_id
+		]]>
+		<where>
+			1=1
+			<if test="order_type != null and order_type != ''">
+				AND o.order_type = #{order_type}
+			</if>
+			<if test="order_id != null and order_id != ''">
+				AND o.order_id = #{order_id}
+			</if>
+			<if test="goods_id != null and goods_id != ''">
+				AND oi.goods_id = #{goods_id}
+			</if>
+			<if test="goods_id_in != null">
+				AND oi.goods_id in
+				<foreach item="item" index="index" collection="goods_id_in"
+					open="(" separator="," close=")">
+					#{item}
+				</foreach>
+			</if>
+			<if test="supplier_id != null and supplier_id != ''">
+				AND oi.supplier_id = #{supplier_id}
+			</if>
+			<if test="order_like != null and order_like != ''">
+				AND (o.order_no like CONCAT('%',#{order_like},'%') or
+				o.contact_tel like CONCAT('%',#{order_like},'%') or
+				o.logistics like
+				CONCAT('%',#{order_like},'%') or
+				oi.goods_code like
+				CONCAT('%',#{order_like},'%') or
+				oi.supplier like
+				CONCAT('%',#{order_like},'%') or
+				oi.manufacturer like
+				CONCAT('%',#{order_like},'%') or
+				oi.goods_title like
+				CONCAT('%',#{order_like},'%'))
+			</if>
+			<if test="member_id != null and member_id != ''">
+				AND o.member_id = #{member_id}
+			</if>
+			<if test="order_date != null and order_date != ''">
+				AND DATE_FORMAT(o.order_date, '%Y-%m-%d') =
+				DATE_FORMAT(#{order_date}, '%Y-%m-%d')
+			</if>
+			<if test="order_date_start != null and order_date_start != ''">
+				AND o.order_date &gt;= #{order_date_start}
+			</if>
+			<if test="order_date_end != null and order_date_end != ''">
+				AND o.order_date &lt;=
+				date_add(#{order_date_end},interval 1 day)
+			</if>
+			<if test="status != null and status != ''">
+				AND o.status = #{status}
+			</if>
+			<if test="status_noteq != null and status_noteq != ''">
+				AND o.status &lt;&gt; #{status_noteq}
+			</if>
+			<if test="status_in != null">
+				AND o.status in
+				<foreach item="item" index="index" collection="status_in"
+					open="(" separator="," close=")">
+					#{item}
+				</foreach>
+			</if>
+			<if test="settle_status != null and settle_status != ''">
+				AND o.settle_status = #{settle_status}
+			</if>
+		</where>
+		ORDER BY o.order_date DESC
+	</select>
+
+
+	<select id="selectWypOrderItemForSettlement" parameterType="Map"
+		resultType="Map">
+		<![CDATA[
+			SELECT
+				o.order_id
+				,o.order_no
+				,oi.goods_id
+				,oi.goods_code
+				,oi.goods_stock_id
+				,oi.supplier
+				,oi.supplier_id
+				,oi.qty
+				,oi.sale_price
+				,oi.total_fee
+				,oi.discount_fee
+				,oi.settled_price
+				,oi.service_fee
+			FROM
+				ps_order_item oi INNER JOIN ps_order o ON oi.order_id = o.order_id
+		]]>
+		<where>
+			1=1
+			<if test="order_date != null and order_date != ''">
+				AND DATE_FORMAT(o.order_date, '%Y-%m-%d') =
+				DATE_FORMAT(#{order_date}, '%Y-%m-%d')
+			</if>
+			<if test="status != null and status != ''">
+				AND o.status = #{status}
+			</if>
+			<if test="settle_status != null and settle_status != ''">
+				AND o.settle_status = #{settle_status}
+			</if>
+		</where>
+		ORDER BY o.created_date
+	</select>
+
+	<select id="selectPsGroupGoods" parameterType="Map" resultType="Map">
+		<![CDATA[
+			SELECT
+				o.order_id
+				,o.member_type_key
+				,o.member_id
+				,o.member_info
+				,o.contact_person as stores_contact_person
+				,o.contact_tel as stores_contact_tel
+				,o.delivery_address as stores_delivery_address
+				,oi.goods_id
+				,oi.goods_code
+				,oi.goods_title
+				,oi.goods_desc1
+				,oi.goods_pic_info
+				,oi.goods_pic_detail_info
+				,oi.specification
+				,oi.supplier
+				,oi.supplier_id
+				,oi.manufacturer
+				,oi.goods_unit
+				,e.invitation_code
+				,e.retail_price
+				,e.qty_limit
+				,e.sub_order_qty
+				,e.closing_time
+				,e.modified_date
+			FROM
+				ps_order o inner join ps_order_item oi on oi.order_id = o.order_id
+				inner join ps_order_extra e on o.order_id = e.order_id
+		]]>
+		<where>
+			order_type = 'activity'
+			<if test="member_id != null and member_id != ''">
+				AND o.member_id = #{member_id}
+			</if>
+			<if test="member_id_in != null">
+				AND o.member_id in
+				<foreach item="item" index="index" collection="member_id_in"
+					open="(" separator="," close=")">
+					#{item}
+				</foreach>
+			</if>
+			<if test="member_type_key != null and member_type_key != ''">
+				AND o.member_type_key = #{member_type_key}
+			</if>
+			<if test="order_id != null and order_id != ''">
+				AND o.order_id = #{order_id}
+			</if>
+			<if test="status != null and status != ''">
+				AND o.status = #{status}
+			</if>
+			<if test="invitation_code != null and invitation_code != ''">
+				AND e.invitation_code = #{invitation_code}
+			</if>
+		</where>
+		ORDER BY o.member_id,o.order_date DESC
+	</select>
+
+
+	<select id="selectPsGroupOrderItemForStores" parameterType="Map"
+		resultType="Map">
+		<![CDATA[
+			SELECT
+				o.order_id
+				,o.order_no
+				,o.order_date
+				,o.desc1
+				,o.total_fee
+				,o.discount_fee
+				,o.sale_fee
+				,o.contact_person
+				,o.contact_tel
+				,o.logistics
+				,o.remark
+				,o.status
+				,oi.goods_id as item_goods_id
+				,oi.goods_title as item_goods_title
+				,oi.discount_fee as item_discount_fee
+				,oi.goods_pic_info as item_goods_pic_info
+				,oi.qty as item_qty
+				,e.closing_time as closing_time 
+				,e.retail_price as retail_price 
+				,e.qty_limit as qty_limit
+				,e.sub_order_qty as sub_order_qty
+			FROM
+				ps_order o inner join ps_order_item oi on oi.order_id = o.order_id
+				left join ps_order_extra e on o.order_id = e.order_id
+		]]>
+		<where>
+			1=1
+			<if test="order_type != null and order_type != ''">
+				AND o.order_type = #{order_type}
+			</if>
+			<if test="loaded_code != null and loaded_code != ''">
+				AND o.loaded_code = #{loaded_code}
+			</if>
+			<if test="member_id != null and member_id != ''">
+				AND o.member_id = #{member_id}
+			</if>
+			<if test="member_type_key != null and member_type_key != ''">
+				AND o.member_type_key = #{member_type_key}
+			</if>
+		</where>
+		ORDER BY o.order_date DESC
+	</select>
+
+
+	<select id="selectPsGroupSubOrder" parameterType="Map"
+		resultType="Map">
+		<![CDATA[
+			SELECT
+				o.delivery_address as stores_delivery_address
+				,o.member_id as stores_member_id
+				,o.contact_person as stores_contact_person
+				,o.contact_tel as stores_contact_tel
+				,so.order_id
+				,so.order_no
+				,so.parent_order_id
+				,so.order_date
+				,so.desc1
+				,so.desc2
+				,so.member_type_key
+				,so.member_id
+				,so.member_info
+				,so.goods_id
+				,so.goods_code
+				,oi.goods_title
+				,oi.goods_pic_info
+				,oi.discount_fee as goods_discount_fee
+				,so.stores_id
+				,so.stores_name
+				,so.payment_way_key
+				,so.qty
+				,so.retail_price
+				,so.total_fee
+				,so.contact_person
+				,so.contact_tel
+				,so.status
+				,so.modified_date
+				,so.remark
+			FROM
+				ps_sub_order so inner join ps_order_item oi on so.parent_order_id = oi.order_id
+				inner join ps_order o on so.parent_order_id = o.order_id
+		]]>
+		<where>
+			1=1
+			<if test="parent_order_id != null and parent_order_id != ''">
+				AND so.parent_order_id = #{parent_order_id}
+			</if>
+			<if test="status != null and status != ''">
+				AND so.status = #{status}
+			</if>
+			<if test="order_id != null and order_id != ''">
+				AND so.order_id = #{order_id}
+			</if>
+			<if test="order_no != null and order_no != ''">
+				AND so.order_no = #{order_no}
+			</if>
+			<if test="member_id != null and member_id != ''">
+				AND so.member_id = #{member_id}
+			</if>
+			<if test="order_date_start != null and order_date_start != ''">
+				AND so.order_date &gt;= #{order_date_start}
+			</if>
+			<if test="order_date_end != null and order_date_end != ''">
+				AND so.order_date &lt;=
+				date_add(#{order_date_end},interval 1 day)
+			</if>
+		</where>
+		ORDER BY so.order_date DESC
+	</select>
+
+
+	<select id="selectPsSubOrderForOp" parameterType="Map"
+		resultType="Map">
+		<![CDATA[
+			SELECT
+				o.order_no as parent_order_no
+				,o.order_date as parent_order_date
+				,o.delivery_address as parent_delivery_address
+				,so.stores_name as parent_stores_name
+				,o.contact_person as parent_contact_person
+				,o.contact_tel as parent_contact_tel
+				,o.desc1 as parent_desc1
+				,o.status as parent_status
+				,so.goods_code as parent_goods_code
+				,oi.goods_title as parent_goods_title
+				,oe.qty_limit as parent_qty_limit
+				,oi.discount_fee as goods_discount_fee
+				,so.order_no
+				,so.order_date
+				,so.desc1
+				,so.desc2
+				,so.payment_way_key
+				,so.qty
+				,so.retail_price
+				,so.total_fee
+				,so.contact_person
+				,so.contact_tel
+				,so.status
+				,so.remark
+			FROM
+				ps_sub_order so inner join ps_order_item oi on so.parent_order_id = oi.order_id
+				inner join ps_order o on so.parent_order_id = o.order_id
+				inner join ps_order_extra oe on oe.order_id = o.order_id
+		]]>
+		<where>
+			1=1
+			<if test="parent_order_id != null and parent_order_id != ''">
+				AND so.parent_order_id = #{parent_order_id}
+			</if>
+			<if test="order_id != null and order_id != ''">
+				AND so.order_id = #{order_id}
+			</if>
+			<if test="order_like != null and order_like != ''">
+				AND (o.order_no like CONCAT('%',#{order_like},'%') or
+				so.stores_name like
+				CONCAT('%',#{order_like},'%') or
+				oi.goods_code
+				like
+				CONCAT('%',#{order_like},'%') or
+				oi.goods_title like
+				CONCAT('%',#{order_like},'%'))
+			</if>
+			<if test="order_date_start != null and order_date_start != ''">
+				AND so.order_date &gt;= #{order_date_start}
+			</if>
+			<if test="order_date_end != null and order_date_end != ''">
+				AND so.order_date &lt;=
+				date_add(#{order_date_end},interval 1 day)
+			</if>
+		</where>
+		ORDER BY so.order_date DESC
+	</select>
+
+
+	<select id="selectPsOrderCount" parameterType="Map" resultType="Map">
+		<![CDATA[
+			SELECT
+				count(order_id) as count_num
+			FROM
+				ps_order
+		]]>
+		<where>
+			<if test="member_type_key != null and member_type_key != ''">
+				AND member_type_key = #{member_type_key}
+			</if>
+			<if test="member_id != null and member_id != ''">
+				AND member_id = #{member_id}
+			</if>
+			<if test="order_type != null and order_type != ''">
+				AND order_type = #{order_type}
+			</if>
+			<if test="status != null and status != ''">
+				AND status = #{status}
+			</if>
+		</where>
+	</select>
+
+	<select id="selectPsOrderGoodsCount" parameterType="Map"
+		resultType="Map">
+		<![CDATA[
+			SELECT
+				sum(o.total_fee) as total_fee
+			FROM
+				ps_order o inner join ps_order_item oi on oi.order_id = o.order_id
+		]]>
+		<where>
+			<if test="member_type_key != null and member_type_key != ''">
+				AND o.member_type_key = #{member_type_key}
+			</if>
+			<if test="member_id != null and member_id != ''">
+				AND o.member_id = #{member_id}
+			</if>
+			<if test="goods_id != null and goods_id != ''">
+				AND o.goods_id = #{goods_id}
+			</if>
+			<if test="status != null and status != ''">
+				AND o.status = #{status}
+			</if>
+		</where>
+	</select>
+
+	<select id="selectPsOrderSettlementCount" parameterType="Map"
+		resultType="Map">
+		<![CDATA[
+			SELECT
+				sum(total_fee) as total_fee
+				,count(order_id) as count_num
+			FROM
+				ps_order
+		]]>
+		<where>
+			<if test="order_like != null and order_like != ''">
+				AND (order_no like CONCAT('%',#{order_like},'%') or
+				desc1
+				like CONCAT('%',#{order_like},'%') or
+				contact_person like
+				CONCAT('%',#{order_like},'%') or
+				contact_tel like
+				CONCAT('%',#{order_like},'%') or
+				supplier like
+				CONCAT('%',#{order_like},'%'))
+			</if>
+			<if test="supplier_id != null and supplier_id != ''">
+				AND supplier_id = #{supplier_id}
+			</if>
+			<if test="status != null and status != ''">
+				AND status = #{status}
+			</if>
+			<if test="settle_status != null and settle_status != ''">
+				AND settle_status = #{settle_status}
+			</if>
+			<if test="status_in != null">
+				AND status in
+				<foreach item="item" index="index" collection="status_in"
+					open="(" separator="," close=")">
+					#{item}
+				</foreach>
+			</if>
+			<if test="order_date != null and order_date != ''">
+				AND DATE_FORMAT(order_date, '%Y-%m-%d') =
+				DATE_FORMAT(#{order_date}, '%Y-%m-%d')
+			</if>
+		</where>
+	</select>
+
+	<!-- 运营我要批订单列表查询 -->
+	<select id="selectPsOrderForOp" parameterType="hashmap"
+		resultType="hashmap">
+		SELECT a.row_no
+		,a.group_no
+		,CASE when a.group_no = 1 THEN a.order_id
+		ELSE NULL END order_id
+		,CASE WHEN a.group_no = 1 THEN a.order_no ELSE
+		NULL END order_no
+		,CASE WHEN a.group_no = 1 THEN a.order_date ELSE NULL
+		END order_date
+		,CASE WHEN a.group_no = 1 THEN a.item_num ELSE NULL END
+		item_num
+		,CASE WHEN a.group_no = 1 THEN a.total_fee ELSE NULL END
+		total_fee
+		,CASE WHEN a.group_no = 1 THEN a.delivery_address ELSE NULL
+		END
+		delivery_address
+		,CASE WHEN a.group_no = 1 THEN a.contact_person
+		ELSE NULL END
+		contact_person
+		,CASE WHEN a.group_no = 1 THEN
+		a.contact_tel ELSE NULL END contact_tel
+		,CASE WHEN a.group_no = 1 THEN
+		a.logistics ELSE NULL END logistics
+		,CASE WHEN a.group_no = 1 THEN
+		a.supplier ELSE NULL END supplier
+		,CASE WHEN a.group_no = 1 THEN
+		a.warehouse ELSE NULL END warehouse
+		,CASE WHEN a.group_no = 1 THEN
+		a.status ELSE NULL END status
+		,CASE WHEN a.group_no = 1 THEN
+		a.settle_status ELSE NULL END settle_status
+		,CASE WHEN a.group_no = 1
+		THEN a.remark ELSE NULL END remark
+		,CASE WHEN a.group_no = 1 THEN
+		a.biz_remark ELSE NULL END biz_remark
+		,a.goods_code
+		,a.goods_title
+		,a.sku goods_sku
+		,a.qty goods_qty
+		,a.sale_price goods_sale_price
+		,a.manufacturer goods_manufacturer
+		FROM (
+		SELECT @row_no := @row_no + 1
+		AS row_no,
+		@group_no := CASE WHEN @order_id = a.order_id THEN @group_no
+		+ 1 ELSE 1 END AS
+		group_no,
+		@order_id := a.order_id as order_id,
+		a.order_no,a.order_date,a.item_num,a.total_fee,a.delivery_address,a.contact_person,a.contact_tel,a.logistics,a.supplier,a.warehouse,
+		a.status,a.settle_status,a.remark,a.biz_remark,a.goods_code,a.goods_title,a.sku,a.qty,a.sale_price,a.manufacturer
+		FROM (
+		SELECT
+		a.order_id,a.order_no,a.order_date,a.item_num,a.total_fee,a.delivery_address,a.contact_person,a.contact_tel,
+		a.logistics,a.supplier,a.warehouse,a.status,a.settle_status,a.remark,a.biz_remark,b.goods_code,b.goods_title,b.sku,b.qty,b.sale_price,b.manufacturer
+		FROM oddb.ps_order a
+		INNER JOIN oddb.ps_order_item b ON a.order_id =
+		b.order_id
+		<where>
+			<if test="order_no != null and order_no != ''">
+				AND a.order_no = #{order_no}
+			</if>
+			<if test="contact_person != null and contact_person != ''">
+				AND a.contact_person = #{contact_person}
+			</if>
+			<if test="contact_tel != null and contact_tel != ''">
+				AND a.contact_tel = #{contact_tel}
+			</if>
+			<if test="logistics_like != null and logistics_like != ''">
+				AND a.logistics LIKE CONCAT('%',#{logistics_like},'%')
+			</if>
+			<if test="supplier_like != null and supplier_like != ''">
+				AND a.supplier LIKE CONCAT('%',#{supplier_like},'%')
+			</if>
+			<if test="supplier_id != null and supplier_id != ''">
+				AND a.supplier_id = #{supplier_id}
+			</if>
+			<if test="warehouse_id != null and warehouse_id != ''">
+				AND a.warehouse_id = #{warehouse_id}
+			</if>
+			<if test="status != null and status != ''">
+				AND a.status = #{status}
+			</if>
+			<if test="settle_status != null and settle_status != ''">
+				AND a.settle_status = #{settle_status}
+			</if>
+			<if test="status_in != null">
+				AND a.status in
+				<foreach item="item" index="index" collection="status_in"
+					open="(" separator="," close=")">
+					#{item}
+				</foreach>
+			</if>
+			<if test="order_date_start != null and order_date_start != ''">
+				AND a.order_date &gt;= #{order_date_start}
+			</if>
+			<if test="order_date_end != null and order_date_end != ''">
+				AND a.order_date &lt;=
+				date_add(#{order_date_end},interval 1 day)
+			</if>
+			<if test="goods_code != null and goods_code != ''">
+				AND b.goods_code = #{goods_code}
+			</if>
+			<if test="goods_title != null and goods_title != ''">
+				AND b.goods_title = #{goods_title}
+			</if>
+			<if test="goods_title_like != null and goods_title_like != ''">
+				AND b.goods_title LIKE
+				CONCAT('%',#{goods_title_like},'%')
+			</if>
+			<if test="manufacturer_like != null and manufacturer_like != ''">
+				AND b.manufacturer LIKE
+				CONCAT('%',#{manufacturer_like},'%')
+			</if>
+		</where>
+		ORDER BY a.created_date DESC, a.order_id
+		) a,(SELECT @group_no:=1,
+		@order_id:='') b,(SELECT @row_no := 0) c
+		) a
+		ORDER BY a.row_no ASC
+	</select>
+
+
+	<update id="updatePsOrder" parameterType="Map">
+		UPDATE ps_order SET
+		<trim suffixOverrides=",">
+			modified_date = SYSDATE(),
+			<if test="logistics != null and logistics != ''">
+				logistics = #{logistics},
+			</if>
+			<if test="remark != null and remark != ''">
+				remark = #{remark},
+			</if>
+			<if test="biz_remark != null and biz_remark != ''">
+				biz_remark = #{biz_remark},
+			</if>
+			<if test="status != null and status != ''">
+				status = #{status},
+			</if>
+			<if test="payment_way_key != null and payment_way_key != ''">
+				payment_way_key = #{payment_way_key},
+			</if>
+			<if test="settle_status != null and settle_status != ''">
+				settle_status = #{settle_status},
+			</if>
+			<if test="total_fee != null and total_fee != ''">
+				total_fee = #{total_fee},
+			</if>
+		</trim>
+		<where>
+			1=1
+			<if test="order_id != null and order_id != ''">
+				AND order_id=#{order_id}
+			</if>
+			<if test="modified_date != null and modified_date != ''">
+				AND modified_date=#{modified_date}
+			</if>
+		</where>
+	</update>
+
+
+	<update id="updatePsSubOrder" parameterType="Map">
+		UPDATE ps_sub_order SET
+		<trim suffixOverrides=",">
+			modified_date = SYSDATE(),
+			<if test="status != null and status != ''">
+				status = #{status},
+			</if>
+			<if test="remark != null and remark != ''">
+				remark = #{remark},
+			</if>
+		</trim>
+		<where>
+			1=1
+			<if test="order_id != null and order_id != ''">
+				AND order_id=#{order_id}
+			</if>
+			<if test="param_status != null and param_status != ''">
+				AND status=#{param_status}
+			</if>
+			<if test="parent_order_id != null and parent_order_id != ''">
+				AND parent_order_id=#{parent_order_id}
+			</if>
+			<if test="modified_date != null and modified_date != ''">
+				AND modified_date=#{modified_date}
+			</if>
+		</where>
+	</update>
+
+	<update id="updateExpirePsGroupOrder" parameterType="Map">
+		UPDATE
+		ps_order_extra e
+		INNER JOIN ps_order o ON e.order_id = o.order_id
+		INNER JOIN ps_order_item oi ON oi.order_id = o.order_id
+		SET
+		e.remark =
+		#{remark},
+		e.modified_date = SYSDATE(),
+		o.modified_date = SYSDATE(),
+		<if test="sale_fee != null and sale_fee != ''">
+			o.sale_fee=#{sale_fee},
+		</if>
+		<if test="total_fee != null and total_fee != ''">
+			o.total_fee=#{total_fee},
+		</if>
+		<if test="qty != null and qty != ''">
+			oi.qty=#{qty},
+		</if>
+		<if test="item_total_fee != null and item_total_fee != ''">
+			oi.total_fee=#{item_total_fee},
+		</if>
+		o.status = #{status}
+		<where>
+			o.order_type = 'activity' AND o.status = 'activing' AND
+			e.order_id = #{order_id}
+		</where>
+	</update>
+
+
+	<update id="updatePsOrderExtra" parameterType="Map">
+		UPDATE ps_order_extra SET
+		<trim suffixOverrides=",">
+			modified_date = SYSDATE(),
+			<if test="qty != null and qty != ''">
+				sub_order_qty = sub_order_qty + #{qty},
+			</if>
+			<if test="remark != null and remark != ''">
+				remark = #{remark},
+			</if>
+		</trim>
+		<where>
+			1=1
+			<if test="order_id != null and order_id != ''">
+				AND order_id=#{order_id}
+			</if>
+			<if test="modified_date != null and modified_date != ''">
+				AND modified_date=#{modified_date}
+			</if>
+		</where>
+	</update>
+
+	<select id="selectExpirePsSubOrder" resultType="Map">
+		SELECT
+		o.order_id
+		,oi.goods_id
+		,oi.discount_fee
+		,e.qty_limit
+		,e.sub_order_qty
+		FROM
+		ps_order_extra e inner join ps_order o on e.order_id = o.order_id
+		inner join ps_order_item oi on oi.order_id = o.order_id
+		WHERE
+		e.closing_time &lt; #{lt_date} AND e.closing_time &gt; #{gt_date}
+		AND
+		o.order_type = 'activity' AND o.status = 'activing'
+	</select>
+
+	<select id="selectTimeoutDeliveredPsOrder" parameterType="Map"
+		resultType="Map">
+		SELECT
+		o.order_id
+		,o.order_no
+		FROM ps_order o
+		WHERE
+		o.order_date &lt; #{lt_date} AND o.order_date &gt; #{gt_date}
+		AND
+		o.status = 'delivered'
+	</select>
+
+</mapper>

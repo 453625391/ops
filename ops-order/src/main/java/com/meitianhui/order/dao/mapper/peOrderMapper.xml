@@ -1,0 +1,368 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.meitianhui.order.dao.PeOrderDao">
+
+	<insert id="insertPeOrder" parameterType="PeOrder">
+		INSERT INTO
+		pe_order (
+		order_id
+		,order_no
+		,order_date
+		,member_type_key
+		,member_id
+		,member_info
+		,desc1
+		,item_num
+		,payment_way_key
+		,point_amount
+		,delivery_address
+		,contact_person
+		,contact_tel
+		,logistics		
+		,data_source
+		,status
+		,settle_status
+		,created_date
+		,modified_date
+		,remark
+		,biz_remark
+		)
+		VALUES (
+		#{order_id}
+		,#{order_no}
+		,#{order_date}
+		,#{member_type_key}
+		,#{member_id}
+		,#{member_info}
+		,#{desc1}
+		,#{item_num}
+		,#{payment_way_key}
+		,#{point_amount}
+		,#{delivery_address}
+		,#{contact_person}
+		,#{contact_tel}
+		,#{logistics}
+		,#{data_source}
+		,#{status}
+		,#{settle_status}
+		,#{created_date}
+		,#{modified_date}
+		,#{remark}
+		,#{biz_remark}
+		)
+	</insert>
+
+	<insert id="insertPeOrderItem" parameterType="PeOrderItem">
+		INSERT INTO
+		pe_order_item (
+		order_item_id
+		,order_id
+		,goods_id
+		,goods_code
+		,goods_title
+		,goods_pic_info
+		,supplier_id
+		,supplier
+		,manufacturer
+		,qty
+		,specification
+		,goods_unit
+		,retail_price
+		,point_paid
+		,created_date
+		,modified_date
+		,remark
+		)
+		VALUES
+		(
+		#{order_item_id}
+		,#{order_id}
+		,#{goods_id}
+		,#{goods_code}
+		,#{goods_title}
+		,#{goods_pic_info}
+		,#{supplier_id}
+		,#{supplier}
+		,#{manufacturer}
+		,#{qty}
+		,#{specification}
+		,#{goods_unit}
+		,#{retail_price}
+		,#{point_paid}
+		,#{created_date}
+		,#{modified_date}
+		,#{remark}
+		)
+	</insert>
+	
+	<select id="selectPeOrder" parameterType="Map" resultType="PeOrder">
+		<![CDATA[
+			SELECT
+			order_id
+			,order_no
+			,order_date
+			,member_type_key
+			,member_id
+			,member_info
+			,desc1
+			,item_num
+			,payment_way_key
+			,point_amount
+			,delivery_address
+			,contact_person
+			,contact_tel
+			,logistics
+			,data_source
+			,status
+			,settle_status
+			,created_date
+			,modified_date
+			,remark
+			,biz_remark
+			FROM
+				ge_order
+		]]>
+		<where>
+			1=1
+			<if test="order_id != null and order_id != ''">
+				AND order_id = #{order_id}
+			</if>
+			<if test="order_no != null and order_no != ''">
+				AND order_no = #{order_no}
+			</if>
+			<if test="status != null and status != ''">
+				AND status = #{status}
+			</if>
+			<if test="settle_status != null and settle_status != ''">
+				AND settle_status = #{settle_status}
+			</if>
+			<if test="member_id != null and member_id != ''">
+				AND member_id = #{member_id}
+			</if>
+			<if test="order_date != null and order_date != ''">
+				AND DATE_FORMAT(order_date, '%Y-%m-%d') =
+				DATE_FORMAT(#{order_date}, '%Y-%m-%d')
+			</if>
+			<if test="order_date_start != null and order_date_start != ''">
+				AND order_date &gt;= #{order_date_start}
+			</if>
+			<if test="order_date_end != null and order_date_end != ''">
+				AND order_date &lt;= date_add(#{order_date_end},interval 1 day)
+			</if>
+			<if test="order_like != null and order_like != ''">
+				AND (order_no like CONCAT('%',#{order_like},'%') or
+				desc1
+				like CONCAT('%',#{order_like},'%') or
+				logistics like
+				CONCAT('%',#{order_like},'%') or
+				member_info like
+				CONCAT('%',#{order_like},'%') or
+				contact_person like
+				CONCAT('%',#{order_like},'%') or
+				contact_tel like
+				CONCAT('%',#{order_like},'%'))
+			</if>
+		</where>
+		ORDER BY order_date DESC
+	</select>
+	
+	<!-- 运营积分兑查询 -->
+	<select id="selectPeOrderListForOp" parameterType="Map" resultType="Map">
+		<![CDATA[
+			SELECT
+			o.order_id
+			,o.order_no
+			,o.order_date
+			,o,member_type_key
+			,o.member_id
+			,o.member_info
+			,o.desc1
+			,o.item_num
+			,o.payment_way_key
+			,o.point_amount
+			,o.delivery_address
+			,o.contact_person
+			,o.contact_tel
+			,o.logistics
+			,o.status
+			,o.settle_status
+			,o.remark
+			,o.biz_remark
+			,oi.goods_code item_goods_code
+			,oi.goods_title item_goods_title
+			,oi.supplier item_supplier
+			FROM
+				pe_order o inner join pe_order_item oi
+			ON o.order_id = oi.order_id
+		]]>
+		<where>
+			<if test="order_no != null and order_no != ''">
+				AND order_no = #{order_no}
+			</if>
+			<if test="status != null and status != ''">
+				AND status = #{status}
+			</if>
+			<if test="settle_status != null and settle_status != ''">
+				AND settle_status = #{settle_status}
+			</if>
+			<if test="supplier_id != null and supplier_id != ''">
+				AND oi.supplier_id = #{supplier_id}
+			</if>
+			<if test="order_date != null and order_date != ''">
+				AND DATE_FORMAT(order_date, '%Y-%m-%d') = DATE_FORMAT(#{order_date}, '%Y-%m-%d')
+			</if>
+			<if test="order_date_start != null and order_date_start != ''">
+				AND order_date &gt;= #{order_date_start}
+			</if>
+			<if test="order_date_end != null and order_date_end != ''">
+				AND order_date &lt;= date_add(#{order_date_end},interval 1 day)
+			</if>
+			<if test="order_like != null and order_like != ''">
+				AND (order_no like CONCAT('%',#{order_like},'%') or
+				desc1 like CONCAT('%',#{order_like},'%') or
+				logistics like CONCAT('%',#{order_like},'%') or
+				member_info like CONCAT('%',#{order_like},'%') or
+				contact_person like CONCAT('%',#{order_like},'%') or
+				contact_tel like CONCAT('%',#{order_like},'%'))
+			</if>
+		</where>
+		ORDER BY o.order_date DESC
+	</select>
+
+	<select id="selectPeOrderItem" parameterType="Map" resultType="PeOrderItem">
+		<![CDATA[
+			SELECT
+				order_item_id
+				,order_id
+				,goods_id
+				,goods_code
+				,goods_title
+				,goods_pic_info
+				,supplier_id
+				,supplier
+				,manufacturer
+				,qty
+				,specification
+				,goods_unit
+				,retail_price
+				,point_paid
+				,created_date
+				,modified_date
+				,remark
+			FROM
+				pe_order_item
+		]]>
+		<where>
+			1=1
+			<if test="order_id != null and order_id != ''">
+				AND order_id = #{order_id}
+			</if>
+		</where>
+	</select>
+	
+	<update id="updatePeOrder" parameterType="Map">
+		UPDATE pe_order SET
+		<trim suffixOverrides=",">
+			modified_date = SYSDATE(),
+			<if test="logistics != null and logistics != ''">
+				logistics = #{logistics},
+			</if>
+			<if test="remark != null and remark != ''">
+				remark = #{remark},
+			</if>
+			<if test="biz_remark != null and biz_remark != ''">
+				biz_remark = #{biz_remark},
+			</if>
+			<if test="status != null and status != ''">
+				status = #{status},
+			</if>
+			<if test="settle_status != null and settle_status != ''">
+				settle_status = #{settle_status},
+			</if>
+			<if test="delivery_address != null and delivery_address != ''">
+				delivery_address = #{delivery_address},
+			</if>
+			<if test="contact_person != null and contact_person != ''">
+				contact_person = #{contact_person},
+			</if>
+			<if test="contact_tel != null and contact_tel != ''">
+				contact_tel = #{contact_tel},
+			</if>
+		</trim>
+		<where>
+			1=1
+			<if test="order_id != null and order_id != ''">
+				AND order_id=#{order_id}
+			</if>
+			<if test="modified_date != null and modified_date != ''">
+				AND modified_date=#{modified_date}
+			</if>
+			<if test="order_id_in != null">
+				AND order_id in
+				<foreach item="item" index="index" collection="order_id_in"
+					open="(" separator="," close=")">
+					#{item}
+				</foreach>
+			</if>
+		</where>
+	</update>
+	
+	<!-- 积分兑结算订单统计 -->
+	<select id="selectPeOrderSettlementCount" parameterType="Map" resultType="Map">
+		<![CDATA[
+			SELECT
+				sum(point_amount) as point_total_fee
+				,count(order_id) as count_num
+			FROM
+				pe_order
+		]]>
+		<where>
+			<if test="status != null and status != ''">
+				AND status = #{status}
+			</if>
+			<if test="settle_status != null and settle_status != ''">
+				AND settle_status = #{settle_status}
+			</if>
+			<if test="order_date != null and order_date != ''">
+				AND DATE_FORMAT(order_date, '%Y-%m-%d') = DATE_FORMAT(#{order_date}, '%Y-%m-%d')
+			</if>
+			<if test="order_like != null and order_like != ''">
+				AND (order_no like CONCAT('%',#{order_like},'%') or
+				desc1 like CONCAT('%',#{order_like},'%') or
+				logistics like CONCAT('%',#{order_like},'%') or
+				member_info like CONCAT('%',#{order_like},'%') or
+				contact_person like CONCAT('%',#{order_like},'%') or
+				contact_tel like CONCAT('%',#{order_like},'%'))
+			</if>
+		</where>
+	</select>
+	
+	<!-- 查询积分兑订单明细（结算） -->
+	<select id="selectPeOrderDetailForSettlement" parameterType="Map" resultType="Map">
+		SELECT 
+			o.order_id
+			,o.order_no
+			,o.order_date
+			,o.modified_date
+			,oi.goods_id item_goods_id
+			,oi.goods_code item_goods_code
+			,oi.goods_title item_goods_title
+			,oi.supplier_id item_supplier_id
+			,oi.supplier item_supplier
+			,oi.qty item_qty
+			,oi.settled_price item_settled_price
+		FROM pe_order o INNER JOIN pe_order_item oi ON o.order_id = oi.order_id
+		<where>
+			<if test="status != null and status != ''">
+				AND o.status = #{status}
+			</if>
+			<if test="settle_status != null and settle_status != ''">
+				AND o.settle_status = #{settle_status}
+			</if>
+			<if test="order_date != null and order_date != ''">
+				AND DATE_FORMAT(o.order_date, '%Y-%m-%d') = DATE_FORMAT(#{order_date}, '%Y-%m-%d')
+			</if>
+		</where>
+	</select>
+
+</mapper>

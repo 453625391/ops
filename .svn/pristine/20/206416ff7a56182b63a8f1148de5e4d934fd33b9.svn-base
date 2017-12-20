@@ -1,0 +1,75 @@
+package com.meitianhui.goods.service;
+
+import java.util.HashMap;
+import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
+
+import org.junit.Ignore;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+
+import com.meitianhui.common.util.FastJsonUtil;
+import com.meitianhui.common.util.HttpClientUtil;
+@RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration(locations = {"classpath:config/spring.xml"})
+public class GoodsSercieImplTest {
+
+	@Autowired
+	private GoodsService goodsService;
+	
+
+	@Test
+	public void psGoodsSync2() {
+		String url = "http://127.0.0.1:8080/omp-mth-freeGet/goods/editGoods";
+		Map<String, String> requestData = new HashMap<String, String>();
+		//requestData.put("service", "editGoods");
+		System.out.println("22222222222222222222222222");
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("area_id", "440304");
+		params.put("contact_tel", "17097217172");
+		params.put("delivery_area", "100000");
+		params.put("discount_end", "2017-11-09 23:59:59");
+		params.put("pic_info", "[{'title':'','path_id':'0bdb5df01b4647db8bf892aabfb33f28'}]");
+		params.put("data_source", "hsrj");
+		params.put("min_buy_qty", "0");
+		params.put("desc1", "经常穿高跟鞋的姑娘，脚上都有老茧，基本上用了一天脚垫就范白了，不刺激皮肤~");
+		params.put("title", "【云南本草】祛脚底鸡眼手脚老茧膏");
+		params.put("max_buy_qty", "0");
+		params.put("token", "9f7b23aa7f164ce68fa58697f30c9804");
+		params.put("discount_price", "0.00");
+		params.put("goods_code", "550928554796");
+		params.put("payment_way", "online");
+		params.put("taobao_price", "35.90");
+		params.put("ladder_price", "0");
+		params.put("cost_price", "0.00");
+		params.put("status", "normal");
+		params.put("contact_person", "厉先生");
+		params.put("commission_rate", "90.50");
+		params.put("voucher_link", "http://shop.m.taobao.com/shop/coupon.htm?seller_id=2336283349&activity_id=0d39b3f435fc49bfa3477eef073cc707");
+		params.put("shipping_fee", "0.00");
+		params.put("category", "试样");
+		params.put("data_source_type", "0");
+		params.put("market_price", "5.90");
+		params.put(" manufacturer", "硕果旗舰店");
+		params.put("goods_id", "6c0397907d804e4ea1c37de7778a0f88");
+		params.put("display_area", "家饰家纺,百货,餐厨,家庭保健");
+		params.put("quan_id", "0d39b3f435fc49bfa3477eef073cc707");
+		params.put("pic_detail_info", "481f5db06af24bec9b9caf5rta45d8gf");
+		
+		try {
+			requestData.put("params", FastJsonUtil.toJson(params));
+			String result = HttpClientUtil.post(url, requestData);
+			System.out.println(result);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+	
+	
+	
+}

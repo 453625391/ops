@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/.idea/ops.iml" filepath="$PROJECT_DIR$/.idea/ops.iml" />
+      <module fileurl="file://$PROJECT_DIR$/ops-common/ops-common.iml" filepath="$PROJECT_DIR$/ops-common/ops-common.iml" />
+      <module fileurl="file://$PROJECT_DIR$/ops-community/ops-community.iml" filepath="$PROJECT_DIR$/ops-community/ops-community.iml" />
+      <module fileurl="file://$PROJECT_DIR$/ops-data-sync/ops-data-sync.iml" filepath="$PROJECT_DIR$/ops-data-sync/ops-data-sync.iml" />
+      <module fileurl="file://$PROJECT_DIR$/ops-finance/ops-finance.iml" filepath="$PROJECT_DIR$/ops-finance/ops-finance.iml" />
+      <module fileurl="file://$PROJECT_DIR$/ops-goods/ops-goods.iml" filepath="$PROJECT_DIR$/ops-goods/ops-goods.iml" />
+      <module fileurl="file://$PROJECT_DIR$/ops-infrastructure/ops-infrastructure.iml" filepath="$PROJECT_DIR$/ops-infrastructure/ops-infrastructure.iml" />
+      <module fileurl="file://$PROJECT_DIR$/ops-member/ops-member.iml" filepath="$PROJECT_DIR$/ops-member/ops-member.iml" />
+      <module fileurl="file://$PROJECT_DIR$/ops-notification/ops-notification.iml" filepath="$PROJECT_DIR$/ops-notification/ops-notification.iml" />
+      <module fileurl="file://$PROJECT_DIR$/ops-order/ops-order.iml" filepath="$PROJECT_DIR$/ops-order/ops-order.iml" />
+      <module fileurl="file://$PROJECT_DIR$/ops-report/ops-report.iml" filepath="$PROJECT_DIR$/ops-report/ops-report.iml" />
+      <module fileurl="file://$PROJECT_DIR$/ops-schedule/ops-schedule.iml" filepath="$PROJECT_DIR$/ops-schedule/ops-schedule.iml" />
+      <module fileurl="file://$PROJECT_DIR$/ops-service-test/ops-service-test.iml" filepath="$PROJECT_DIR$/ops-service-test/ops-service-test.iml" />
+      <module fileurl="file://$PROJECT_DIR$/ops-storage/ops-storage.iml" filepath="$PROJECT_DIR$/ops-storage/ops-storage.iml" />
+      <module fileurl="file://$PROJECT_DIR$/ops-template/ops-template.iml" filepath="$PROJECT_DIR$/ops-template/ops-template.iml" />
+    </modules>
+  </component>
+</project>

@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.meitianhui.member.dao.CompanyDao">
+
+	<insert id="insertMDCompany" parameterType="MDCompany">
+		INSERT INTO
+		md_company (
+		company_id
+		,company_name
+		,company_type_key
+		,registered_date
+		,desc1
+		,area_id
+		,address
+		,contact_person
+		,contact_tel
+		,business_status
+		,status
+		,created_date
+		,modified_date
+		,remark
+		)
+		VALUES (
+		#{company_id}
+		,#{company_name}
+		,#{company_type_key}
+		,#{registered_date}
+		,#{desc1}
+		,#{area_id}
+		,#{address}
+		,#{contact_person}
+		,#{contact_tel}
+		,#{business_status}
+		,#{status}
+		,#{created_date}
+		,#{modified_date}
+		,#{remark}
+		)
+	</insert>
+
+	<select id="selectMDCompany" parameterType="Map" resultType="MDCompany">
+		<![CDATA[
+			SELECT
+				company_id 
+				,company_code
+				,company_name
+				,desc1
+				,area_id
+				,address
+				,contact_person
+				,contact_tel
+				,status
+				,created_date
+				,remark
+			FROM
+				md_company
+		]]>
+		<where>
+			1=1
+			<if test="member_id != null and member_id != ''">
+				AND company_id=#{member_id}
+			</if>
+			<if test="company_id != null and company_id != ''">
+				AND company_id=#{company_id}
+			</if>
+			<if test="contact_tel != null and contact_tel != ''">
+				AND contact_tel=#{contact_tel}
+			</if>
+		</where>
+	</select>
+
+	<update id="updateMDCompany" parameterType="Map">
+		UPDATE md_company SET
+		<trim suffixOverrides=",">
+			<if test="company_name != null and company_name != ''">
+				company_name = #{company_name},
+			</if>
+			<if test="company_type_key != null and company_type_key != ''">
+				company_type_key = #{company_type_key},
+			</if>
+			<if test="registered_date != null and registered_date != ''">
+				certification_pic_path = #{certification_pic_path},
+			</if>
+			<if test="id_card != null and id_card != ''">
+				licence_pic_path = #{licence_pic_path},
+			</if>
+			<if test="head_pic_path != null and head_pic_path != ''">
+				logo_pic_path = #{logo_pic_path},
+			</if>
+			<if test="sex_key != null and sex_key != ''">
+				sex_key = #{sex_key},
+			</if>
+			<if test="desc1 != null and desc1 != ''">
+				desc1 = #{desc1},
+			</if>
+			<if test="area_id != null and area_id != ''">
+				area_id = #{area_id},
+			</if>
+			<if test="address != null and address != ''">
+				address = #{address},
+			</if>
+			<if test="contact_person != null and contact_person != ''">
+				contact_person = #{contact_person},
+			</if>
+			<if test="contact_tel != null and contact_tel != ''">
+				contact_tel = #{contact_tel},
+			</if>
+			<if test="contact_tel != null and contact_tel != ''">
+				contact_tel = #{contact_tel},
+			</if>
+			<if test="business_status != null and business_status != ''">
+				business_status = #{business_status},
+			</if>
+		</trim>
+		<where>
+			company_id=#{company_id}
+		</where>
+	</update>
+
+</mapper>

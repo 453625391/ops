@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <% include ../../commonHead.html %>
+    <title>商品详情</title>
+    <link rel="stylesheet" type="text/css" href="/css/interests/detail.css?v20170314">
+</head>
+<body>
+    <div class="banner">
+        <div id="slider" class="swipe">
+            <div class="swipe-wrap">
+                <% for(var i in goods.picUrlArr) { %>
+                    <div>
+                        <img src="<%=goods.picUrlArr[i] %>" />
+                    </div>
+                <% } %>
+            </div>
+        </div>
+        <nav>
+            <ul id="position">
+                <% for(var i in goods.picUrlArr) { %>
+                    <% if(i == 0) { %>
+                        <li class="on"></li>
+                    <% } else { %>
+                        <li></li>
+                    <% } %>
+                <% } %>
+            </ul>
+        </nav>
+    </div>
+    <div class="cnt-box">
+        <!-- <p class="title"><%=goods.title%></p> -->
+        <p class="title"><%=goods.goods_title%></p>
+        <div class="" style="margin-top:0.4rem;">
+           <span style="color:#ff4242;font-size:0.533333rem;"> <%=goods.limited_point%></span>
+           <span style="color:#ff4242;font-size:0.373333rem;"> 积分</span>
+            <span style="text-decoration: line-through;font-size:0.32rem;color:#b5b5b5">市场价：￥<%=goods.market_price%></span>
+            <span class="num" style="float:right;font-size:0.32rem;color:#666666;">剩余数量：<%=goods.sale_qty %></span>
+        </div>
+        <!-- <div><span class="desc"><%=goods.desc1 %></span> </div> -->
+    </div>
+    <% if(goods.picDetailArr && goods.picDetailArr.length > 0) { %>
+    <div class="detail-wrap">
+        <div class="detail-title">
+            <i class="detail-title-line"></i>
+            <h2>商品详情</h2>
+        </div>
+    <% for(var i=0; i<goods.picDetailArr.length; i++) { %>
+        <div class="detail-img-wrap">
+            <p><%=goods.picDetailArr[i].title %></p>
+            <img src="<%=goods.picDetailArr[i].url %>" />
+        </div>
+    <% } %>
+    </div>
+    <% } %>
+    <div class="footer-bar">
+      <a href="javascript: void(0);" class="chat" id="csBtn" onclick="getChatData();"></a>
+        <% if(requestParams.limited_grade > requestParams.grade || goods.sale_qty <= 0 ){ %>
+        <!-- <a href="javascript: void(0);" class="btn disabled">领取</a> -->
+        <a href="javascript: void(0);" class="btn disabled"  style="float:right;">立即兑换</a>
+        <% } else { %>
+        <!-- <a href="/openapi/h5/c/interests/chooseTicket?activity_id=<%=requestParams.activity_id%>&goods_id=<%=goods.goods_id%>&member_id=<%=requestParams.member_id%>&mobile=<%=requestParams.mobile%>&grade=<%=requestParams.grade%>" class="btn">领取</a> -->
+        <!--调用app端js  -->
+        <!-- <a href="javascript:getGoodsInfo(JSON.stringify(<%= JSON.stringify(goods)%>),'<%=requestParams.activity_id%>')" class="btn">领取</a> -->
+        <a href="javascript:getGoodsInfo(JSON.stringify(<%= JSON.stringify(goods)%>),'<%=requestParams.activity_id%>')" class="btn" style="float:right;">立即兑换</a>
+        <% } %>
+    </div>
+</body>
+<script type="text/javascript">
+function getGoodsInfo(data,activity_id){
+  console.log("data:",JSON.parse(data));
+  console.log('activity_id:',activity_id);
+  if(window.jsObj) {
+      if(window.jsObj.getGoodsInfo) {
+          window.jsObj.getGoodsInfo(data,activity_id);
+      }
+  } else {
+      setupWebViewJavascriptBridge(function(bridge) {
+          bridge.callHandler('getGoodsInfo', data,activity_id);
+      });
+  }
+}
+var chatData = {
+    // 聊天id
+    chat_id: 'llmcustomerserviceagent',
+    // 聊天界面标题
+    title: '官方客服',
+    // 客服头像
+    head_pic_path: 'https://oss-img.meitianhui.com/communityDocs/kefu.jpg',
+    // 当前商品id
+    goods_id: '<%=goods.goods_id %>',
+    // 聊天来源
+    from: 'llm'
+};
+var member_id = '<%=requestParams.mi%>';
+
+// 获取聊天id
+function getChatData() {
+    if(!member_id) {
+        callNativeToChat();
+        return;
+    }
+    $.ajax({
+        type: 'POST',
+        url: '/openapi/h5/c/getChatIdOfDefaultStoreByConsumerId',
+        data: {
+            consumer_id: member_id,
+            chat_id: 'llmcustomerserviceagent',
+            title: '官方客服'
+        },
+        success: function(data) {
+            data = typeof data == 'string' ? JSON.parse(data) : data;
+            if(data.rsp_code == 'succ') {
+                chatData.chat_id = data.data.chatId;
+                chatData.title = data.data.title;
+            }
+        },
+        complete: function() {
+            callNativeToChat();
+        }
+    });
+}
+// 调Native方法聊天
+function callNativeToChat() {
+    if(window.jsObj) {
+        window.jsObj.chatWithCustomerServiceAgent(JSON.stringify(chatData));
+    } else {
+        setupWebViewJavascriptBridge(function(bridge) {
+            bridge.callHandler('chatWithCustomerServiceAgent', chatData);
+        });
+    }
+}
+
+$(function() {
+    M.initSwipe();
+});
+</script>
+</html>

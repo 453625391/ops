@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<% include ../../../commonHead.html %>
+	<title>确认报名</title>
+	<link rel="stylesheet" type="text/css" href="/css/more/xpx/signup.css">
+</head>
+<body>
+	<ul class="shop-info">
+		<li>
+			<p class="name">店铺名称</p>
+			<p class="tx"><%=storeInfo.stores_name %></p>
+		</li>
+		<li>
+			<p class="name">店东姓名</p>
+			<p class="tx"><%=storeInfo.contact_person %></p>
+		</li>
+		<li>
+			<p class="name">联系电话</p>
+			<p class="tx"><%=storeInfo.contact_tel %></p>
+		</li>
+		<li>
+			<p class="name">店铺地址</p>
+			<p class="tx"><%=storeInfo.address %></p>
+		</li>
+	</ul>
+	<ul class="shop-info liHeight">
+		<li>
+			<p class="name">门店面积</p>
+			<p class="tx"><input type="number" id="acreage" placeholder="输入门店面积">㎡</p>
+		</li>
+		<li>
+			<p class="name">日均营业额</p>
+			<p class="tx"><input type="number" id="dms" placeholder="输入日均营业额">元</p>
+		</li>
+	</ul>
+	<ul class="shop-info liHeight borbottom-none">
+		<li>
+			<p class="name">门店实景图</p>
+		</li>
+	</ul>
+	<div class="add-img">
+		<div id="picContainer"></div>
+		<a class="icon-add" id="uploadBtn"></a>
+	</div>
+	<a href="javascript: void(0);" class="icon-qr" id="signupBtn">立即报名</a>
+	<a href="javascript: void(0);" class="icon-qr" id="sucTipBar" style="z-index: 10">已报名</a>
+</body>
+<script type="text/javascript">
+var formData = {
+	activity_id: '<%=activity_id %>',
+	stores_id: '<%=stores_id %>',
+	stores_name: '<%=storeInfo.stores_name %>',
+	contact_person: '<%=storeInfo.contact_person %>',
+	contact_tel: '<%=storeInfo.contact_tel %>',
+	address: '<%=storeInfo.address %>'
+};
+var isRequesting = false;
+$(function() {
+	// 删除图片
+	$('#picContainer').on('click', '.icon-delete', function() {
+		$(this).parent().remove();
+		$('#uploadBtn').show();
+	});
+
+	// 上传图片
+	if(window.jsObj) {
+        $('#uploadBtn').click(function(){
+            window.jsObj.uploadImg('addPicDom');
+        });
+    } else {
+        setupWebViewJavascriptBridge(function(bridge) {
+            $('#uploadBtn').click(function(){
+                bridge.callHandler('uploadImg', function(data) {
+                    addPicDom(data);
+                });
+            });
+        });
+    }
+
+	// 报名
+	$('#signupBtn').click(function() {
+		formData.acreage = $('#acreage').val();
+		formData.dms = $('#dms').val();
+		var picArr = [];
+		$('.pic-id').each(function() {
+			if($(this).val()) {
+				picArr.push($(this).val());
+			}
+		});
+		formData.pic_ids = picArr.join(',');
+		if(!formData.acreage) {
+			M.Toast.warn('请输入门店面积');
+			return;
+		}
+		if(isNaN(formData.acreage)) {
+			M.Toast.warn('门店面积格式错误');
+			return;
+		}
+		if(!formData.dms) {
+			M.Toast.warn('请输入日均营业额');
+			return;
+		}
+		if(isNaN(formData.dms)) {
+			M.Toast.warn('日均营业额格式错误');
+			return;
+		}
+		if(!formData.pic_ids) {
+			M.Toast.warn('请上传门店实景图');
+			return;
+		}
+		if(!isRequesting) {
+			$.ajax({
+				type: 'POST',
+	            url: '/openapi/h5/b/more/xpx/signup',
+	            data: formData,
+	            beforeSend: function() {
+	            	$('#signupBtn').text('提交中');
+	            	isRequesting = true;
+	            },
+	            success: function(data) {
+	            	if(typeof data == 'string') data = JSON.parse(data);
+	            	if(data.rsp_code == 'succ') {
+	            		M.Toast.succ('报名成功');
+	            		$('#signupBtn').remove();
+	            	} else {
+	            		M.Toast.warn(data.error_msg);
+	            	}
+	            },
+	            complete: function() {
+	            	$('#signupBtn').text('立即报名');
+	            	setTimeout(function() {
+	            		isRequesting = false;
+	            	}, 3000);
+	            }
+			});
+		}
+	});
+});
+
+// 添加图片dom
+function addPicDom(data) {
+	if(typeof data === 'string') data = JSON.parse(data);
+	var $p = $('<p></p>');
+	var $img = $('<img src="'+data.doc_path+'" />');
+	var $a = $('<a class="icon-delete"></a>');
+	var $input = $('<input type="hidden" class="pic-id" value="'+data.doc_id+'" />');
+	$('#picContainer').append($p.append($img).append($a).append($input));
+	if($('#picContainer').find('img').length == 5) {
+		$('#uploadBtn').hide();
+	}
+}
+</script>
+</html>

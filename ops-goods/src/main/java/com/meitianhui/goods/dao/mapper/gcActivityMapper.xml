@@ -1,0 +1,283 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.meitianhui.goods.dao.GcActivityDao">
+
+
+	<insert id="insertGcActivity" parameterType="GcActivity">
+		INSERT INTO
+		gc_activity (
+		activity_id
+		,gift_type
+		,expired_date
+		,gift_qty
+		,gift_value
+		,member_qty
+		,operator
+		,operated_time
+		,remark
+		)
+		VALUES (
+		#{activity_id}
+		,#{gift_type}
+		,#{expired_date}
+		,#{gift_qty}
+		,#{gift_value}
+		,#{member_qty}
+		,#{operator}
+		,#{operated_time}
+		,#{remark}
+		)
+	</insert>
+
+	<!-- 查询红包发放记录 -->
+	<select id="selectGcActivity" parameterType="Map" resultType="Map">
+		<![CDATA[
+			SELECT
+  			activity_id
+  			,gift_type
+  			,expired_date
+  			,gift_qty
+  			,gift_value
+  			,member_qty
+  			,operator
+  			,operated_time
+  			,remark
+			FROM
+				gc_activity
+		]]>
+		<where>
+			1=1
+			<if test="operator != null and operator != ''">
+				AND operator = #{operator}
+			</if>
+			<if test="gift_type != null and gift_type != ''">
+				AND gift_type = #{gift_type}
+			</if>
+			<if test="operated_time_start != null and operated_time_start != ''">
+				AND operated_time &gt;= #{operated_time_start}
+			</if>
+			<if test="operated_time_end != null and operated_time_end != ''">
+				AND operated_time &lt;=
+				date_add(#{operated_time_end},interval 1 day)
+			</if>
+		</where>
+		ORDER BY operated_time DESC
+	</select>
+
+	<!-- 查询红包记录 -->
+	<select id="selectGcActivityDetail" parameterType="Map"
+		resultType="GcActivityDetail">
+		<![CDATA[
+			SELECT
+			 detail_id
+			,activity_id
+			,gift_type
+			,from_member_type_key
+			,from_member_id
+			,to_member_type_key
+			,to_member_id
+			,gift_value
+			,expired_date
+			,status
+			,modified_date
+			,created_date
+			FROM
+				gc_activity_detail
+		]]>
+		<where>
+			1=1
+			<if test="detail_id != null and detail_id != ''">
+				AND detail_id = #{detail_id}
+			</if>
+			<if test="member_id != null and member_id != ''">
+				AND to_member_id = #{member_id}
+			</if>
+			<if test="member_type_key != null and member_type_key != ''">
+				AND to_member_type_key = #{member_type_key}
+			</if>
+			<if test="status != null and status != ''">
+				AND status = #{status}
+			</if>
+		</where>
+		ORDER BY locate (status,'disable,enable,delete') ASC, created_date
+		DESC
+	</select>
+
+	<!-- 查询红包个数 -->
+	<select id="selectGcActivityDetailCount" parameterType="Map"
+		resultType="Map">
+		<![CDATA[
+			SELECT
+				to_member_id as member_id
+				,count(detail_id) as count_num
+			FROM gc_activity_detail
+		]]>
+		<where>
+			<if test="member_id != null and member_id != ''">
+				AND to_member_id = #{member_id}
+			</if>
+			<if test="member_type_key != null and member_type_key != ''">
+				AND to_member_type_key = #{member_type_key}
+			</if>
+			<if test="status != null and status != ''">
+				AND status = #{status}
+			</if>
+		</where>
+	</select>
+
+	<!-- 更新红包信息 -->
+	<update id="updateGcActivityDetail" parameterType="Map">
+		UPDATE gc_activity_detail SET
+		<trim suffixOverrides=",">
+			modified_date = SYSDATE(),
+			<if test="status != null and status != ''">
+				status = #{status},
+			</if>
+		</trim>
+		<where>
+			1=1
+			<if test="detail_id != null and detail_id != ''">
+				AND detail_id = #{detail_id}
+			</if>
+			<if test="modified_date != null and modified_date != ''">
+				AND modified_date = #{modified_date}
+			</if>
+		</where>
+	</update>
+
+	<update id="updateDisabledGcActivity" parameterType="Map">
+		UPDATE
+		gc_activity_detail SET
+		modified_date =
+		SYSDATE(),
+		status = 'delete',
+		remark = '红包已过期'
+		WHERE status = 'disable'
+		AND expired_date &lt;
+		#{lt_date} AND expired_date &gt; #{gt_date}
+	</update>
+
+	<!-- ======================================================见面礼=================================================================== -->
+	<!-- 根据条件查询红包记录数 -->
+	<select id="selectActivityDetailCount" parameterType="Map"
+		resultType="long">
+		select count(1) from gc_activity_detail
+		<where>
+			<if test="from_member_type_key != null">
+				AND from_member_type_key = #{from_member_type_key}
+			</if>
+			<if test="from_member_id != null">
+				AND from_member_id = #{from_member_id}
+			</if>
+			<if test="to_member_id != null">
+				AND to_member_id = #{to_member_id}
+			</if>
+			<if test="to_member_type_key != null">
+				AND to_member_type_key = #{to_member_type_key}
+			</if>
+			<if test="gift_type != null">
+				AND gift_type = #{gift_type}
+			</if>
+			<if test="status != null">
+				AND status = #{status}
+			</if>
+		</where>
+	</select>
+
+	<!-- 新增红包记录 -->
+	<insert id="insertGcActivityDetail" parameterType="GcActivityDetail">
+		insert into
+		gc_activity_detail(
+		detail_id, activity_id, gift_type,
+		from_member_type_key, from_member_id,
+		from_member_info,
+		to_member_type_key,
+		to_member_id, to_member_info, gift_value,
+		expired_date, status, modified_date,
+		created_date, remark
+		) values (
+		#{detail_id}, #{activity_id}, #{gift_type}, #{from_member_type_key},
+		#{from_member_id}, #{from_member_info}, #{to_member_type_key},
+		#{to_member_id}, #{to_member_info}, #{gift_value}, #{expired_date},
+		#{status}, #{modified_date}, #{created_date}, #{remark}
+		)
+	</insert>
+
+	<!-- 新增会员见面礼记录 -->
+	<insert id="insertGcMemberFaceGift" parameterType="GcMemberFaceGift">
+		insert into
+		gc_member_face_gift(
+		member_id, member_info, cash_amount, cash_balance,
+		modified_date, created_date,
+		remark
+		) values(
+		#{member_id},
+		#{member_info}, #{cash_amount}, #{cash_balance}, #{modified_date},
+		#{created_date}, #{remark}
+		)
+	</insert>
+
+	<!-- 根据条件查询会员见面礼统计 -->
+	<select id="selectGcMemberFaceGift" parameterType="Map"
+		resultType="GcMemberFaceGift">
+		select member_id, member_info, cash_amount, cash_balance,
+		modified_date, created_date, remark from gc_member_face_gift
+		<where>
+			<if test="member_id != null and member_id != ''">
+				member_id = #{member_id}
+			</if>
+		</where>
+	</select>
+
+	<!-- 更新会员见面礼红包统计信息,用于送红包与开红包 -->
+	<update id="updateGcMemberFaceGift" parameterType="Map">
+		UPDATE gc_member_face_gift
+		<set>
+			modified_date = SYSDATE(),cash_balance = cash_balance +
+			#{add_cash_balance},
+			<if test="add_cash_amount != null and add_cash_amount != ''">
+				cash_amount = cash_amount + #{add_cash_amount},
+			</if>
+		</set>
+		<where>
+			member_id = #{member_id} AND (cash_balance +
+			#{add_cash_balance}) &gt;= 0
+		</where>
+	</update>
+
+	<!-- 新增见面礼红包领取日志 -->
+	<insert id="insertGcMemberFaceGiftLog" parameterType="GcMemberFaceGiftLog">
+		insert into
+		gc_member_face_gift_log(
+		log_id
+		,member_id
+		,category
+		,amount
+		,tracked_date
+		,order_date
+		,event_desc
+		) values(
+		#{log_id}
+		,#{member_id}
+		,#{category}
+		,#{amount}
+		,#{tracked_date}
+		,#{order_date}
+		,#{event_desc}
+		)
+	</insert>
+
+	<!-- 统计会员已到帐的见面礼金额 -->
+	<select id="selectGcMemberFaceGiftTotalAmount" parameterType="Map"
+		resultType="Map">
+		SELECT
+		member_id,
+		SUM(amount) total_amount
+		FROM gc_member_face_gift_log
+		<where>
+			member_id = #{member_id} AND order_date = #{order_date}
+		</where>
+		GROUP BY member_id
+	</select>
+
+</mapper>

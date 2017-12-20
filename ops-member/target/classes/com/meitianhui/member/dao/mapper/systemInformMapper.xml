@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.meitianhui.member.dao.SystemInformDao">
+
+	<insert id="insertSystemInform" parameterType="MDSystemInform">
+		INSERT INTO
+		md_system_info(
+			info_id,
+			info_type,
+			info_result,
+			info_comment,
+			cre_by,
+			cre_date
+		)VALUES(
+			#{info_id},
+			#{info_type},
+			#{info_result},
+			#{info_comment},
+			#{cre_by},
+			#{cre_date}
+		)
+	</insert>
+	
+	<select id="selectSystemInformList" parameterType="Map" resultType="Map">
+		<![CDATA[
+		SELECT
+			msi.info_id,
+			msi.info_type,
+			msi.info_result,
+			msi.info_comment,
+			msi.cre_by,
+			msi.cre_date
+		FROM
+			md_system_info msi
+		]]>	
+		<where>
+			1=1
+			<if test="cre_by !=null and cre_by !=''">
+				AND msi.cre_by = #{cre_by}
+			</if>
+		</where>	
+		ORDER BY msi.cre_date DESC
+	</select>
+
+</mapper>

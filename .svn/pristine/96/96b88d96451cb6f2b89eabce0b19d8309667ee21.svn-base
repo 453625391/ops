@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <% include ../../commonHead.html %>
+    <title>淘淘领</title>
+    <link rel="stylesheet" type="text/css" href="/css/free/main.css?v20170608">
+</head>
+
+<body>
+    <div class="banner">
+        <div id="slider" class="swipe">
+            <div class="swipe-wrap">
+                <% for(var i in goods.picUrlArr) { %>
+                    <div>
+                        <img src="<%=goods.picUrlArr[i] %>" />
+                    </div>
+                <% } %>
+            </div>
+        </div>
+        <nav>
+            <ul id="position">
+                <% for(var i in goods.picUrlArr) { %>
+                    <% if(i == 0) { %>
+                        <li class="on"></li>
+                    <% } else { %>
+                        <li></li>
+                    <% } %>
+                <% } %>
+            </ul>
+        </nav>
+    </div>
+    <div class="cnt-box">
+        <% if(goods.leftSeconds > 0) { %>
+        <div id="countdown" data-seconds="<%=goods.leftSeconds %>">
+            开抢倒计时<em class="day">00</em><i>天</i><em class="hour">00</em><i>时</i><em class="minute">00</em><i>分</i><em class="second">00</em><i>秒</i>
+        </div>
+        <% } %>
+        <p class="tit">
+            <% if(goods.data_source == 'taobao' || goods.data_source == 'merchants') { %>
+            <em class="tag tb">淘宝</em>
+            <% } else if(goods.data_source == 'meitianhui') { %>
+            <em class="tag zy">官方</em>
+            <% } %>
+            <%=goods.title %>
+        </p>
+        <div class="price-box">
+            <span class="final-price">到手价¥<em><%=goods.discount_price %></em></span>
+            <!-- <span class="refund">预付¥<%=goods.market_price %>&nbsp;&nbsp;&nbsp;&nbsp;返还¥<%=(goods.market_price-goods.discount_price).toFixed(2) %></span> -->
+            <span class="refund">预付¥<%=goods.market_price %>&nbsp;&nbsp;&nbsp;&nbsp;节省¥<%=(goods.market_price-goods.discount_price).toFixed(2) %></span>
+        </div>
+        <p class="sale-num">已售<em><%=goods.stock_qty-goods.sale_qty%></em>件 / 仅剩<em><%=goods.sale_qty %></em>件</p>
+    </div>
+    <div class="guide">
+        <img src="/image/payback/guide.png?v2" />
+    </div>
+    <div class="desc"><%=goods.desc1 %></div>
+    <% if(goods.picDetailArr && goods.picDetailArr.length > 0) { %>
+    <div class="detail-wrap">
+        <div>
+            <img src="/image/payback/detail-bar.png" />
+        </div>
+        <% for(var i=0; i<goods.picDetailArr.length; i++) { %>
+        <%if(goods.picDetailArr[i].title){%><p class="detail-desc"><%=goods.picDetailArr[i].title%></p><%}%>
+        <div>
+            <img src="<%=goods.picDetailArr[i].url %>" />
+        </div>
+        <% } %>
+    </div>
+    <% } %>
+    <% if(!requestParams.s) { %>
+    <div class="footer-bar">
+        <a href="javascript: void(0);" class="chat" id="csBtn"></a>
+        <a href="javascript: collectGoods();" class="favor" id="favor"></a>
+        <% if(goods.sale_qty <= 0) { %>
+            <a href="javascript: void(0);" class="btn disable">库存不足</a>
+        <% } else if(goods.leftSeconds > 0) { %>
+            <a href="javascript: void(0);" class="btn disable">敬请期待</a>
+        <% } else if(alreadyGot == 'true') { %>
+            <a href="javascript: void(0);" class="btn disable">限购一件</a>
+        <% } else { %>
+            <% if(goods.data_source=='taobao' || goods.data_source=='merchants' || goods.data_source=='hsrj' ) { %>
+            <a href="javascript: void(0);" class="btn" id="goToSee">了解一下</a>
+            <% } %>
+            <a href="javascript: void(0);" class="btn able" id="getNow">立即领取</a>
+        <% } %>
+    </div>
+    <% } else { %>
+    <div style="width: 10rem; margin: 0 auto; margin-bottom: -2.666667rem; margin-top: 0.666667rem;">
+        <img src="/image/fan/qr.gif?v2" style="width: 100%;" />
+    </div>
+    <img src="/image/common/qrcode_bdsh.png" style="width: 100%; height: 100%; position: fixed; top: 0; left: 0; opacity: 0;" />
+    <% } %>
+    <div class="bind-taobao-wrap">
+        <div class="bind">
+            <h1 class="tit">提示</h1>
+            <h3 class="content">该账号尚未绑定淘宝会员名，请前去绑定后继续领取。</h3>
+            <div class="btns">
+                <a href="javascript: $('.bind-taobao-wrap').hide();" class="btn cancel">取消</a>
+                <a href="#" class="btn go-bind">前去绑定</a>
+            </div>
+        </div>
+    </div>
+</body>
+<script type="text/javascript">
+var ps = '<%=goods.product_source %>';
+var inBlacklist = '<%=inBlacklist%>';
+var bind = '<%=requestParams.bind%>';
+var isRequesting = false;
+var isCollecting = false;
+var isGetting = false;
+$(function() {
+    M.initSwipe();
+
+    // 开卖倒计时
+    if($('#countdown').length > 0) {
+        var difftime = parseInt($('#countdown').attr('data-seconds'));
+        if(difftime > 0) {
+            timer(difftime);
+        }
+    }
+
+    // 店东点继续
+    $('.footer-bar').on('click', '#getNow', function() {
+        if(inBlacklist == 'true') {
+            M.Toast.warn('你的账号被加入黑名单，禁止参加此活动！<br/>请联系客服，谢谢。');
+            return;
+        }
+        // 5秒内只能点击一次领取
+        if(isGetting) return;
+        isGetting = true;
+        setTimeout(function() {
+            isGetting = false;
+        }, 5000);
+
+        validTaobaoAccount();
+    });
+
+    var shareData = {
+        title: '<%=goods.title %>',
+        desc: '<%=goods.desc1 ? goods.desc1.replace(/\r\n/g," ").replace(/\n/g, " ") : "" %>',
+        imgPath: '<%=goods.picUrlArr ? goods.picUrlArr[0] : "" %>',
+        url: window.location.protocol + '//' + window.location.host + window.location.pathname + '?goods_id=<%=goods.goods_id %>&s=1'
+    };
+
+    var chatData = {
+        // 聊天id
+        chat_id: 'llmcustomerserviceagent',
+        // 聊天界面标题
+        title: '官方客服',
+        // 客服头像
+        head_pic_path: 'https://oss-img.meitianhui.com/communityDocs/kefu.jpg',
+        // 当前商品id
+        goods_id: '<%=goods.goods_id %>',
+        // 聊天来源
+        from: 'llm'
+    };
+
+    if(window.jsObj) {    // Android
+        // 传递分享数据
+        window.jsObj.share(JSON.stringify(shareData));
+
+        // 点击了解一下打开淘宝
+        $('#goToSee').click(function() {
+            window.jsObj.openTaobao(ps);
+        });
+
+        // 客服聊天
+        $('#csBtn').click(function() {
+            if(window.jsObj.chatWithCustomerServiceAgent) {
+                window.jsObj.chatWithCustomerServiceAgent(JSON.stringify(chatData));
+            }
+        });
+
+        // 跳转至绑定淘宝账户
+        $('.bind-taobao-wrap .go-bind').click(function() {
+            if(window.jsObj.bindTaobaoMemberName) {
+                $('.bind-taobao-wrap').hide();
+                window.jsObj.bindTaobaoMemberName();
+            }
+        });
+    } else {    // IOS
+        setupWebViewJavascriptBridge(function(bridge) {
+            // 传递分享数据
+            bridge.callHandler('share', shareData);
+
+            // 点击了解一下打开淘宝
+            $('#goToSee').click(function() {
+                bridge.callHandler('openTaobao', ps);
+            });
+
+            // 客服聊天
+            $('#csBtn').click(function() {
+                bridge.callHandler('chatWithCustomerServiceAgent', chatData);
+            });
+
+            // 跳转至绑定淘宝账户
+            $('.bind-taobao-wrap .go-bind').click(function() {
+                $('.bind-taobao-wrap').hide();
+                bridge.callHandler('bindTaobaoMemberName');
+            });
+        });
+    }
+});
+
+// 检查是否已绑定淘宝账户
+function validTaobaoAccount() {
+    if(!bind) { // 旧版本不做绑定逻辑，直接领取
+        getGoods();
+        return;
+    }
+    if(window.jsObj) {
+        window.jsObj.getTaobaoMemberName('getTaobaoAccountCb');
+    } else {
+        setupWebViewJavascriptBridge(function(bridge) {
+            bridge.callHandler('getTaobaoMemberName', function(data) {
+                getTaobaoAccountCb(data);
+            });
+        });
+    }
+}
+
+// 检查淘宝账户绑定回调
+function getTaobaoAccountCb(data) {
+    data = typeof data == 'string' ? JSON.parse(data) : data;
+    if(data.account_no) {
+        getGoods();
+    } else {    // 提示绑定淘宝账户
+        $('.bind-taobao-wrap').show();
+    }
+}
+
+// 领取商品
+function getGoods() {
+    if(!isRequesting) {
+        $.ajax({
+            type: 'POST',
+            url: '/openapi/h5/b/free/sendSMS',
+            async: false,
+            data: {
+                member_id : '<%=requestParams.mi %>',
+                mobile : '<%=requestParams.mobile %>',
+                stores_name : '<%=requestParams.stores_name %>',
+                contact_person : '<%=requestParams.contact_person %>',
+                goods_code : '<%=goods.goods_code %>',
+                amount : '<%=goods.market_price %>',
+                product_source: encodeURIComponent(ps)
+            },
+            beforeSend: function() {
+                isRequesting = true;
+            },
+            success: function(data) {
+                var jsonData = typeof data == 'string' ? JSON.parse(data) : data;
+                if(jsonData.rsp_code == 'succ') {
+                    if(window.jsObj) {    // Android
+                        // 跳转到订单界面
+                        window.jsObj.storeGetFreeSucc();
+                    } else {    // ios
+                        setupWebViewJavascriptBridge(function(bridge) {
+                            bridge.callHandler('storeGetFreeSucc');
+                        });
+                    }
+                } else if(jsonData.error_code && jsonData.error_code == 'free_get_times_error') {
+                    M.Toast.warn('您已领取过该商品');
+                } else if(jsonData.error_code && jsonData.error_code == 'not_allowed') {
+                    M.Toast.warn(jsonData.error_msg);
+                } else {
+                    M.Toast.warn('请检查当前网络是否可用');
+                }
+            },
+            error: function() {
+                M.Toast.warn('请检查当前网络是否可用');
+            },
+            complete: function() {
+                setTimeout(function() {
+                    isRequesting = false;
+                }, 3000);
+            }
+        });
+    }
+}
+
+// 添加心愿单
+function collectGoods() {
+    if(!isCollecting) {
+        $.ajax({
+            type: 'POST',
+            url: '/openapi/h5/b/free/collectGoods',
+            data: {
+                member_id: '<%=requestParams.mi %>',
+                goods_id: '<%=goods.goods_id%>'
+            },
+            beforeSend: function() {
+                isCollecting = true;
+            },
+            success: function(data) {
+                if(typeof data == 'string') data = JSON.parse(data);
+                if(data.rsp_code == 'succ') {
+                    M.Toast.succ('已添加至心愿单');
+                } else {
+                    M.Toast.warn('系统繁忙');
+                }
+            },
+            complete: function() {
+                setTimeout(function() {
+                    isCollecting = false;
+                }, 3000);
+            }
+        });
+    }
+}
+
+// 倒计时
+function timer(difftime){
+    var id = setInterval(function(){
+        if(difftime <= 0) {
+            clearInterval(id);
+            $('#countdown').remove();
+            $('.disable').removeClass('disable').addClass('able').attr('id', 'getNow').text('立即领取');
+        }
+        var day=0, hour=0, minute=0, second=0;//时间默认值
+        if(difftime > 0){
+            day = Math.floor(difftime / (60 * 60 * 24));
+            hour = Math.floor(difftime / (60 * 60)) - (day * 24);
+            minute = Math.floor(difftime / 60) - (day * 24 * 60) - (hour * 60);
+            second = Math.floor(difftime) - (day * 24 * 60 * 60) - (hour * 60 * 60) - (minute * 60);
+
+        }
+        if (day <= 9) day = '0' + day;
+        if (hour <= 9) hour = '0' + hour;
+        if (minute <= 9) minute = '0' + minute;
+        if (second <= 9) second = '0' + second;
+        $('#countdown').find('.day').text(day);
+        $('#countdown').find('.hour').text(hour);
+        $('#countdown').find('.minute').text(minute);
+        $('#countdown').find('.second').text(second);
+        difftime--;
+    }, 1000);
+}
+</script>
+</html>

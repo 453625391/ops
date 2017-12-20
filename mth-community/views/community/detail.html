@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<% include commonHeader.html %>
+	<title>秀一秀</title>
+	<link rel="stylesheet" type="text/css" href="/css/community/index.css?v20170401">
+</head>
+<body class="mb-comment">
+	<div id="vm">
+		<div class="detail-img"><img v-bind:src="article.cover_path[0]"></div>
+		<div class="dt-attention">
+			<a v-bind:href="'/homepage?mi='+article.member_id" style="display: inline-block; overflow: hidden;">
+				<em class="dt-img">
+					<img v-bind:src="article.head_path" />
+				</em>
+				<div class="dt-xq">
+					<p class="name">{{article.nick_name | handleName}}</p>
+					<p class="time">{{article.createDateFormatted}}</p>
+				</div>
+			</a>
+			<!-- <a class="dt-gz">关注</a> -->
+		</div>
+		<div class="dt-literal">
+			<div class="title">{{article.title}}</div>
+			<div class="content" v-html="handledContent"></div>
+		</div>
+		<div class="dt-review" >
+			<div class="title">评论 <em id="commentCount">{{article.comment.length || 0}}</em>条</div>
+			<div id="commentContainer">
+				<template v-for="comment in reversedComment">
+					<div class="review-list">
+						<div class="list-f">
+							<a class="l-img" v-bind:href="'/homepage?mi='+comment.commenter_id">
+								<img v-bind:src="comment.commenter_head_path" />
+							</a>
+							<div class="l-name">
+								<a class="nm" v-bind:href="'/homepage?mi='+comment.commenter_id">{{comment.commenter_nick_name | handleName}}</a>
+								<p class="time">{{comment.commentTimeFormatted}}</p>
+								<p class="pl">{{comment.comment_content}}</p>
+							</div>
+							<!-- <div class="pl-number">0</div> -->
+						</div>
+					</div>
+				</template>
+			</div>
+		</div>
+		<div class="review-publish">
+			<a v-on:click="like" class="rp-dz" v-bind:class="{'sel-pl-number': article.isAlreadyLiked}">{{article.like.length || 0 }}</a>
+			<input type="text" v-model="comment" placeholder="我也说两句...">
+			<a href="javascript: void(0);" class="rp-send" v-on:click="addComment">发送</a>
+		</div>
+	</div>
+</body>
+<script>
+var _article = JSON.parse('<%-JSON.stringify(article)%>');
+</script>
+<script type="text/javascript" src="/build/js/community/detail.js?v2"></script>
+</html>

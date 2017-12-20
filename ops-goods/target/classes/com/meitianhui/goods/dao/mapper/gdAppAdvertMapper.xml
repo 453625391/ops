@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.meitianhui.goods.dao.GdAppAdvertDao">
+
+	<insert id="insertGdAppAdvert" parameterType="GdAppAdvert">
+		INSERT INTO
+		gd_app_advert (
+		advert_id
+		,category
+		,json_data
+		,created_date
+		,modified_date
+		,remark
+		)
+		VALUES
+		(
+		#{advert_id}
+		,#{category}
+		,#{json_data}
+		,#{created_date}
+		,#{modified_date}
+		,#{remark}
+		)
+	</insert>
+
+	<select id="selectGdAppAdvert" parameterType="Map" resultType="Map">
+		SELECT
+		advert_id
+		,category
+		,json_data
+		FROM
+		gd_app_advert
+		<where>
+			<if test="category != null and category != ''">
+				AND category = #{category}
+			</if>
+		</where>
+	</select>
+
+
+	<update id="updateGdAppAdvert" parameterType="Map">
+		UPDATE gd_app_advert SET
+		<trim suffixOverrides=",">
+			modified_date = SYSDATE(),
+			<if test="json_data != null and json_data != ''">
+				json_data = #{json_data},
+			</if>
+			<if test="remark != null and remark != ''">
+				remark = #{remark},
+			</if>
+		</trim>
+		<where>
+			advert_id = #{advert_id} AND category = #{category}
+		</where>
+	</update>
+
+</mapper>

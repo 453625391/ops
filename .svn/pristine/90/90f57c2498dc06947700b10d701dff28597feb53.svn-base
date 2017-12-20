@@ -1,0 +1,13 @@
+#财务同步url
+finance_sync_service_url=http://127.0.0.1:9090/ops-finance/financeSync
+#密码同步url
+user_sync_service_url=http://127.0.0.1:9090/ops-infrastructure/userSync
+
+#获取消费者礼券日志url
+php_customer_service_url=http://121.40.148.40/topapi/temporary.html
+#app_token
+php_customer_service_app_token=b6d6d2d5-1d78-4b85-8b94-2be370fb6a83
+#每次获取的记录数
+page_size=2000
+#每次获取的记录数
+user_sync_page_size=10

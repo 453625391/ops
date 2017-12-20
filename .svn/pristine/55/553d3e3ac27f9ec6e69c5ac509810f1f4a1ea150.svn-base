@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <% include ../../../commonHead.html %>
+    <title>新品秀</title>
+    <link rel="stylesheet" type="text/css" href="/css/more/xpx/index.css?v20170427">
+</head>
+<body>
+    <% if(list && list.length > 0) { %>
+    <% for(var i=0; i<list.length; i++) { %>
+    <div class="new-god">
+        <div class="title"><%=list[i].title %></div>
+        <p class="nr"><%=list[i].desc1 %></p>
+        <ul>
+            <% for(var j=0; j<list[i].picUrl.length; j++) { %>
+            <li><img src="<%=list[i].picUrl[j] %>"></li>
+            <% } %>
+        </ul>
+        <div class="time">
+            <i><%=list[i].start_date %> 至 <%=list[i].end_date %></i>
+            <% if(list[i].entry == 0) { %>
+            <a href="/openapi/h5/b/more/xpx/signup?stores_id=<%=stores_id%>&activity_id=<%=list[i].activity_id%>" class="icon-bm"></a>
+            <% } else { %>
+            <span>已报名</span>
+            <% } %>
+        </div>
+    </div>
+    <% } %>
+    <% } else { %>
+    <div class="no-record">
+        <img src="/image/common/no-record.png" />
+        <p>暂无活动</p>
+    </div>
+    <% } %>
+    <div id="imgPreview" class="img-preview">
+        <table>
+            <tr>
+                <td><img src="" /></td>
+            </tr>
+        </table>
+    </div>
+</body>
+<script type="text/javascript">
+$(function() {
+    // 点击图片预览
+    $('.new-god img').click(function() {
+        $('#imgPreview img').eq(0).attr('src', $(this).attr('src'));
+        $('#imgPreview').show();
+    });
+
+    // 关闭图片预览
+    $('#imgPreview').click(function() {
+        $(this).hide();
+    });
+});
+</script>
+</html>

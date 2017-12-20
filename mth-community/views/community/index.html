@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <% include commonHeader.html %>
+    <title>秀一秀</title>
+    <link rel="stylesheet" type="text/css" href="/css/community/index.css?v20170401">
+</head>
+
+<body>
+    <div class="article-wrap" id="articleContainer" style="padding-bottom: 1.333333rem;">
+        <template v-for="article in articleList">
+            <a v-bind:href="'/detail?id='+article._id" class="article-box">
+                <div class="top">
+                    <div class="face-icon">
+                        <img v-bind:src="article.head_path" />
+                    </div>
+                    <div class="name-addr">
+                        <template v-if="article.location">
+                            <p class="name">{{article.nick_name | handleName}}</p>
+                            <p class="addr">{{article.location}}</p>
+                        </template>
+                        <template v-else>
+                            <p class="name name-mid">{{article.nick_name | handleName}}</p>
+                        </template>
+                    </div>
+                </div>
+                <div class="text">
+                    <p class="title" v-if="article.title">{{article.title}}</p>
+                    <!-- <template v-if="article.content">
+                        <p class="content" v-if="article.content.length>45">{{article.content.substring(0, 45) + '...'}}</p>
+                        <p class="content" v-else>{{article.content}}</p>
+                    </template> -->
+                </div>
+                <div class="img" v-bind:style="{backgroundImage: 'url(' + article.cover_path[0] + ')'}"></div>
+                <div class="bottom">
+                    <div class="statistics like">{{article.like.length}}</div>
+                    <div class="statistics comment">{{article.comment.length}}</div>
+                    <div class="statistics view">{{article.view_count}}</div>
+                    <div class="time">{{article.createDateFormatted}}</div>
+                </div>
+            </a>
+        </template>
+    </div>
+    <div class="icon-bottom">
+        <a href="/publish" class="icon-create"></a>
+    </div>
+</body>
+</html>
+<script type="text/javascript">
+    var _requestParams = JSON.parse('<%-JSON.stringify(requestParams)%>');
+</script>
+<script type="text/javascript" src="/build/js/community/index.js?v20170401"></script>

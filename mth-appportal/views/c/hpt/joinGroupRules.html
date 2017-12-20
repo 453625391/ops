@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <% include ../../commonHead.html %>
+    <title>我要参团</title>
+    <link rel="stylesheet" type="text/css" href="/css/hpt/rule.css?v20170504">
+</head>
+<body>
+    <div class="activity-info">
+        <span class="joined-num">还差<%=(activity.min_num-0)-activity.doc_url_list.length+1%>人</span>
+        <div class="timeline"></div>
+        <div class="face-wrap">
+            <% for(var i=0; i<activity.doc_url_list.length; i++) { %>
+            <div class="face <%if(i%2==0){%>face-up<%}else{%>face-down<%}%>">
+                <%if(activity.doc_url_list[i]){%><img src="<%=activity.doc_url_list[i]%>" /><%}%>
+            </div>
+            <% } %>
+            <div class="progress"></div>
+        </div>
+    </div>
+	<ul class="rule-wrap">
+        <li class="rule">
+            <p class="tit pay">付款</p>
+            <div class="content">您需要完成订单预付，成团后差额部分将自动返还。</div>
+        </li>
+        <li class="rule">
+            <p class="tit delivery">收货</p>
+            <p class="content">成团后惠商驿站将代理收发和退换商品，有任何疑问可从订单页右上角处联系在线客服。</p>
+        </li>
+        <li class="rule">
+            <p class="tit refund">退款</p>
+            <p class="content">不成团则全部参与者将立即返还实际支付款项；成团后未发货亦可取消订单，已完成发货和返款操作的订单如要退换，请联系客服处理，可能产生费用。</p>
+        </li>
+        <li class="rule">
+            <p class="tit payback">返款</p>
+            <p class="content">请注意查看订单状态和确认收货，订单发货7天后系统也会自动确认收货，您的订单差价将自动支付到您的钱包账户。</p>
+        </li>
+    </ul>
+    <div class="foot-bar">
+        <a href="javascript:void(0);" id="joinNow" class="btn">果断参与</a>
+    </div>
+</body>
+<script type="text/javascript">
+$(function() {
+    setTimeout(function() {
+        var joinedNum = '<%=activity.doc_url_list.length%>';
+        var minNum = '<%=(parseInt(activity.min_num)+1)%>';
+        var faceArr = $('.face');
+        for(var i=0; i<faceArr.length; i++) {
+            $(faceArr).eq(i).animate({
+                'left': ((1 / minNum)*100)*(i+1)+'%'
+            }, 500);
+        }
+        $('.progress').animate({
+            'width': (joinedNum/minNum*100) + '%'
+        }, 500);
+    }, 500);
+
+    var joinData = {
+        activity_id: '<%=requestParams.activity_id%>',
+        title: '拼团领',
+        desc: '邻里组团拼，低至出厂价！',
+        imgPath: window.location.protocol + '//' + window.location.host + '/image/common/app_bdsh.png?v2',
+        url: window.location.protocol + '//' + window.location.host + '/openapi/h5/c/hpt?area_id=100000&s=1'
+    }
+
+    $('#joinNow').click(function() {
+        $.ajax({
+            type: 'POST',
+            url: '/openapi/h5/c/hpt/joinGroupAuth',
+            data: {
+                member_id: '<%=requestParams.member_id%>',
+                goods_id: '<%=requestParams.goods_id%>'
+            },
+            beforeSend: function() {
+                M.maskLayer.start();
+            },
+            success: function(data) {
+                var jsonData = typeof data == 'string' ? JSON.parse(data) : data;
+                if(jsonData.rsp_code == 'succ') {
+                    if(window.jsObj) {
+                        window.jsObj.joinHptGroup(JSON.stringify(joinData));
+                    } else {
+                        setupWebViewJavascriptBridge(function(bridge) {
+                            bridge.callHandler('joinHptGroup', joinData);
+                        });
+                    }
+                } else {
+                    M.Toast.warn(jsonData.error_msg);
+                }
+            },
+            complete: function() {
+                M.maskLayer.stop();
+            }
+        });
+    });
+});
+</script>
+</html>

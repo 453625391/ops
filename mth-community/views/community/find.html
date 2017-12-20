@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="apple-mobile-web-app-capable" content="yes" /><!-- 删除苹果默认的工具栏和菜单栏 -->
+	<meta name="apple-mobile-web-app-status-bar-style" content="black" /><!-- 设置苹果工具栏颜色 -->
+	<meta name="format-detection" content="telphone=no, email=no" /><!-- 忽略页面中的数字识别为电话，忽略email识别 -->
+	<!-- 启用360浏览器的极速模式(webkit) -->
+	<meta name="renderer" content="webkit">
+	<!-- 避免IE使用兼容模式 -->
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<!-- 针对手持设备优化，主要是针对一些老的不识别viewport的浏览器，比如黑莓 -->
+	<meta name="HandheldFriendly" content="true">
+	<!-- 微软的老式浏览器 -->
+	<meta name="MobileOptimized" content="320">
+	<!-- uc强制竖屏 -->
+	<meta name="screen-orientation" content="portrait">
+	<!-- QQ强制竖屏 -->
+	<meta name="x5-orientation" content="portrait">
+	<!-- UC强制全屏 -->
+	<meta name="full-screen" content="yes">
+	<!-- QQ强制全屏 -->
+	<meta name="x5-fullscreen" content="true">
+	<!-- UC应用模式 -->
+	<meta name="browsermode" content="application">
+	<!-- QQ应用模式 -->
+	<meta name="x5-page-mode" content="app">
+	<!-- windows phone 点击无高光 -->
+	<meta name="msapplication-tap-highlight" content="no">
+	<!-- 禁用iPhone手机浏览器上给电话号码自动加上的link样式 -->
+	<meta name="format-detection" content="telephone=no">
+	<title>发现</title>
+	<link rel="stylesheet" type="text/css" href="/css/reset.css">
+	<link rel="stylesheet" type="text/css" href="/css/community/common.css">
+	<link rel="stylesheet" type="text/css" href="/css/community/index.css">
+	<script type="text/javascript" src="/js/third-part/flexible.js"></script>
+	<script type="text/javascript" src="/js/third-part/jquery.min.js"></script>
+	<script type="text/javascript" src="/js/third-part/fastclick.min.js"></script>
+</head>
+<body>
+	<header id="header" class="">
+		<div class="head-wrap">
+			<a href="javascript: window.history.go(-1);" class="icon-return"></a>
+			<span class="title">发现</span>
+		</div>
+	</header><!-- /header -->
+	<div class="content-wrap">
+		<ul class="find-sty">
+			<li class="sel">工作圈</li>
+			<li>生活圈</li>
+			<li>老乡圈</li>
+			<li>兴趣圈</li>
+		</ul>
+	</div>
+	<div class="dt-review bot0">
+		<div class="review-list">
+			<div class="list-f">
+				<em class="l-img"></em>
+				<div class="l-name">
+					<p class="sty-name">唯唯</p>
+					<p class="sty-q">泰然小区</p>
+					<p class="pl">旅行，IT，互联网，运动</p>
+				</div>
+				<a class="dt-gz">关注</a>
+			</div>
+			<div class="list-f">
+				<em class="l-img"></em>
+				<div class="l-name">
+					<p class="sty-name">唯唯</p>
+					<p class="sty-q">泰然小区</p>
+					<p class="pl">旅行，IT，互联网，运动</p>
+				</div>
+				<a class="dt-gz">关注</a>
+			</div>
+		</div>
+	</div>
+	<div class="no-more">没有更多了！</div>
+</body>
+  
+</html>
+<script>
+$(function(){
+	FastClick.attach(document.body);
+	$('.dt-gz').click(function(){
+		$(this).toggleClass('click-gz');
+	});
+	$('.find-sty li').click(function(){
+		$('.find-sty li').removeClass('sel')
+		$(this).addClass('sel');
+	});
+});
+</script>
+

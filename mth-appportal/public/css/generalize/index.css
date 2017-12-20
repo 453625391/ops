@@ -1,0 +1,61 @@
+body {
+    font-weight: 300;
+}
+
+.bor-spread div {
+    background: #ffffff;
+    border-radius: 5px;
+    padding-bottom: 0.866667rem;
+    margin-bottom: 0.333333rem;
+    text-align: center;
+    overflow: hidden;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+}
+
+.bor-spread .title {
+    color: #333333;
+    height: 3.066667rem;
+    line-height: 3.066667rem;
+}
+
+[data-dpr="1"] .bor-spread .title {
+    font-size: 30px;
+}
+
+[data-dpr="2"] .bor-spread .title {
+    font-size: 60px;
+}
+
+[data-dpr="3"] .bor-spread .title {
+    font-size: 90px;
+}
+
+.bor-spread img {
+    width: 6.866667rem;
+    height: 6.866667rem;
+}
+
+.bor-spread .icon-fx {
+    color: #333333;
+    width: 6.16667rem;
+    height: 1.066667rem;
+    text-align: center;
+    line-height: 1.066667rem;
+    display: block;
+    margin: 0.866667rem auto;
+    margin-bottom: 0;
+    background: #f4f4f4;
+    border-radius: 5px;
+}
+
+[data-dpr="1"] .bor-spread .icon-fx {
+    font-size: 18px;
+}
+
+[data-dpr="2"] .bor-spread .icon-fx {
+    font-size: 36px;
+}
+
+[data-dpr="3"] .bor-spread .icon-fx {
+    font-size: 54px;
+}

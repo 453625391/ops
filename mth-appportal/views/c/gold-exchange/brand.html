@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <% include ../../commonHead.html %>
+    <link rel="stylesheet" type="text/css" href="/css/gold-exchange/brand.css?v20170419">
+    <title>品牌领</title>
+</head>
+
+<body>
+    <div id="app">
+        <div class="banner">
+            <div id="slider" class="swipe">
+                <div class="swipe-wrap">
+                    <div v-for="banner in bannerData.list">
+                        <img v-bind:src="bannerData.doc_url[banner.path_id]" v-bind:banner-url="banner.url" />
+                    </div>
+                </div>
+            </div>
+            <nav>
+                <ul id="position">
+                    <li v-for="banner in bannerData.list"></li>
+                </ul>
+            </nav>
+        </div>
+        <ul class="brand-container">
+            <li id="brandContainer" v-for="brand in brandList">
+                <a v-bind:href="'/openapi/h5/c/gold-exchange/list?area_id=<%=area_id%>&brand='+brand.split('|')[0]" class="brand">
+                    <img v-bind:src="'/image/gold-exchange/brand/'+brand.split('|')[0]+'.png?v20170419'" class="brand-logo" />
+                    <img src="/image/gold-exchange/zpbz.png" class="zpbz" />
+                </a>
+            </li>
+        </ul>
+    </div>
+</body>
+<script type="text/javascript">
+var app = new Vue({
+    el: '#app',
+    data: function() {
+        return {
+            bannerData: JSON.parse('<%-JSON.stringify(banner)%>'),
+            pageParams: {
+                page_no: 1,
+                page_size: 5,
+                hasMore: true,
+                isLoading: false
+            },
+            brandList: []
+        }
+    },
+    methods: {
+        getBrandList: function() {
+            var self = this;
+            if (self.pageParams.hasMore && !self.pageParams.isLoading) {
+                $.ajax({
+                    type: 'POST',
+                    url: '/openapi/h5/c/gold-exchange/brandlist',
+                    data: {
+                        page_no: self.pageParams.page_no,
+                        page_size: self.pageParams.page_size
+                    },
+                    beforeSend: function() {
+                        self.pageParams.isLoading = true;
+                    },
+                    success: function(data) {
+                        if (typeof data == 'string') data = JSON.parse(data);
+                        if (data.brandList.length == 0) {
+                            self.pageParams.hasMore = false;
+                            return;
+                        }
+                        self.pageParams.page_no++;
+                        self.brandList.push.apply(self.brandList, data.brandList);
+                    },
+                    complete: function() {
+                        self.pageParams.isLoading = false;
+                    }
+                });
+            }
+        }
+    },
+    mounted: function() {
+        M.initSwipe();
+        M.bindBannerAdClick();
+        new AutoLoader().load({scrollToTop: true}, this.getBrandList);
+    }
+});
+</script>
+
+</html>

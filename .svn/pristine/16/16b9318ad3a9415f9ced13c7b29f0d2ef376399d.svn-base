@@ -1,0 +1,29 @@
+{
+  "name": "mth-salesassistant",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "forever start ./bin/www",
+    "stop": "forever stop ./bin/www",
+    "dev": "./dev.bat",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "Holly<hl4god@gmail.com>",
+  "license": "ISC",
+  "dependencies": {
+    "bluebird": "^3.5.0",
+    "body-parser": "^1.17.2",
+    "consolidate": "^0.14.5",
+    "debug": "^2.6.8",
+    "express": "^4.15.3",
+    "handlebars": "^4.0.10",
+    "log4js": "^1.1.1",
+    "md5": "^2.2.1",
+    "moment": "^2.18.1",
+    "nconf": "^0.8.4",
+    "request": "^2.81.0",
+    "request-promise": "^4.2.1"
+  }
+}

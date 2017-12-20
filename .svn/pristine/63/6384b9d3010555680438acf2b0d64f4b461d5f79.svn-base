@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html data-dpr="1" style="font-size: 40px;">
+  <head>
+    <% include ../../commonHead.html %>
+    <link rel="stylesheet" type="text/css" href="/css/free/index.css?v20170621">
+    <title><% if (requestParams.label == "freshman") { %>新人专享<% } else{%>   <%= requestParams.label%> <%}%> </title>
+  </head>
+  <body style="font-size: 12px; line-height:1">
+
+    <div id="app">
+  <!-- {{ message }} v-bind:goods="goods"
+  v-bind:key="goods.id"-->
+  <div class="">
+    <% if (requestParams.label == "freshman") { %>
+      <!-- banner图  2张图 1.新人攻略 2.百问百答-->
+      <!-- <my-banner v-bind:banner-data="bannerData"></my-banner> -->
+      <lin-banner v-bind:banner-data="bannerData"></lin-banner>
+    <% } else{%>
+    <img src="<%=requestParams.banner %>" alt=""  style="width: 100%; height: auto">
+<%}%>
+    <!-- 新人攻略 label_promotion = 新人攻略  新人专享（freshman）图片可点击 -->
+    <!-- <a href='<% if (requestParams.label == "freshman") { %>http://help.meitianhui.com?id=1006<% } else{%>javascript:void(0)<%}%>'>
+    <img src="<%=requestParams.banner %>" alt=""  style="width: 100%; height: auto">
+    </a> -->
+  </div>
+
+  <ul class="goods-list-single">
+    <goods-item-signal v-for="(goods,index) in goodsList"
+       v-bind:goods="goods" v-bind:key="goods.id" v-bind:index="index"
+    ></goods-item-signal>
+      <div v-show="nothing" class="no-record">
+          <img src="/image/common/no-record.png" />
+          <p>暂无相关商品</p>
+      </div>
+      <div v-show="isLoading" class="loading">正在加载</div>
+      <div v-show="!hasMore && !nothing && page.page_no > 1" class="loading">没有更多啦~</div>
+  </ul>
+</div>
+<!--  列表里的单个商品-->
+<script type="text/x-template" id="goods-item-signal-template">
+  <li class="goods" >
+  <a v-bind:href="'javascript:getGoods_Id(\''+goods.goods_id+'\')'">
+      <div class="left-box">
+          <img v-bind:src="goods.pic_info_url" class="goods-pic" />
+          <!-- <em class="freshman" v-if="goods.label_promotion.indexOf('freshman')!=-1"></em> -->
+          <div class="saletime-wrap" v-if="goods.leftSeconds>0">
+              <div class="saletime">
+                  <p class="date">{{goods.saleDate}}</p>
+                  <p class="time">{{goods.saleTime}}</p>
+                  <p class="text">开抢</p>
+              </div>
+          </div>
+          <div class="soldout-wrap" v-if="goods.sale_qty<=0">
+              <img src="/image/common/soldout.png" />
+          </div>
+      </div>
+      <div class="right-box">
+          <p class="tit">
+              {{goods.title}}
+              <em class="tag tb" v-if="goods.data_source=='taobao' || goods.data_source=='merchants'">淘宝</em>
+              <em class="tag zy" v-if="goods.data_source=='meitianhui'">官方</em>
+          </p>
+          <div class="price-wrap">
+              <p class="final-price">到手价<em><i>¥</i>{{goods.discount_price}}</em></p>
+              <div class="other-price">
+                  <!-- <span class="original-price">预付 ¥ {{goods.market_price}}</span>
+                  <span class="refund">返还 ¥ {{(goods.market_price-goods.discount_price).toFixed(2)}}</span> -->
+                  <span class="original-price">预付 ¥ {{goods.market_price}}</span>
+                  <span class="refund">返还 ¥ {{(goods.market_price-goods.discount_price).toFixed(2)}}</span>
+              </div>
+          </div>
+      </div>
+  </a>
+  </li>
+</script>
+
+<script type="text/x-template" id="lin-banner-template">
+  <div class="banner">
+    <div id="slider" class="swipe">
+      <div class="swipe-wrap">
+      <div v-for="banner in bannerData.list" >
+        <a v-bind:href='banner.url'>
+          <img v-bind:src="bannerData.doc_url[banner.path_id]" />
+        </a>
+      </div>
+    </div>
+      <nav>
+          <ul id="position">
+              <li v-for="banner in bannerData.list"></li></li>
+          </ul>
+      </nav>
+    </div>
+  </div>
+</script>
+
+
+<!-- <script src="https://unpkg.com/vue"></script> -->
+<script type="text/javascript">
+Vue.config.devtools = true;
+// 获取app客户端用户登陆信息
+function getGoods_Id(goodsId){
+  if(window.jsObj) {
+      if(window.jsObj.getGoods_Id) {
+          window.jsObj.getGoods_Id(goodsId);
+      }
+  } else {
+      setupWebViewJavascriptBridge(function(bridge) {
+          bridge.callHandler('getGoods_Id', goodsId);
+      });
+  }
+}
+// 注册
+Vue.component('goods-item-signal', {
+  // 声明 props
+  props: ['goods'],
+  template: '#goods-item-signal-template'
+});
+Vue.component('lin-banner', {
+  // 声明 props
+  props: ['bannerData'],
+  template: '#lin-banner-template',
+  methods:{
+    initSwipe: function() {
+        var bullets = document.getElementById('position').getElementsByTagName('li');
+        if(bullets[0]) bullets[0].className = 'on';
+        var slider = Swipe(document.getElementById('slider'), {
+            auto: 3000,
+            continuous: true,
+            callback: function(pos) {
+                var i = bullets.length;
+                while (i--) {
+                    bullets[i].className = '';
+                }
+                bullets[pos].className = 'on';
+            }
+        });
+    },
+
+  },
+  mounted: function() {
+      this.initSwipe();
+  }
+});
+
+var app = new Vue({
+  el: '#app',
+  data: function(){
+    return {
+      requestParams: JSON.parse('<%-JSON.stringify(requestParams)%>'),
+      bannerData:{
+        list:[
+          {path_id:'newMember',url:'http://help.meitianhui.com?id=1006'},
+          {path_id:'questionAndAnswer',url:'http://help.meitianhui.com?id=1010'}
+        ],
+        doc_url:{
+          newMember:'/image/tag/newMember.png', //新会员
+          questionAndAnswer:'/image/tag/questionAndAnswer.jpg' //百问百答
+        }
+      },
+      goodsList: [],
+      total_page:-1, //总页数 初始化为0
+      page: {
+          page_no: 1,
+          page_size: 10
+      },
+      nothing: false,
+      isLoading: false,
+      hasMore: true
+    };
+  },
+  methods:{
+     //列表滚动刷新
+    loadGoods:function(label){
+      var self = this;
+      $.ajax({
+          type: 'POST',
+          url: '/openapi/h5/b/free/getList',
+          data: {
+              // service: "goods.freeGetGoodsByLabelListPageFind",
+              service:"psGoods.consumer.freeGetGoodsByLabelListPageFind",
+              params: JSON.stringify({"label_promotion":'<%=requestParams.label %>'||label}),
+              page: JSON.stringify(self.page)
+          },
+          beforeSend: function() {
+            console.log('self.total_page:',self.total_page);
+            console.log('self.page.page_no:',self.page.page_no);
+            if(self.total_page < self.page.page_no && self.page.page_no>1){
+              return false;
+            }
+              self.isLoading = true;
+              self.nothing = false;
+                self.page.page_no++;
+          },
+          success: function(data) {
+              var jsonData = (typeof data == 'string' ? JSON.parse(data) : data) || [];
+              self.goodsList.push.apply(self.goodsList, jsonData.goodsList);
+              self.total_page = jsonData.page.total_page;
+              if(self.goodsList.length == 0) {
+                  self.nothing = true;
+              }
+              if(jsonData.page.total_page == self.page.page_no
+                  || jsonData.goodsList.length == 0) {
+                  self.hasMore = false;
+                  return;
+              }
+              // self.page.page_no++;
+          },
+          complete: function() {
+              self.isLoading = false;
+          }
+      });
+
+    }
+  },
+  mounted: function() {
+    new AutoLoader().load({scrollToTop: true}, this.loadGoods);
+  }
+})
+</script>
+  </body>
+</html>

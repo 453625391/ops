@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<% include ../../commonHead.html %>
+    <title>品牌领</title>
+    <link rel="stylesheet" type="text/css" href="/css/gold-exchange/detail.css?v20161219">
+</head>
+<body style="<%if(requestParams.s){%>padding-bottom: 0;<%}%>">
+	<div class="banner">
+        <div id="slider" class="swipe">
+            <div class="swipe-wrap">
+            <% for(var i=0; i<goods.picUrlArr.length; i++) { %>
+                <div>
+                    <img src="<%=goods.picUrlArr[i] %>" />
+                </div>
+			<% } %>
+            </div>
+        </div>
+        <nav>
+            <ul id="position">
+            <% for(var i in goods.picUrlArr) { %>
+                <% if(i == 0) { %>
+                    <li class="on"></li>
+                <% } else { %>
+                    <li></li>
+                <% } %>    
+            <% } %>
+            </ul>
+        </nav>
+    </div>
+    <div class="txt-wrap">
+    	<table class="tb">
+    		<tr>
+    			<td class="price"><em class="rmb">¥</em><%if(parseInt(goods.market_price)==goods.market_price){%><%=parseInt(goods.market_price)%><%}else{%><%=goods.market_price%><%}%></td>
+    			<td>会员特价&nbsp;&nbsp;<span class="highlight"><%=Math.ceil(goods.market_price-goods.discount_price) %>&nbsp;金币&nbsp;+&nbsp;<%if(parseInt(goods.discount_price)==goods.discount_price){%><%=parseInt(goods.discount_price)%><%}else{%><%=goods.discount_price%><%}%>&nbsp;元</span></td>
+    		</tr>
+    		<tr>
+    			<td colspan="2" class="tit bt"><%=goods.title %></td>
+    		</tr>
+    		<tr>
+    			<td colspan="2" class="gray pb20">
+	    			<ul>
+		                <%if(goods.specification){%><li>规格：<%=goods.specification %></li><%}%>
+		                <%if(goods.sale_qty){%><li>库存：<%=goods.sale_qty %></li><%}%>
+	    			</ul>
+    			</td>
+    		</tr>
+    		<tr>
+    			<td colspan="2" class="desc bt"><%=goods.desc1 %></td>
+    		</tr>
+    	</table>
+    </div>
+    <div id="detailContainer" class="tab-target">
+		<% if(goods.picDetailArr) { %>
+	    <div class="detail-wrap">
+	    <% for(var i=0; i<goods.picDetailArr.length; i++) { %>
+	        <p><%=goods.picDetailArr[i].title %></p>
+	        <div class="detail-img-wrap">
+	            <img src="<%=goods.picDetailArr[i].url %>" />
+	        </div>
+	    <% } %>
+	    </div>
+	    <% } %>
+	</div>
+    <% if(!requestParams.s) { %>
+    <div class="footer-bar">
+        <a href="javascript: void(0);" id="chatBtn" class="chat"></a>
+        <% if(goods.sale_qty > 0) {  %>
+        <a href="javascript: void(0);" class="btn able" id="exchangeNow">立即购买</a>
+        <% } else { %>
+        <a href="javascript: void(0);" class="btn disable">立即购买</a>
+    <% } %>
+    </div>
+    <% } else { %>
+    <div style="margin-bottom: -1.733333rem; margin-top: 0.666667rem;">
+        <img src="/image/fan/qr.gif?v2" style="width: 100%;" />
+    </div>
+    <% } %>
+</body>
+<script type="text/javascript">
+$(function() {
+	M.initSwipe();
+
+	var goods = {
+		goods_id : '<%=goods.goods_id %>',
+		goods_code : '<%=goods.goods_code %>',
+		title : '<%=goods.title %>',
+		pic_info : '<%=goods.pic_info %>'.replace(/&#34;/g, '"'),
+		specification : '<%=goods.specification %>',
+		goods_unit : '<%=goods.goods_unit %>',
+		market_price : '<%=goods.market_price %>',
+		discount_price : '<%=goods.discount_price %>',
+		gold : '<%=Math.ceil(goods.market_price-goods.discount_price) %>'
+	};
+
+    var shareData = {
+        title: '<%=goods.title %>',
+        desc: '<%=goods.desc1 ? goods.desc1.replace(/\r\n/g," ").replace(/\n/g, " ") : "" %>',
+        imgPath: '<%=goods.picUrlArr ? goods.picUrlArr[0] : "" %>',
+        url: window.location.href + '&s=1'
+    };
+
+    var chatData = {
+        // 聊天id
+        chat_id: 'mphcustomerserviceagent',
+        // 聊天界面标题
+        title: '官方客服',
+        // 客服头像
+        head_pic_path: 'https://oss-img.meitianhui.com/communityDocs/kefu.jpg',
+        // 当前商品id
+        goods_id: '<%=goods.goods_id %>',
+        // 聊天来源
+        from: 'llm'
+    };
+
+	if(window.jsObj) {	// Android
+        // 传递分享数据
+        if(window.jsObj.share) {
+            window.jsObj.share(JSON.stringify(shareData));
+        }
+
+		if(window.jsObj.exchangeNow) {
+			$('#exchangeNow').click(function() {
+				window.jsObj.exchangeNow(JSON.stringify(goods));
+			});
+		}
+
+        // 客服聊天
+        $('#chatBtn').click(function() {
+            if(window.jsObj.chatWithCustomerServiceAgent) {
+                window.jsObj.chatWithCustomerServiceAgent(JSON.stringify(chatData));
+            }
+        });
+	} else {	// IOS
+        setupWebViewJavascriptBridge(function(bridge) {
+            // 传递分享数据
+            bridge.callHandler('share', shareData);
+
+            $('#exchangeNow').click(function() {
+				bridge.callHandler('exchangeNow', goods);
+            });
+
+            // 客服聊天
+            $('#chatBtn').click(function() {
+                bridge.callHandler('chatWithCustomerServiceAgent', chatData);
+            });
+        });
+	}
+});
+</script>
+</html>

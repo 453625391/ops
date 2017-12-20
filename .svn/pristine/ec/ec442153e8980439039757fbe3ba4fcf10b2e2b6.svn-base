@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <% include ../commonHead.html %>
+    <title>新手攻略</title>
+    <style type="text/css">
+    .process-bor {
+        width: 100%;
+        overflow: hidden;
+        margin: 0 auto;
+        text-align: center;
+    }
+    .process-bor img {
+        width: 10.0rem;
+        display: block;
+        margin: 0 auto;
+    }
+    </style>
+</head>
+
+<body>
+    <div class="process-bor">
+        <!-- <img src="/image/freshmanStrategy/1.jpg">
+        <img src="/image/freshmanStrategy/2.jpg">
+        <img src="/image/freshmanStrategy/3.jpg"> -->
+        <img src="/image/freshmanStrategy/4.jpg">
+    </div>
+</body>
+
+</html>

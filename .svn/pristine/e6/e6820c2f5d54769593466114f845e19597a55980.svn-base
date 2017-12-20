@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.meitianhui.member.dao.SalesmanAuthHistoryDao">
+
+	<select id="selectSalesmanAuthHistoryList" parameterType="Map" resultType="Map">
+		<![CDATA[
+		SELECT
+			ms.name,
+			ms.nick_name,
+			ms.contact_tel,
+			ms.area_id,
+			ms.id_card,
+			ma.path,
+			ms.salesman_id,
+			msah.history_id,
+			msah.auth_status,
+			msah.created_date
+		FROM
+			md_salesman_auth_history msah	
+			INNER JOIN md_salesman ms ON msah.salesman_id = ms.salesman_id	
+			LEFT JOIN md_area ma ON ms.area_id = ma.area_id
+		]]>	
+		<where>
+			1=1
+			<if test="auth_status !=null and auth_status !=''">
+				AND msah.auth_status = #{auth_status}
+			</if>
+			<if test="search_like !=null and search_like !=''">
+				AND (ms.name like concat('%',#{search_like},'%') or
+					ms.nick_name like concat('%',#{search_like},'%') or
+					ms.contact_tel like concat('%',#{search_like},'%') or
+					ms.id_card like concat('%',#{search_like},'%'))
+			</if>
+		</where>	
+		ORDER BY msah.created_date DESC
+	</select>
+	
+	<select id="selectSalesmanAuthHistoryLogList" parameterType="Map" resultType="Map">
+		<![CDATA[
+		SELECT
+			msal.log_id,
+			msal.tracked_date,
+			msal.event_desc,
+			msal.history_id,
+			msal.category
+		FROM
+			md_salesman_auth_log msal	
+		]]>	
+		<where>
+			1=1
+			<if test="history_id !=null and history_id !=''">
+				AND msal.history_id = #{history_id}
+			</if>
+			
+		</where>	
+		ORDER BY msal.tracked_date DESC
+	</select>
+	
+	<select id="selectSalesmanAuthHistory" parameterType="Map" resultType="Map">
+		<![CDATA[
+			SELECT
+			     msah.history_id
+				,msah.salesman_id
+				,msah.name
+				,msah.sex_key
+				,msah.id_card
+				,msah.id_card_pic_path
+				,msah.auth_status
+				,msah.remark
+				,msah.created_date
+			FROM
+				md_salesman_auth_history msah 
+		]]>
+		<where>
+			1=1
+			<if test="history_id != null and history_id != ''">
+				AND msah.history_id = #{history_id}
+			</if>
+			<if test="salesman_id != null and salesman_id != ''">
+				AND msah.salesman_id = #{salesman_id}
+			</if>
+			<if test="id_card != null and id_card != ''">
+				AND msah.id_card = #{id_card}
+			</if>
+			<if test="auth_status_in != null">
+				AND msah.auth_status in
+				<foreach item="item" index="index" collection="auth_status_in"
+					open="(" separator="," close=")">
+					#{item}
+				</foreach>
+			</if>
+		</where>
+		ORDER BY msah.created_date DESC	
+	</select>
+	
+	<update id="updateSalesmanAuthHistory" parameterType="Map">
+		UPDATE md_salesman_auth_history SET 
+		<trim suffixOverrides=",">
+			modified_date = SYSDATE(),
+			<if test="auth_status != null and auth_status != ''">
+				auth_status = #{auth_status},
+			</if>
+			<if test="remark != null and remark != ''">
+				remark = #{remark},
+			</if>
+		</trim>	
+		<where>
+			history_id = #{history_id}
+		</where>
+	</update>
+	
+	<insert id="insertSalesmanAuthHistory" parameterType="MDSalesmanAuthHistory">
+		INSERT INTO
+		md_salesman_auth_history(
+			history_id,
+			salesman_id,
+			name,
+			sex_key,
+			id_card,
+			id_card_pic_path,
+			auth_status,
+			created_date,
+			modified_date,
+			remark
+		)VALUES(
+			#{history_id},
+			#{salesman_id},
+			#{name},
+			#{sex_key},
+			#{id_card},
+			#{id_card_pic_path},
+			#{auth_status},
+			#{created_date},
+			#{modified_date},
+			#{remark}
+		)
+	</insert>
+	
+	<insert id="insertSalesmanAuthLog" parameterType="Map">
+		INSERT INTO
+		md_salesman_auth_log (
+		log_id
+		,history_id
+		,category
+		,tracked_date
+		,event_desc
+		)
+		VALUES (
+		#{log_id}
+		,#{history_id}
+		,#{category}
+		,#{tracked_date}
+		,#{event_desc}
+		)
+	</insert>
+	
+</mapper>

@@ -1,0 +1,128 @@
+body {
+    background-color: #f3f6f5;
+    font-weight: 300;
+}
+.new-god{
+    background: #ffffff;
+    width: 9.466667rem;
+    padding:0.266667rem 0.266667rem 0 0.266667rem;
+    margin:0.333333rem auto;
+}
+.new-god:first-child {
+    margin-top: 0;
+}
+.new-god .title{
+    color: #333333;
+    margin:0.066667rem 0 0.233333rem;
+}
+[data-dpr="1"] .new-god .title{
+    font-size: 18px;
+}
+[data-dpr="2"] .new-god .title{
+    font-size: 36px;
+}
+[data-dpr="3"] .new-god .title{
+    font-size: 54px;
+}
+.new-god .nr{
+    color: #666666;
+    line-height: 0.48rem;
+}
+[data-dpr="1"] .new-god .nr{
+    font-size: 14px;
+}
+[data-dpr="2"] .new-god .nr{
+    font-size: 28px;
+}
+[data-dpr="3"] .new-god .nr{
+    font-size: 42px;
+}
+.new-god ul{
+    overflow: hidden;
+    margin:0.266667rem 0 0;
+}
+.new-god ul li,.new-god ul li img{
+    float: left;
+    width: 2.96rem;
+    height: 2.96rem;
+}
+.new-god ul li{
+    margin-right: 0.24rem;
+    margin-bottom: 0.266667rem;
+}
+.new-god ul li:nth-child(3n) {
+    margin-right: 0 !important;
+}
+.new-god ul li.right-none{
+    margin-right: 0;
+}
+.new-god .time{
+    height: 1.2rem;
+    line-height: 1.2rem;
+    border-top: solid 1px #f4f4f4;
+    color: #666666;
+}
+[data-dpr="1"] .new-god .time{
+    font-size: 12px;
+}
+[data-dpr="2"] .new-god .time{
+    font-size: 24px;
+}
+[data-dpr="3"] .new-god .time{
+    font-size: 36px;
+}
+.new-god .time span{
+    float:right;
+    color:#ff0000;
+    }
+[data-dpr="1"] .new-god .time span{
+    font-size: 16px;
+}
+[data-dpr="2"] .new-god .time{
+    font-size: 32px;
+}
+[data-dpr="3"] .new-god .time{
+    font-size: 64px;
+}
+.new-god .time .icon-bm{
+    width: 2.133333rem;
+    height: 0.773333rem;
+    float: right;
+    background: url(/image/more/xpx/icon-bm.jpg) no-repeat;
+    background-size: 2.133333rem 0.773333rem;
+    margin-top: 0.213333rem;
+}
+.new-god .time i {
+    font-size: 0.32rem;
+}
+.img-preview {
+    width: 100%;
+    height: 100%;
+    text-align: center;
+    display: none;
+    background-color: rgba(0,0,0, 0.8);
+    position: fixed;
+    left: 0;
+    top: 0;
+}
+.img-preview table {
+    height: 100%;
+}
+.img-preview td {
+    vertical-align: middle;
+}
+.img-preview img {
+    width: 10rem;
+}
+.no-record {
+    margin-top: 2rem;
+    font-size: 0.373333rem;
+    color: #666;
+    text-align: center;
+}
+.no-record p {
+    padding-top: 0.373333rem;
+}
+.no-record img {
+    width: 3.76rem;
+}

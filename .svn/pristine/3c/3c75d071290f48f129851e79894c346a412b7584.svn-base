@@ -1,0 +1,453 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.meitianhui.goods.dao.LdActivityDao">
+
+
+	<insert id="insertLdActivity" parameterType="LdActivity">
+		INSERT INTO
+		ld_activity (
+		activity_id
+		,activity_type
+		,title
+		,desc1
+		,end_date
+		,award_name
+		,award_value
+		,stores_id
+		,stores_info
+		,stores_longitude
+		,stores_latitude
+		,person_num
+		,joined_num
+		,luck_code
+		,award_pic_path1
+		,award_pic_path2
+		,award_pic_path3
+		,award_pic_path4
+		,award_pic_path5
+		,status
+		,created_date
+		,modified_date
+		,remark
+		)
+		VALUES (
+		#{activity_id}
+		,#{activity_type}
+		,#{title}
+		,#{desc1}
+		,#{end_date}
+		,#{award_name}
+		,#{award_value}
+		,#{stores_id}
+		,#{stores_info}
+		,#{stores_longitude}
+		,#{stores_latitude}
+		,#{person_num}
+		,#{joined_num}
+		,#{luck_code}
+		,#{award_pic_path1}
+		,#{award_pic_path2}
+		,#{award_pic_path3}
+		,#{award_pic_path4}
+		,#{award_pic_path5}
+		,#{status}
+		,#{created_date}
+		,#{modified_date}
+		,#{remark}
+		)
+	</insert>
+
+
+	<insert id="insertLdActivityProcess" parameterType="LdActivityProcess">
+		INSERT INTO
+		ld_activity_process (
+		process_id
+		,activity_id
+		,consumer_id
+		,draw_code
+		,status
+		,created_date
+		,modified_date
+		,remark
+		)
+		VALUES (
+		#{process_id}
+		,#{activity_id}
+		,#{consumer_id}
+		,#{draw_code}
+		,#{status}
+		,#{created_date}
+		,#{modified_date}
+		,#{remark}
+		)
+	</insert>
+
+
+	<insert id="insertDskActivityProcess" parameterType="LdActivityProcess">
+		INSERT INTO
+		ld_activity_process (
+		process_id
+		,activity_id
+		,consumer_id
+		,draw_code
+		,status
+		,created_date
+		,modified_date
+		,remark
+		)
+		VALUES (
+		#{process_id}
+		,#{activity_id}
+		,#{consumer_id}
+		,(SELECT CAST(CASE count(1) WHEN 0 THEN
+		'10000001' ELSE MAX(t.draw_code) + 1 END as CHAR) draw_code FROM
+		ld_activity_process t where t.activity_id =#{activity_id} )
+		,#{status}
+		,#{created_date}
+		,#{modified_date}
+		,#{remark}
+		)
+	</insert>
+
+	<select id="selectLdActivityCount" parameterType="Map" resultType="Map">
+		<![CDATA[
+			SELECT
+				count(a.activity_id) as count_num
+				
+			FROM ld_activity a 
+		]]>
+		<where>
+			1=1
+			<if test="stores_id != null and stores_id != ''">
+				AND a.stores_id = #{stores_id}
+			</if>
+			<if test="status != null and status != ''">
+				AND a.status = #{status}
+			</if>
+		</where>
+	</select>
+
+
+	<select id="selectLdActivityDetail" parameterType="Map"	resultType="Map">
+			SELECT
+				a.activity_id
+				,activity_type
+				,a.stores_id
+				,a.stores_info
+				,a.title
+				,a.desc1
+				,a.end_date
+				,a.award_name
+				,a.award_value
+				,a.person_num
+				,a.joined_num
+				,a.luck_code
+				,a.award_pic_path1
+				,a.award_pic_path2
+				,a.award_pic_path3
+				,a.award_pic_path4
+				,a.award_pic_path5
+				,a.status
+				,a.created_date
+				,a.modified_date
+				,a.remark
+				,a.joined_num as total_person
+			FROM ld_activity a 
+		<where>
+			1=1
+			<if test="activity_id != null and activity_id != ''">
+				AND a.activity_id = #{activity_id}
+			</if>
+			<if test="stores_id != null and stores_id != ''">
+				AND a.stores_id = #{stores_id}
+			</if>
+			<if test="activity_type != null and activity_type != ''">
+				AND a.activity_type = #{activity_type}
+			</if>
+			<if test="stores_id_in != null">
+				AND a.stores_id in
+				<foreach item="item" index="index" collection="stores_id_in"
+					open="(" separator="," close=")">
+					#{item}
+				</foreach>
+			</if>
+			<if test="activities_like != null and activities_like != ''">
+				AND (a.award_name like CONCAT('%',#{activities_like},'%')
+				or
+				a.title like CONCAT('%',#{activities_like},'%') or
+				a.stores_info
+				like CONCAT('%',#{activities_like},'%'))
+			</if>
+			<if test="status != null and status != ''">
+				AND a.status = #{status}
+			</if>
+			<if test="status_in != null">
+				AND a.status in
+				<foreach item="item" index="index" collection="status_in"
+					open="(" separator="," close=")">
+					#{item}
+				</foreach>
+			</if>
+			<if test="gt_date != null">
+				AND a.end_date &gt; #{gt_date}
+			</if>
+			<if test="lt_date != null">
+				AND a.end_date &lt; #{lt_date}
+			</if>
+		</where>
+		ORDER BY a.created_date DESC
+	</select>
+
+
+	<select id="selectLdActivityForValidate" parameterType="Map" resultType="Map">
+			SELECT
+				a.title
+				,a.award_name
+				,a.activity_type
+				,a.award_pic_path1
+				,ap.created_date
+			FROM ld_activity a 
+			INNER JOIN ld_activity_process ap ON a.activity_id=ap.activity_id
+		<where>
+			ap.status = 'win'
+			<if test="activity_id != null and activity_id != ''">
+				AND a.activity_id = #{activity_id}
+			</if>
+			<if test="stores_id != null and stores_id != ''">
+				AND a.stores_id = #{stores_id}
+			</if>
+			<if test="luck_code != null and luck_code != ''">
+				AND a.luck_code = #{luck_code}
+			</if>
+			<if test="activity_type != null and activity_type != ''">
+				AND a.activity_type = #{activity_type}
+			</if>
+			<if test="process_id != null and process_id != ''">
+				AND ap.process_id = #{process_id}
+			</if>
+		</where>
+	</select>
+
+	<select id="selectLdActivity" parameterType="Map" resultType="LdActivity">
+			SELECT
+				a.activity_id
+				,activity_type
+				,a.stores_id
+				,a.title
+				,a.end_date
+				,a.award_name
+				,a.award_value
+				,a.person_num
+				,a.joined_num
+				,a.luck_code
+				,a.status
+				,a.modified_date
+			FROM ld_activity a 
+		<where>
+			1=1
+			<if test="activity_id != null and activity_id != ''">
+				AND a.activity_id = #{activity_id}
+			</if>
+			<if test="stores_id != null and stores_id != ''">
+				AND a.stores_id = #{stores_id}
+			</if>
+			<if test="luck_code != null and luck_code != ''">
+				AND a.luck_code = #{luck_code}
+			</if>
+			<if test="activity_type != null and activity_type != ''">
+				AND a.activity_type = #{activity_type}
+			</if>
+			<if test="status != null and status != ''">
+				AND a.status = #{status}
+			</if>
+		</where>
+		ORDER BY a.created_date DESC
+	</select>
+
+
+	<select id="selectLdActivityProcess" parameterType="Map"
+		resultType="LdActivityProcess">
+		<![CDATA[
+			SELECT
+				process_id
+				,activity_id
+				,consumer_id
+				,draw_code
+				,created_date
+				,modified_date
+				,status
+				,remark
+			FROM ld_activity_process
+		]]>
+		<where>
+			1=1
+			<if test="process_id != null and process_id != ''">
+				AND process_id = #{process_id}
+			</if>
+			<if test="activity_id != null and activity_id != ''">
+				AND activity_id = #{activity_id}
+			</if>
+			<if test="consumer_id != null and consumer_id != ''">
+				AND consumer_id = #{consumer_id}
+			</if>
+			<if test="draw_code != null and draw_code != ''">
+				AND draw_code = #{draw_code}
+			</if>
+			<if test="status != null and status != ''">
+				AND status = #{status}
+			</if>
+		</where>
+		ORDER BY created_date DESC
+	</select>
+
+	<select id="selectLdActivityProcessForStore" parameterType="Map"
+		resultType="LdActivityProcess">
+		<![CDATA[
+			SELECT
+				process_id
+				,activity_id
+				,consumer_id
+				,draw_code
+				,created_date
+				,modified_date
+				,status
+				,remark
+			FROM ld_activity_process
+		]]>
+		<where>
+			1=1
+			<if test="process_id != null and process_id != ''">
+				AND process_id = #{process_id}
+			</if>
+			<if test="activity_id != null and activity_id != ''">
+				AND activity_id = #{activity_id}
+			</if>
+		</where>
+		ORDER BY created_date DESC
+	</select>
+
+	<select id="selectLdActivityProcessCount" parameterType="Map"
+		resultType="Map">
+		<![CDATA[
+			SELECT
+				consumer_id
+				,count(process_id) as count_num
+			FROM ld_activity_process
+		]]>
+		<where>
+			1=1
+			<if test="activity_id != null and activity_id != ''">
+				AND activity_id = #{activity_id}
+			</if>
+		</where>
+		GROUP BY consumer_id
+	</select>
+
+	<!-- 查询附近的活动门店ID列表 -->
+	<select id="selectNearbyActivityStores" parameterType="Map"
+		resultType="Map">
+		SELECT stores_id, distance FROM (
+			<![CDATA[
+				SELECT
+					a.stores_id,
+					round(6378.138 * 2 * asin(
+					sqrt(pow(sin((stores_latitude * pi() / 180 - #{latitude} * pi() / 180) / 2),	2) + 
+						cos(stores_latitude * pi() / 180) * cos(#{latitude} * pi()/180)* pow(sin((stores_longitude * pi()/180 - #{longitude} * pi()/180)/2),2))) * 1000) as distance
+				from
+					ld_activity a
+			]]>
+		<where>
+			a.stores_latitude &gt; #{latitude_gt} AND a.stores_latitude &lt;
+			#{latitude_lt}
+			AND a.stores_longitude &gt; #{longitude_gt} AND
+			a.stores_longitude &lt;
+			#{longitude_lt}
+			<if test="status != null and status != ''">
+				AND a.status = #{status}
+			</if>
+		</where>
+		GROUP BY a.stores_id, distance
+		<if test="range != null and range != ''">
+			HAVING distance &lt;= #{range}
+		</if>
+		ORDER BY distance ASC
+		) b
+	</select>
+
+
+
+	<update id="updateLdActivity" parameterType="Map">
+		UPDATE ld_activity SET
+		<trim suffixOverrides=",">
+			modified_date = SYSDATE(),
+			<if test="luck_code != null and luck_code != ''">
+				luck_code = #{luck_code},
+			</if>
+			<if test="status != null and status != ''">
+				status = #{status},
+			</if>
+			<if test="stores_longitude != null and stores_longitude != ''">
+				stores_longitude = #{stores_longitude},
+			</if>
+			<if test="stores_latitude != null and stores_latitude != ''">
+				stores_latitude = #{stores_latitude},
+			</if>
+			<if test="remark != null and remark != ''">
+				remark = #{remark},
+			</if>
+			<if test="add_num != null">
+				joined_num = joined_num+#{add_num},
+			</if>
+		</trim>
+		<where>
+			1=1
+			<if test="activity_id != null and activity_id != ''">
+				AND activity_id = #{activity_id}
+			</if>
+			<if test="stores_id != null and stores_id != ''">
+				AND stores_id = #{stores_id}
+			</if>
+			<if test="modified_date != null and modified_date != ''">
+				AND modified_date = #{modified_date}
+			</if>
+		</where>
+	</update>
+
+	<update id="updateLdActivityProcess" parameterType="Map">
+		UPDATE ld_activity_process SET
+		<trim suffixOverrides=",">
+			modified_date = SYSDATE(),
+			<if test="status != null and status != ''">
+				status = #{status},
+			</if>
+			<if test="draw_code != null and draw_code != ''">
+				draw_code = #{draw_code}
+			</if>
+			<if test="remark != null and remark != ''">
+				remark = #{remark},
+			</if>
+		</trim>
+		<where>
+			1=1
+			<if test="process_id != null and process_id != ''">
+				AND process_id = #{process_id}
+			</if>
+			<if test="activity_id != null and activity_id != ''">
+				AND activity_id = #{activity_id}
+			</if>
+			<if test="consumer_id != null and consumer_id != ''">
+				AND consumer_id = #{consumer_id}
+			</if>
+			<if test="draw_code_eq != null and draw_code_eq != ''">
+				AND draw_code = #{draw_code_eq}
+			</if>
+			<if test="draw_code_neq != null and draw_code_neq != ''">
+				AND draw_code &lt;&gt; #{draw_code_neq}
+			</if>
+			<if test="modified_date != null and modified_date != ''">
+				AND modified_date = #{modified_date}
+			</if>
+		</where>
+	</update>
+
+</mapper>

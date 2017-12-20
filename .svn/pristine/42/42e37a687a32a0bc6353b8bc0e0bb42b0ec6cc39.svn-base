@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <!-- 删除苹果默认的工具栏和菜单栏 -->
+    <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+    <!-- 设置苹果工具栏颜色 -->
+    <meta name="format-detection" content="telphone=no, email=no" />
+    <!-- 忽略页面中的数字识别为电话，忽略email识别 -->
+    <!-- 启用360浏览器的极速模式(webkit) -->
+    <meta name="renderer" content="webkit">
+    <!-- 避免IE使用兼容模式 -->
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <!-- 针对手持设备优化，主要是针对一些老的不识别viewport的浏览器，比如黑莓 -->
+    <meta name="HandheldFriendly" content="true">
+    <!-- 微软的老式浏览器 -->
+    <meta name="MobileOptimized" content="320">
+    <!-- uc强制竖屏 -->
+    <meta name="screen-orientation" content="portrait">
+    <!-- QQ强制竖屏 -->
+    <meta name="x5-orientation" content="portrait">
+    <!-- UC强制全屏 -->
+    <meta name="full-screen" content="yes">
+    <!-- QQ强制全屏 -->
+    <meta name="x5-fullscreen" content="true">
+    <!-- UC应用模式 -->
+    <meta name="browsermode" content="application">
+    <!-- QQ应用模式 -->
+    <meta name="x5-page-mode" content="app">
+    <!-- windows phone 点击无高光 -->
+    <meta name="msapplication-tap-highlight" content="no">
+    <!-- 禁用iPhone手机浏览器上给电话号码自动加上的link样式 -->
+    <meta name="format-detection" content="telephone=no">
+    <title>话费充值</title>
+    <link rel="stylesheet" type="text/css" href="/css/reset.css">
+    <link rel="stylesheet" type="text/css" href="/css//mobile-fee/index.css?v20170104">
+    <script type="text/javascript" src="/js/third-part/flexible.js"></script>
+    <script type="text/javascript" src="/js/third-part/zepto.min.js"></script>
+    <script type="text/javascript" src="/js/third-part/fastclick.min.js"></script>
+    <script type="text/javascript" src="/js/third-part/template.js"></script>
+</head>
+
+<body>
+    <div class="phone">
+        <input type="tel" id="mobile" class="number" placeholder="请输入手机号码" />
+        <p class="flag" id="attribution"></p>
+    </div>
+    <div class="charge-wrap">
+        <!-- <div class="ti">充话费</div> -->
+        <div id="goodsToShow">
+            <!-- <ul class="calls-list">
+                <li>
+                    <p class="disabled-price">10元</p>
+                </li>
+                <li>
+                    <p class="disabled-price">20元</p>
+                </li>
+                <li>
+                    <p class="disabled-price">30元</p>
+                </li>
+            </ul> -->
+            <ul class="calls-list">
+                <li>
+                    <p class="disabled-price">50元</p>
+                </li>
+                <li>
+                    <p class="disabled-price">100元</p>
+                </li>
+                <li>
+                    <p class="disabled-price">200元</p>
+                </li>
+            </ul>
+            <ul class="calls-list">
+                <li>
+                    <p class="disabled-price">300元</p>
+                </li>
+                <li>
+                    <p class="disabled-price">500元</p>
+                </li>
+            </ul>
+        </div>
+        <div id="goodsList"></div>
+    </div>
+    <a class="but-recharge" id="rechargeBtn">立即充值</a>
+
+    <% if(recordsList && recordsList.length != 0) { %>
+    <h3 class="records-bar">充值记录</h3>
+    <ul class="records-list">
+        <% for(var i=0; i<recordsList.length; i++) { %>
+        <li class="record">
+            <div class="main-box">
+                <div class="tit">
+                    <div class="fl">
+                        <%=recordsList[i].goods_title %>
+                        -
+                        <%=recordsList[i].contact_tel %>
+                    </div>
+                    <div class="fr">
+                        <%=recordsList[i].total_fee %>
+                    </div>
+                </div>
+                <div class="date">
+                    <div class="fl"><%=recordsList[i].order_date %></div>
+                    <div class="fr <%if(recordsList[i].status == 'cancelled'){%>fail-red<%}%>"><%=recordsList[i].status == 'paid' ? '已支付' : recordsList[i].status == 'closed' ? '充值成功' : '充值失败' %></div>
+                </div>
+            </div>
+        </li>
+        <% } %>
+    </ul>
+    <% } %>
+
+    <script id="goodsTpl" type="text/html">
+        {{each list as goods i}}
+            {{if i%3 == 0}}
+            <ul class="calls-list">
+            {{/if}}
+                <li goods_id="{{goods.goods_id}}" market_price="{{goods.market_price}}" discount_price="{{goods.discount_price}}" title="{{goods.title}}" class="{{if i==0}}sel{{/if}}">
+                    <p class="nu">{{goods.title.replace('联通','').replace('移动','').replace('电信','')}}</p>
+                    <p class="price">售价:{{goods.discount_price}}元</p>
+                </li>
+            {{if i%3 == 2}}
+            </ul>
+            {{/if}}
+        {{/each}}
+    </script>
+</body>
+<script type="text/javascript">
+$(function() {
+    FastClick.attach(document.body);
+
+    // 选择充值套餐
+    $('#goodsList').on('click', 'li', function() {
+        $('#goodsList li').removeClass('sel');
+        $(this).addClass('sel');
+    });
+
+    var reg = /^1[0-9]{10}$/;
+    var mobile = '';
+    $('#mobile').on('keyup', function() {
+        mobile = $.trim($(this).val());
+        if(mobile.length == 11) {
+            if(reg.test(mobile)) {
+                $(this).blur();
+                // 查询归属地
+                $.ajax({
+                    type: 'POST',
+                    url: '/openapi/h5/common/mobile-fee/attribution',
+                    data: {
+                        mobile: mobile,
+                    },
+                    beforeSend: function() {
+                        $('#mobile').attr('disabled', true);
+                    },
+                    success: function(data) {
+                        if(typeof data == 'string') data = JSON.parse(data);
+                        if(data.rsp_code == 'fail') {
+                            $('#attribution').text(data.error_code).addClass('err');
+                            return;
+                        }
+                        // 显示归属地
+                        $('#attribution').text(data.data.province+data.data.yysType).removeClass('err');
+
+                        // 展示商品列表
+                        var tdata = {
+                            list: data.data.list
+                        };
+                        var html = template('goodsTpl', tdata);
+                        $('#goodsList').html(html);
+                        $('#goodsToShow').hide();
+                    },
+                    complete: function() {
+                        $('#mobile').removeAttr("disabled");
+                    }
+                });
+            } else {    // 格式错误
+                $('#attribution').text('手机号输入有误').addClass('err');
+            }
+        } else {
+            $('#attribution').empty();
+            $('#goodsList').empty();
+            $('#goodsToShow').show();
+        }
+    }).on('keydown', function(e) {
+        if(e.keyCode != 8) {    // 忽略删除键
+            if(e.keyCode < 48 || e.keyCode > 57) {  // 只允许输入数字
+                return false;
+            }
+            mobile = $(this).val();
+            if(mobile.length == 11) {   // 最多输入11位
+                return false;
+            }
+        }
+    });
+
+    if(window.jsObj) {
+        $('#rechargeBtn').click(function() {
+            var goodsDom = $('#goodsList .sel');
+            if(goodsDom.length != 0) {
+                var goods = {
+                    mobile: mobile,
+                    title: $(goodsDom).attr('title'),
+                    goods_id: $(goodsDom).attr('goods_id'),
+                    market_price: $(goodsDom).attr('market_price'),
+                    discount_price: $(goodsDom).attr('discount_price')
+                };
+
+                window.jsObj.mobileFeeRecharge(JSON.stringify(goods));
+            }
+        });
+    } else {
+        setupWebViewJavascriptBridge(function(bridge) {
+            $('#rechargeBtn').click(function(e) {
+                var goodsDom = $('#goodsList .sel');
+                if(goodsDom.length != 0) {
+                    var goods = {
+                        mobile: mobile,
+                        title: $(goodsDom).attr('title'),
+                        goods_id: $(goodsDom).attr('goods_id'),
+                        market_price: $(goodsDom).attr('market_price'),
+                        discount_price: $(goodsDom).attr('discount_price')
+                    };
+
+                    bridge.callHandler('mobileFeeRecharge', goods);
+                }
+                
+            });
+        });
+    }
+});
+
+function setupWebViewJavascriptBridge(callback) {
+    if (window.WebViewJavascriptBridge) {
+        return callback(WebViewJavascriptBridge);
+    }
+    if (window.WVJBCallbacks) {
+        return window.WVJBCallbacks.push(callback);
+    }
+    window.WVJBCallbacks = [callback];
+    var WVJBIframe = document.createElement('iframe');
+    WVJBIframe.style.display = 'none';
+    WVJBIframe.src = 'wvjbscheme://__BRIDGE_LOADED__';
+    document.documentElement.appendChild(WVJBIframe);
+    setTimeout(function() {
+        document.documentElement.removeChild(WVJBIframe)
+    }, 0)
+}
+</script>
+</html>

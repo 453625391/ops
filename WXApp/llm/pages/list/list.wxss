@@ -1,0 +1,301 @@
+page {
+	background-color: #f3f6f5;
+	padding-bottom: 100rpx;
+}
+/* banner */
+.banner {
+	height: 260rpx;
+	margin-bottom: 0;
+}
+.banner-img {
+	width: 750rpx;
+	height: 260rpx;
+}
+
+/* tab */
+.tab-wrap {
+	width: 750rpx;
+	overflow: hidden;
+	position: fixed;
+	left: 0;
+	bottom: 0;
+	background: #ffffff;
+	box-shadow: 0 -3rpx 6rpx rgba(0,0,0,0.05);
+	z-index: 3;
+}
+.tab-wrap .tab {
+	width: 25%;
+	height: 100rpx;
+	line-height: 150rpx;
+	font-size: 24rpx;
+	color: #666666;
+	float: left;
+	text-align: center;
+}
+.tab-wrap .all {
+	background: url(https://appportal.meitianhui.com/image/wxapp/recommend.png) no-repeat center 12rpx;
+	background-size: 39rpx 39rpx;
+}
+.tab-wrap .on.all {
+	color: #ff4242;
+	background: url(https://appportal.meitianhui.com/image/wxapp/recommend-red.png) no-repeat center 12rpx;
+	background-size: 39rpx 39rpx;
+}
+.tab-wrap .new {
+	background: url(https://appportal.meitianhui.com/image/wxapp/new.png) no-repeat center 12rpx;
+	background-size: 39rpx 36rpx;
+}
+.tab-wrap .on.new {
+	color: #ff4242;
+	background: url(https://appportal.meitianhui.com/image/wxapp/new-red.png) no-repeat center 12rpx;
+	background-size: 39rpx 36rpx;
+}
+.tab-wrap .category {
+	background: url(https://appportal.meitianhui.com/image/wxapp/all.png) no-repeat center 12rpx;
+	background-size: 39rpx 39rpx;
+}
+.tab-wrap .on.category {
+	color: #ff4242;
+	background: url(https://appportal.meitianhui.com/image/wxapp/all-red.png) no-repeat center 12rpx;
+	background-size: 39rpx 39rpx;
+}
+.tab-wrap .forecast {
+	background: url(https://appportal.meitianhui.com/image/wxapp/forecast.png) no-repeat center 12rpx;
+	background-size: 42rpx 42rpx;
+}
+.tab-wrap .on.forecast {
+	color: #ff4242;
+	background: url(https://appportal.meitianhui.com/image/wxapp/forecast-red.png) no-repeat center 12rpx;
+	background-size: 42rpx 42rpx;
+}
+/* .tab-wrap .wish {
+	background: url(https://appportal.meitianhui.com/image/wxapp/wish.png) no-repeat center 12rpx;
+	background-size: 43rpx 41rpx;
+}
+.tab-wrap .on.wish {
+	color: #ff4242;
+	background: url(https://appportal.meitianhui.com/image/wxapp/wish-red.png) no-repeat center 12rpx;
+	background-size: 43rpx 41rpx;
+} */
+
+
+.all-goods-bar {
+	width: 750rpx;
+	height: 80rpx;
+	margin-bottom: 12rpx;
+}
+/* 单行商品 */
+.single-goods-list {
+	width: 100%;
+}
+.single-goods {
+	overflow: hidden;
+	padding: 0 18rpx;
+	margin-bottom: 10rpx;
+	background-color: #ffffff;
+}
+.single-goods .left-box {
+	float: left;
+	width: 250rpx;
+	height: 250rpx;
+	position: relative;
+	box-shadow: 2rpx 0 0 0 #f3f6f5;
+}
+.single-goods .left-box .goods-pic {
+	width: 250rpx;
+	height: 250rpx;
+}
+.single-goods .right-box {
+	float: left;
+	width: 432rpx;
+	height: 250rpx;
+	margin-left: 28rpx;
+	position: relative;
+}
+.single-goods .right-box .tit {
+	font-size: 32rpx;
+	line-height: 38rpx;
+	height: 76rpx;
+	color: #333333;
+	margin-top: 38rpx;
+	overflow: hidden;
+	position: relative;
+	text-indent: 70rpx;
+}
+.single-goods .right-box .tit .tag {
+	display: inline-block;
+	padding: 0 8rpx;
+	margin-right: 5rpx;
+	border-radius: 5rpx;
+	text-align: center;
+	color: #ffffff;
+	position: absolute;
+	top: 5rpx;
+	left: 0;
+	height: 32rpx;
+	line-height: 32rpx;
+	font-size: 20rpx;
+	text-indent: 0;
+}
+.single-goods .right-box .tit .tb {
+	background-color: #ff4400;
+}
+.single-goods .right-box .price-wrap {
+	margin-top: 20rpx;
+}
+.single-goods .right-box .price-wrap .final-price-wrap {
+	color: #333333;
+	font-size: 24rpx;
+}
+.single-goods .right-box .price-wrap .final-price-wrap .unit {
+	color: #ff4242;
+	font-size: 28rpx;
+	font-weight: bold;
+	margin: 0 5rpx;
+}
+.single-goods .right-box .price-wrap .final-price-wrap .final-price {
+	color: #ff4242;
+	font-size: 36rpx;
+	font-weight: bold;
+}
+.single-goods .right-box .price-wrap .other-price {
+	margin-top: 18rpx;
+	color: #666666;
+	font-size: 24rpx;
+}
+.single-goods .right-box .price-wrap .other-price .original-price {
+	margin-right: 24rpx;
+}
+
+/* 一行两个商品 */
+.double-goods-list {
+	width: 750rpx;
+	margin: 0 auto;
+	/* background: #f3f6f5; */
+	overflow: hidden;
+}
+.double-goods-list .double-goods {
+	width: 333rpx;
+	padding: 18rpx;
+	float: left;
+	position: relative;
+	background-color: #ffffff;
+	margin-bottom: 12rpx;
+}
+.double-goods-list .double-goods:nth-child(odd) {
+	margin-right: 6rpx;
+}
+.double-goods-list .double-goods:nth-child(even) {
+	margin-left: 6rpx;
+}
+.double-goods-list .double-goods .goods-pic {
+	width: 333rpx;
+	height: 333rpx;
+}
+.double-goods-list .double-goods .txt-wrap {
+	color: #999999;
+	overflow: hidden;
+	padding: 30rpx 0 24rpx 0;
+}
+.double-goods-list .double-goods .txt-wrap .tit {
+	color: #333333;
+	font-size: 32rpx;
+	padding: 0 75rpx 15rpx 0;
+	text-overflow: ellipsis;
+	overflow: hidden;
+	white-space: nowrap;
+	position: relative;
+}
+.double-goods-list .double-goods .txt-wrap .tag {
+	display: inline-block;
+	padding: 0 8rpx;
+	border-radius: 7rpx;
+	text-align: center;
+	color: #ffffff;
+	position: absolute;
+	top: 5rpx;
+	right: 0;
+	line-height: 32rpx;
+	font-size: 20rpx;
+}
+.double-goods-list .double-goods .txt-wrap .tb {
+	background-color: #ff4400;
+}
+.double-goods-list .double-goods .txt-wrap .price {
+	color: #333333;
+	font-size: 24rpx;
+	padding-top: 10rpx;
+}
+.double-goods-list .double-goods .txt-wrap .price .unit {
+	color: #ff4242;
+	font-size: 28rpx;
+	margin: 0 6rpx;
+	font-weight: bold;
+}
+.double-goods-list .double-goods .txt-wrap .price .money {
+	color: #ff4242;
+	font-size: 36rpx;
+	font-weight: bold;
+}
+
+/* 分类选择 */
+.category-panel-wrap {
+	width: 750rpx;
+	height: 100%;
+	position: fixed;
+	left: 0;
+	bottom: 100rpx;
+	background: rgba(0, 0, 0, 0.5);
+	z-index: 2;
+}
+.category-panel-wrap .category-panel {
+	width: 714rpx;
+	height: 425rpx;
+	padding: 45rpx 18rpx 0 18rpx;
+	background: #ffffff;
+	position: fixed;
+	left: 0;
+	bottom: 98rpx;
+}
+.category-panel-wrap .category-panel .category {
+	width: 238rpx;
+	float: left;
+	display: inline-block;
+	padding-top: 110rpx;
+	margin-bottom: 45rpx;
+	text-align: center;
+	position: relative;
+}
+.category-panel-wrap .category-panel .category .name {
+	display: inline-block;
+	color: #333333;
+	font-size: 30rpx;
+	padding: 12rpx 20rpx;
+	border-radius: 1000rpx;
+	border: 2rpx solid #c5c5c5;
+	background: rgba(255, 255, 255, 0.7);
+}
+.category-panel-wrap .category-panel .ryjj {
+	background: url(https://appportal.meitianhui.com/image/wxapp/ryjj.png) no-repeat center 16rpx;
+	background-size: 122rpx 135rpx;
+}
+.category-panel-wrap .category-panel .smjd {
+	background: url(https://appportal.meitianhui.com/image/wxapp/smjd.png) no-repeat center 24rpx;
+	background-size: 133rpx 133rpx;
+}
+.category-panel-wrap .category-panel .myyp {
+	background: url(https://appportal.meitianhui.com/image/wxapp/myyp.png) no-repeat center 24rpx;
+	background-size: 135rpx 131rpx;
+}
+.category-panel-wrap .category-panel .fsxb {
+	background: url(https://appportal.meitianhui.com/image/wxapp/fsxb.png) no-repeat center 24rpx;
+	background-size: 136rpx 130rpx;
+}
+.category-panel-wrap .category-panel .spsx {
+	background: url(https://appportal.meitianhui.com/image/wxapp/spsx.png) no-repeat center 12rpx;
+	background-size: 173rpx 173rpx;
+}
+.category-panel-wrap .category-panel .xrzx {
+	background: url(https://appportal.meitianhui.com/image/wxapp/xrzx.png) no-repeat center 12rpx;
+	background-size: 166rpx 163rpx;
+}

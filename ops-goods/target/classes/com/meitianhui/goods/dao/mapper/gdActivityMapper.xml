@@ -1,0 +1,234 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.meitianhui.goods.dao.GdActivityDao">
+
+	<insert id="insertGdActivity" parameterType="GdActivity">
+		INSERT INTO
+		gd_activity (
+		activity_id
+		,title
+		,goods_id
+		,goods_code
+		,goods_title
+		,json_data
+		,expired_date
+		,limited_point
+		,limited_grade
+		,limited_benefit
+		,status
+		,created_date
+		,modified_date
+		,remark
+		)
+		VALUES (
+		#{activity_id}
+		,#{title}
+		,#{goods_id}
+		,#{goods_code}
+		,#{goods_title}
+		,#{json_data}
+		,#{expired_date}
+		,#{limited_point}
+		,#{limited_grade}
+		,#{limited_benefit}
+		,#{status}
+		,#{created_date}
+		,#{modified_date}
+		,#{remark}
+		)
+	</insert>
+
+	<select id="selectGdActivity" parameterType="Map" resultType="Map">
+		SELECT
+		activity_id
+		,goods_title
+		,expired_date
+		,limited_point
+		,limited_grade
+		,limited_benefit
+		FROM
+		gd_activity
+		<where>
+			1=1
+			<if test="activity_id != null and activity_id != ''">
+				AND activity_id = #{activity_id}
+			</if>
+			<if test="status != null and status != ''">
+				AND status = #{status}
+			</if>
+		</where>
+	</select>
+
+
+	<select id="selectGdActivityListForOp" parameterType="Map"
+		resultType="Map">
+		SELECT
+		activity_id
+		,title
+		,goods_id
+		,goods_code
+		,goods_title
+		,json_data
+		,expired_date
+		,limited_point
+		,limited_grade
+		,limited_benefit
+		,status
+		,created_date
+		,remark
+		FROM
+		gd_activity
+		<where>
+			1=1
+			<if test="title != null and title != ''">
+				AND title like CONCAT('%',#{title},'%')
+			</if>
+			<if test="goods_title != null and goods_title != ''">
+				AND goods_title like CONCAT('%',#{goods_title},'%')
+			</if>
+			<if test="goods_code != null and goods_code != ''">
+				AND goods_code = #{goods_code}
+			</if>
+			<if test="status != null and status != ''">
+				AND status = #{status}
+			</if>
+			<if test="status_in != null">
+				AND status in
+				<foreach item="item" index="index" collection="status_in"
+					open="(" separator="," close=")">
+					#{item}
+				</foreach>
+			</if>
+		</where>
+		ORDER BY created_date DESC
+	</select>
+
+
+	<select id="selectGdActivityListForConsumer" parameterType="Map"
+		resultType="Map">
+		SELECT
+		ga.activity_id
+		,ga.title
+		,ga.json_data
+		,ga.limited_point
+		,ga.limited_grade
+		,ga.limited_benefit
+		,ga.goods_id
+		,ga.goods_title
+		,pg.sale_qty
+		,pg.stock_qty
+		,pg.discount_price
+		,pg.market_price
+		FROM
+		gd_activity ga inner join ps_goods	pg on ga.goods_id = pg.goods_id 
+		AND	ga.status='normal' AND ga.expired_date &gt;= SYSDATE() 
+		ORDER BY ga.created_date DESC
+	</select>
+	
+	<select id="selectGdActivityDetail" parameterType="Map"
+		resultType="Map">
+		SELECT
+		ga.activity_id
+		,ga.title
+		,ga.json_data
+		,ga.limited_point
+		,ga.limited_grade
+		,ga.limited_benefit
+		,ga.goods_id
+		,ga.goods_title
+		,ga.status
+		,pg.sale_qty
+		,pg.stock_qty
+		,pg.discount_price
+		,pg.market_price
+		,pg.goods_code
+		,pg.desc1
+		,pg.area_id
+		,pg.label
+		,pg.label_promotion
+		,pg.category
+		,pg.data_source
+		,pg.display_area
+		,pg.contact_person
+		,pg.contact_tel
+		,pg.pic_info
+		,pg.pic_detail_info
+		,pg.specification
+		,pg.pack
+		,pg.cost_price
+		,pg.market_price
+		,pg.discount_price
+		,pg.ladder_price
+		,pg.ts_min_num
+		,pg.ts_price
+		,pg.ts_date
+		,pg.cost_allocation
+		,pg.product_source
+		,pg.shipping_fee
+		,pg.settled_price
+		,pg.service_fee
+		,pg.producer
+		,pg.agent
+		,pg.supplier_id
+		,pg.supplier
+		,pg.manufacturer
+		,pg.min_buy_qty
+		,pg.max_buy_qty
+		,pg.sale_qty
+		,pg.stock_qty
+		,pg.goods_unit
+		,pg.valid_thru
+		,pg.warehouse
+		,pg.warehouse_id
+		,pg.delivery
+		,pg.delivery_id
+		,pg.delivery_area
+		,pg.payment_way
+		,pg.status pg_status
+		,pg.created_date
+		,pg.modified_date
+		,pg.remark
+		,pg.online_date
+		,pg.offline_date
+		FROM
+		gd_activity ga inner join ps_goods	pg on ga.goods_id = pg.goods_id 
+		<where>
+			1=1 AND	ga.status='normal' AND ga.expired_date &gt;= SYSDATE() 
+			<if test="goods_id != null and goods_id != ''">
+				AND ga.goods_id = #{goods_id}
+			</if>
+			<if test="activity_id != null and activity_id != ''">
+				AND ga.activity_id = #{activity_id}
+			</if>
+		</where>	
+	</select>
+
+
+	<update id="updateGdActivity" parameterType="Map">
+		UPDATE gd_activity SET
+		<trim suffixOverrides=",">
+			modified_date = SYSDATE(),
+			<if test="status != null and status != ''">
+				status = #{status},
+			</if>
+			<if test="remark != null and remark != ''">
+				remark = #{remark},
+			</if>
+		</trim>
+		<where>
+			1=1
+			<if test="activity_id != null and activity_id != ''">
+				AND activity_id = #{activity_id}
+			</if>
+		</where>
+	</update>
+
+	<update id="updateExpiredGdActivity" parameterType="Map">
+		UPDATE gd_activity SET
+			modified_date = SYSDATE(),status = 'cancelled',remark = '过期自动取消'
+		WHERE status = 'normal'  AND expired_date &lt; #{lt_date} AND
+		expired_date &gt; #{gt_date}
+	</update>
+
+
+</mapper>

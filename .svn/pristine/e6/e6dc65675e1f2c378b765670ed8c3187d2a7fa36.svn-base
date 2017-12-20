@@ -1,0 +1,231 @@
+@charset "utf-8";
+
+/* CSS Document */
+
+html {
+    color: #000;
+    background: #214d65;
+    font-family: Arial, 'Microsoft Yahei', '微软雅黑', Helvetica, sans-serif;
+}
+
+body,
+div,
+dl,
+dt,
+dd,
+ul,
+ol,
+li,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+pre,
+code,
+form,
+fieldset,
+legend,
+input,
+textarea,
+p,
+blockquote,
+th,
+td {
+    margin: 0;
+    padding: 0;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    font-size: 100%;
+    font-weight: normal;
+}
+
+input,
+textarea,
+select {
+    *font-size: 100%;
+}
+
+.fr {
+    float: right;
+}
+
+a {
+    text-decoration: none;
+    outline: none;
+}
+
+input {
+	outline: none;
+}
+
+.main-container .ti {
+    color: #6695ae;
+    font-size: 20px;
+}
+
+.main-container .ti em {
+    background: url(/image/logo.png) no-repeat;
+    width: 130px;
+    height: 38px;
+    display: inline-block;
+    vertical-align: middle;
+    margin-right: 15px;
+}
+
+.main-container div {
+    margin-top: 20px;
+}
+
+.main-container div input[type="submit"] {
+    text-indent: 0;
+    background: #6695ae;
+    color: #ffffff;
+    font-size: 20px;
+    cursor: pointer;
+    -webkit-border-radius: 5px;
+    border-radius: 5px;
+    -webkit-appearance: none;
+    font-family: Arial, 'Microsoft Yahei', '微软雅黑', Helvetica, sans-serif;
+}
+
+.main-container div span,
+.main-container div span a {
+    color: #6695ae;
+    font-size: 12px;
+}
+
+.main-container div span .check {
+    width: 16px;
+    height: 16px;
+    vertical-align: middle;
+}
+
+.or {
+    background: url(/image/or.png) no-repeat #ffffff;
+    background-position: 20px 13px;
+}
+
+.oy {
+    background: url(/image/oy.png) no-repeat #ffffff;
+    background-position: 20px 11px;
+}
+
+.main-container div input {
+    width: 100%;
+    height: 46px;
+    border: none;
+    -webkit-border-radius: 5px;
+    border-radius: 5px;
+    color: #6695ae;
+    font-size: 16px;
+    text-indent: 50px;
+    font-weight: normal;
+}
+
+.zc {
+    text-align: center;
+    color: #ffffff;
+    font-size: 30px;
+}
+
+.main-container div .lo a {
+    color: #75abc7;
+    margin-left: 5px;
+    font-weight: bold;
+}
+
+@media screen and (min-width:768px) {
+    .main-container {
+        width: 300px;
+        margin: 150px auto 0;
+    }
+}
+
+@media screen and (max-width:768px) {
+    .main-container {
+        width: 96%;
+        padding: 2%;
+    }
+    .fluid-input {
+        display: inline-block;
+        width: 100%;
+        _overflow: hidden;
+    }
+    .fluid-input-inner {
+        display: block;
+        #zoom: 1;
+    }
+    .fluid-input .text,
+    .fluid-input .submit {
+        border: none;
+        padding: 2px 0 2px 10px;
+        width: 98%;
+        border-radius: 5px;
+    }
+    .fluid-input .submit {
+        background: #6695ae;
+        color: #ffffff;
+        font-size: 20px;
+        cursor: pointer;
+        width: 100%;
+    }
+}
+.err {
+    border: red 1px solid;
+    box-shadow: 0 0 20px rgba(244,187,85,0.9);
+    -webkit-box-shadow: 0 0 20px rgba(244,187,85,0.9);
+    -moz-box-shadow: 0 0 20px rgba(244,187,85,0.9);
+}
+.err-msg {
+    font-size: 16px;
+    color: #F4BB55;
+    padding-top: 10px;
+    font-weight: normal;
+}
+.oauth-err-msg {
+    text-align: center; 
+    background-color: #f9f2f4; 
+    color: #c7254e;
+    min-height: 50px; 
+    border-radius: 5px;
+    line-height: 50px;
+}
+/*==========以下部分是Validform必须的===========*/
+/*.Validform_checktip{
+    margin-left:8px;
+    line-height:30px;
+    height:30px;
+    overflow:hidden;
+    color:#fff !important;
+    font-size: 12px !important;
+    position: absolute;
+    border-top-right-radius: 3px;
+    border-bottom-right-radius: 3px;
+}
+.Validform_right{
+    display: none;
+}
+.Validform_wrong{
+    padding-left: 20px;
+    white-space: nowrap;
+    background: url(/image/validform-la.jpg) no-repeat left #F90;
+}
+.Validform_loading{
+    padding-left:20px;
+    background:url(/image/validform-onLoad.gif) no-repeat left center;
+}
+#Validform_msg{color:#7d8289; font: 12px/1.5 tahoma, arial, \5b8b\4f53, sans-serif; width:280px; -webkit-box-shadow:2px 2px 3px #aaa; -moz-box-shadow:2px 2px 3px #aaa; background:#fff; position:absolute; top:0px; right:50px; z-index:99999; display:none;filter: progid:DXImageTransform.Microsoft.Shadow(Strength=3, Direction=135, Color='#999999');}
+#Validform_msg .iframe{position:absolute; left:0px; top:-1px; z-index:-1;}
+#Validform_msg .Validform_title{line-height:25px; height:25px; text-align:left; font-weight:bold; padding:0 8px; color:#fff; position:relative; background-color:#000;}
+#Validform_msg a.Validform_close:link,#Validform_msg a.Validform_close:visited{line-height:22px; position:absolute; right:8px; top:0px; color:#fff; text-decoration:none;}
+#Validform_msg a.Validform_close:hover{color:#cc0;}
+#Validform_msg .Validform_info{padding:8px;border:1px solid #000; border-top:none; text-align:left;}*/
+/*==========Validform样式结束===========*/

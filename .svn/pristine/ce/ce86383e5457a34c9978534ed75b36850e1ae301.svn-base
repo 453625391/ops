@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <% include ../../commonHead.html %>
+    <title>开团须知</title>
+    <link rel="stylesheet" type="text/css" href="/css/hpt/rule.css?v20170324">
+</head>
+<body>
+	<ul class="rule-wrap">
+        <li class="rule">
+            <p class="tit pay">付款</p>
+            <div class="content">您需要完成首单预付，成团后差额部分将自动返还。</div>
+        </li>
+        <li class="rule">
+            <p class="tit income">收益</p>
+            <p class="content">开团成功可随机获赠会员权益－免单券</p>
+        </li>
+        <li class="rule">
+            <p class="tit delivery">收货</p>
+            <p class="content">成团后惠商驿站将代理收发和退换商品，有任何疑问可从订单页右上角处联系在线客服。</p>
+        </li>
+        <li class="rule">
+            <p class="tit refund">退款</p>
+            <p class="content">不成团则全部参与者将立即返还实际支付款项；成团后未发货亦可取消订单，已完成发货和返款操作的订单如要退换，请联系客服处理，可能产生费用。</p>
+        </li>
+        <li class="rule">
+            <p class="tit payback">返款</p>
+            <p class="content">请注意查看订单状态和确认收货，订单发货7天后系统也会自动确认收货，您的订单差价和免单权益也将自动支付到您的钱包账户。</p>
+        </li>
+    </ul>
+    <div class="foot-bar">
+        <a href="javascript: void(0);" id="createNow" class="btn">立即发起</a>
+    </div>
+</body>
+<script type="text/javascript">
+$(function() {
+    var data = {
+        goods_id: '<%=requestParams.goods_id%>',
+        title: '拼团领',
+        desc: '邻里组团拼，低至出厂价！',
+        imgPath: window.location.protocol + '//' + window.location.host + '/image/common/app_bdsh.png?v2',
+        url: window.location.protocol + '//' + window.location.host + '/openapi/h5/c/hpt/detail?goods_id=<%=requestParams.goods_id%>&s=1'
+    }
+    if(window.jsObj) {
+        $('#createNow').click(function() {
+            window.jsObj.createHptGroup(JSON.stringify(data));
+        });
+    } else {
+        setupWebViewJavascriptBridge(function(bridge) {
+            $('#createNow').click(function() {
+                bridge.callHandler('createHptGroup', data);
+            });
+        });
+    }
+});
+</script>
+</html>

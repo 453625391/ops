@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.meitianhui.notification.dao.NotificationDao">
+
+	<insert id="insertIdSmsStatistics" parameterType="java.util.List">
+		INSERT INTO id_sms_statistics
+		(
+		statistics_id
+		,sms_source
+		,mobile
+		,sms
+		,tracked_date
+		)
+		VALUES
+		<foreach collection="list" item="item" index="index"
+			separator=",">
+			(
+			#{item.statistics_id}
+			,#{item.sms_source}
+			,#{item.mobile}
+			,#{item.sms}
+			,#{item.tracked_date}
+			)
+		</foreach>
+	</insert>
+
+	<insert id="insertIdMessageQueue" parameterType="IdMessageQueue">
+		INSERT INTO
+		id_message_queue
+		(
+		queue_id
+		,message
+		,sender
+		,send_date
+		,receiver
+		)
+		VALUES
+		(
+		#{queue_id}
+		,#{message}
+		,#{sender}
+		,#{send_date}
+		,#{receiver}
+		)
+	</insert>
+
+
+	<select id="selectMemberLoginLog" resultType="Map"
+		parameterType="Map">
+		SELECT
+		member_id
+		,member_type_key
+		,device_type
+		,alias
+		FROM id_member_login
+		<where>
+			1=1
+			<if test="member_id != null and member_id != ''">
+				AND member_id=#{member_id}
+			</if>
+		</where>
+	</select>
+
+
+</mapper>

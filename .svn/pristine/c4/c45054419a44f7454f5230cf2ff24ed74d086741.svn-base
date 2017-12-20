@@ -1,0 +1,235 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.meitianhui.member.dao.SupplierDao">
+
+
+	<insert id="insertMDSupplier" parameterType="MDSupplier">
+		INSERT INTO
+		md_supplier (
+		supplier_id
+		,supplier_no
+		,supplier_name
+		,business_type_key
+		,desc1
+		,desc2
+		,area_id
+		,address
+		,contact_person
+		,contact_tel
+		,email
+		,legal_person
+		,legal_person_tel
+		,finance_contact
+		,finance_contact_tel
+		,contractor
+		,nature_business
+		,registered_capital
+		,sys_status
+		,registered_date
+		,label
+		,id_card_pic_path
+		,certification_pic_path
+		,licence_pic_path
+		,logo_pic_path
+		,old_facade_pic_path
+		,new_facade_pic_path
+		,old_stores_pic_path
+		,new_stores_pic_path
+		,created_date
+		,modified_date
+		,remark
+		)
+		VALUES (
+		#{supplier_id}
+		,#{supplier_no}
+		,#{supplier_name}
+		,#{business_type_key}
+		,#{desc1}
+		,#{desc2}
+		,#{area_id}
+		,#{address}
+		,#{contact_person}
+		,#{contact_tel}
+		,#{email}
+		,#{legal_person}
+		,#{legal_person_tel}
+		,#{finance_contact}
+		,#{finance_contact_tel}
+		,#{contractor}
+		,#{nature_business}
+		,#{registered_capital}
+		,#{sys_status}
+		,#{registered_date}
+		,#{label}
+		,#{id_card_pic_path}
+		,#{certification_pic_path}
+		,#{licence_pic_path}
+		,#{logo_pic_path}
+		,#{old_facade_pic_path}
+		,#{new_facade_pic_path}
+		,#{old_stores_pic_path}
+		,#{new_stores_pic_path}
+		,SYSDATE()
+		,SYSDATE()
+		,#{remark}
+		)
+	</insert>
+
+	<insert id="insertMDSupplierLog" parameterType="Map">
+		INSERT INTO
+		md_supplier_log (
+		log_id
+		,supplier_id
+		,category
+		,tracked_date
+		,event
+		)
+		VALUES (
+		#{log_id}
+		,#{supplier_id}
+		,#{category}
+		,#{tracked_date}
+		,#{event}
+		)
+	</insert>
+	
+	
+	<select id="selectMDSupplier" parameterType="Map" resultType="MDSupplier">
+		<![CDATA[
+			SELECT
+				t.supplier_id
+				,t.supplier_no
+				,t.supplier_name
+				,t.business_type_key
+				,t.desc1
+				,t.desc2
+				,t.area_id
+				,a.path as area_desc
+				,t.address
+				,t.contact_person
+				,t.contact_tel
+				,t.email
+				,t.legal_person
+				,t.legal_person_tel
+				,t.finance_contact
+				,t.finance_contact_tel
+				,t.contractor
+				,t.nature_business
+				,t.registered_capital
+				,t.sys_status
+				,t.registered_date
+				,t.label
+				,t.remark
+			FROM
+				md_supplier t
+				left join md_area a on a.area_code = t.area_id
+		]]>
+		<where>
+			1=1
+			<if test="supplier_id != null and supplier_id != ''">
+				AND t.supplier_id=#{supplier_id}
+			</if>
+			<if test="sys_status != null and sys_status != ''">
+				AND t.sys_status=#{sys_status}
+			</if>
+		</where>
+	</select>
+	
+
+	<update id="updateMDSupplierSync" parameterType="Map">
+		UPDATE md_supplier SET
+		modified_date = SYSDATE(),
+		<trim suffixOverrides=",">
+			<if test="business_type_key != null and business_type_key != ''">
+				business_type_key = #{business_type_key},
+			</if>
+			<if test="supplier_name != null and supplier_name != ''">
+				supplier_name = #{supplier_name},
+			</if>
+			<if test="address != null">
+				address = #{address},
+			</if>
+			<if test="area_id != null and area_id != ''">
+				area_id = #{area_id},
+			</if>
+			<if test="contact_person != null">
+				contact_person = #{contact_person},
+			</if>
+			<if test="contact_tel != null">
+				contact_tel = #{contact_tel},
+			</if>
+			<if test="desc1 != null">
+				desc1 = #{desc1},
+			</if>
+			<if test="desc2 != null">
+				desc2 = #{desc2},
+			</if>
+			<if test="email != null and email != ''">
+				email = #{email},
+			</if>
+			<if test="finance_contact != null and finance_contact != ''">
+				finance_contact = #{finance_contact},
+			</if>
+			<if test="finance_contact_tel != null and finance_contact_tel != ''">
+				finance_contact_tel = #{finance_contact_tel},
+			</if>
+			<if test="legal_person != null">
+				legal_person = #{legal_person},
+			</if>
+			<if test="legal_person_tel != null">
+				legal_person_tel = #{legal_person_tel},
+			</if>
+			<if test="contractor != null and contractor != ''">
+				contractor = #{contractor},
+			</if>
+			<if test="nature_business != null and nature_business != ''">
+				nature_business = #{nature_business},
+			</if>
+			<if test="registered_capital != null and registered_capital != ''">
+				registered_capital = #{registered_capital},
+			</if>
+			<if test="sys_status != null and sys_status != ''">
+				sys_status = #{sys_status},
+			</if>
+			<if test="business_status_key != null and business_status_key != ''">
+				business_status_key = #{business_status_key},
+			</if>
+			<if test="label != null">
+				label = #{label},
+			</if>
+			<if test="id_card_pic_path != null and id_card_pic_path != ''">
+				id_card_pic_path = #{id_card_pic_path},
+			</if>
+			<if test="certification_pic_path != null and certification_pic_path != ''">
+				certification_pic_path = #{certification_pic_path},
+			</if>
+			<if test="licence_pic_path != null and licence_pic_path != ''">
+				licence_pic_path = #{licence_pic_path},
+			</if>
+			<if test="logo_pic_path != null and logo_pic_path != ''">
+				logo_pic_path = #{logo_pic_path},
+			</if>
+			<if test="old_facade_pic_path != null and old_facade_pic_path != ''">
+				old_facade_pic_path = #{old_facade_pic_path},
+			</if>
+			<if test="new_facade_pic_path != null and new_facade_pic_path != ''">
+				new_facade_pic_path = #{new_facade_pic_path},
+			</if>
+			<if test="old_stores_pic_path != null and old_stores_pic_path != ''">
+				old_stores_pic_path = #{old_stores_pic_path},
+			</if>
+			<if test="new_stores_pic_path != null and new_stores_pic_path != ''">
+				new_stores_pic_path = #{new_stores_pic_path},
+			</if>
+			<if test="remark != null">
+				remark = #{remark},
+			</if>
+		</trim>
+		<where>
+			supplier_id=#{supplier_id}
+		</where>
+	</update>
+
+
+
+</mapper>

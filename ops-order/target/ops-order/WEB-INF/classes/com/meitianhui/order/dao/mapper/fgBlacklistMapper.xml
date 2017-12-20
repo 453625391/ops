@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.meitianhui.order.dao.FgBlacklistDao">
+
+
+	<insert id="insertFgBlacklist" parameterType="FgBlacklist">
+		INSERT INTO
+		fg_blacklist (
+		blacklist_id
+		,account
+		,account_type
+		,created_date
+		,remark
+		)
+		VALUES (
+		#{blacklist_id}
+		,#{account}
+		,#{account_type}
+		,#{created_date}
+		,#{remark}
+		)
+	</insert>
+
+	<select id="selectFgBlacklist" parameterType="Map" resultType="Map">
+		<![CDATA[
+			SELECT
+				blacklist_id 
+				,account
+				,account_type
+				,created_date
+				,remark
+			FROM
+				fg_blacklist
+		]]>
+		<where>
+			1=1
+			<if test="account != null and account != ''">
+				AND account = #{account}
+			</if>
+			<if test="account_type != null and account_type != ''">
+				AND account_type = #{account_type}
+			</if>
+		</where>
+		ORDER BY created_date DESC
+	</select>
+
+	<delete id="deleteFgBlacklist" parameterType="String">
+		DELETE FROM
+		fg_blacklist WHERE blacklist_id=#{blacklist_id}
+	</delete>
+
+</mapper>

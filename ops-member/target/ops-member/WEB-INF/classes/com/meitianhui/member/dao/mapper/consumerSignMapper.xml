@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.meitianhui.member.dao.ConsumerSignDao">
+
+	<insert id="insertMDConsumerSign" parameterType="MDConsumerSign">
+		INSERT INTO
+		md_consumer_sign(
+		sign_in_id
+		,category
+		,consumer_id
+		,sign_in_date
+		,created_date
+		,remark
+		)
+		VALUES(
+		#{sign_in_id}
+		,#{category}
+		,#{consumer_id}
+		,#{sign_in_date}
+		,sysdate()
+		,#{remark}
+		)
+	</insert>
+
+
+	<select id="selectMDConsumerSign" parameterType="Map"
+		resultType="MDConsumerSign">
+		SELECT
+			sign_in_id
+			,consumer_id
+		FROM md_consumer_sign
+		<where>
+			<if test="consumer_id != null and consumer_id != ''">
+				AND consumer_id=#{consumer_id}
+			</if>
+			<if test="sign_in_date != null and sign_in_date != ''">
+				AND sign_in_date=#{sign_in_date}
+			</if>
+		</where>
+	</select>
+	
+
+</mapper>

@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<% include commonHeader.html %>
+	<title>发布</title>
+	<link rel="stylesheet" type="text/css" href="/css/community/index.css?v20170425">
+</head>
+<body style="padding-bottom: 1.733333rem;">
+	<div id="publish">
+		<div class="content-wrap mt0">
+			<div class="upload-cover-wrap">
+				<div class="cover-wrap">
+					<p class="txt" v-show="!publishFormData.cover_path">添加封面</p>
+					<img id="cover" v-bind:src="publishFormData.cover_path" />
+				</div>
+				<div class="upload-mask" v-on:click="uploadImg(true)"></div>
+			</div>
+			<div class="article-wrap">
+				<div class="tit-wrap">
+					<input type="text" id="title" placeholder="标题" v-model="publishFormData.title" />
+				</div>
+				<div class="detail-wrap">
+					<div id="content" contenteditable="true" placeholder="写你所想" v-html="publishFormData.content"></div>
+				</div>
+				<div class="img-wrap">
+					<ul><li><a href="javascript: void(0);"  v-on:click="uploadImg(false)"></a></li></ul>
+				</div>
+			</div>
+		</div>
+		<div class="publish-wrap">
+			<ul class="option-list">
+				<li class="location" v-bind:class="{sel: publishFormData.location}" v-on:click="publishFormData.location ? publishFormData.location = '' : getLocation()">包含位置信息</li>
+				<li class="circle" v-bind:class="{sel: publishFormData.life_circle}" v-on:click="publishFormData.life_circle = !publishFormData.life_circle">发布到生活圈</li>
+				<li class="circle" v-bind:class="{sel: publishFormData.work_circle}" v-on:click="publishFormData.work_circle = !publishFormData.work_circle">发布到工作圈</li>
+				<li class="circle" v-bind:class="{sel: publishFormData.home_circle}" v-on:click="publishFormData.home_circle = !publishFormData.home_circle">发布到家乡圈</li>
+				<li class="circle" v-bind:class="{sel: publishFormData.hobby_circle}" v-on:click="publishFormData.hobby_circle = !publishFormData.hobby_circle">发布到兴趣圈</li>
+			</ul>
+			<a href="javascript: void(0);" class="publish-btn" v-on:click="publish">发 布</a>
+		</div>
+	</div>
+</body>
+<script type="text/javascript">
+var _mi = '<%=mi%>';
+</script>
+<script type="text/javascript" src="/build/js/community/publish.js?v3"></script>
+</html>

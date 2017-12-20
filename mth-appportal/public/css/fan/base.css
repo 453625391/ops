@@ -1,0 +1,341 @@
+/* 默认样式设定 */
+
+* {
+    margin: 0;
+    padding: 0;
+    color: #666666;
+    font-size: 16px;
+    font-family: '微软雅黑', Arial, 'Microsoft Yahei', Helvetica, sans-serif;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    font-family: inherit;
+    font-weight: 500;
+    line-height: 1.1;
+}
+
+table {
+    border-spacing: 0px;
+    border-collapse: collapse;
+}
+
+a {
+    text-decoration: none;
+}
+
+a {
+    color: #666666;
+}
+
+a:hover,
+a:focus {
+    text-decoration: none;
+}
+
+input[type="text"],
+select {
+    font-size: 14px;
+    color: #666;
+    border: solid 1px #EEEEEE;
+    height: 30px;
+}
+
+option {
+    text-indent: 5px;
+}
+
+a,
+input,
+select,
+textarea,
+a:hover,
+input:hover,
+select:hover,
+textarea:hover {
+    outline: none;
+}
+
+html {
+    height: 100%;
+    min-height: 100%;
+}
+
+body {
+    background: url(/image/fan/bj.jpg);
+    background-repeat: no-repeat;
+}
+
+li {
+    list-style: none;
+}
+
+option {
+    font-size: 14px;
+}
+
+.clearfix:before {
+    content: ' ';
+    clear: both;
+}
+
+.fl {
+    float: left;
+}
+
+.fr {
+    float: right;
+}
+
+.god-list {
+    width: 100%;
+    margin-top: 50px;
+}
+
+.god-list li {
+    float: left;
+    background: #ffffff;
+    width: 490px;
+    padding: 20px;
+    margin: 0 30px;
+    position: relative;
+}
+
+.god-list li .soldout-wrap {
+    width: 100%;
+    height: 100%;
+    text-align: center;
+    background: rgba(0, 0, 0, 0.5);
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 2;
+}
+.god-list li .soldout-wrap img {
+    width: 200px;
+    height: 200px;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    margin-left: -100px;
+    margin-top: -100px;
+}
+
+.god-list li img {
+    width: 490px;
+    height: 490px;
+}
+
+.god-list li .name {
+    color: #333333;
+    font-size: 24px;
+    width: 490px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    text-overflow: ellipsis;
+    -o-text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.god-list li .price {
+    margin-top: 15px;
+    height: 60px;
+    line-height: 60px;
+    overflow: hidden;
+}
+
+.god-list li .price .money {
+    color: #ff0000;
+    font-size: 42px;
+}
+
+.god-list li .price .money i {
+    font-size: 28px;
+    color: #ff0000;
+    font-style: normal;
+}
+
+.god-list li .price .return-money {
+    color: #f96116;
+    font-size: 42px;
+    float: right;
+}
+
+.god-list li .price .return-money i {
+    color: #f96116;
+    font-size: 24px;
+    width: 40px;
+    height: 40px;
+    display: inline-block;
+    text-align: center;
+    line-height: 40px;
+    border-radius: 40px;
+    border: solid 4px #f96116;
+    font-style: normal;
+    margin-right: 5px;
+    vertical-align: top;
+    margin-top: 6px;
+}
+
+.title {
+    color: #ffffff;
+    font-size: 90px;
+    text-align: center;
+    margin-top: 30px;
+    height: 200px;
+    line-height: 200px;
+}
+.title img {
+    width: 200px;
+    height: 200px;
+    vertical-align: top;
+}
+
+.title i {
+    width: 10px;
+    height: 10px;
+    background-color: #ffffff;
+    border-radius: 5px;
+    display: inline-block;
+    vertical-align: middle;
+}
+
+.mi-title {
+    color: #ffffff;
+    font-size: 22px;
+    text-align: center;
+    width: 630px;
+    margin: 20px auto 0;
+}
+
+.mi-title:before {
+    width: 180px;
+    height: 1px;
+    background: #ffffff;
+    content: " ";
+    float: left;
+    margin-top: 15px;
+}
+
+.mi-title:after {
+    width: 180px;
+    height: 1px;
+    background: #ffffff;
+    content: " ";
+    float: right;
+    margin-top: 15px;
+}
+
+#god-demo {
+    overflow: hidden;
+    width: 100%;
+}
+
+#indemo {
+    float: left;
+    width: 10000%;
+}
+
+#god-demo1 {
+    float: left;
+}
+
+#god-demo2 {
+    float: left;
+}
+
+@media screen and (max-width:1366px) and (min-width:1280px) {
+    .god-list li {
+        width: 300px;
+    }
+    .god-list li .name {
+        width: 300px;
+    }
+    .god-list li img {
+        width: 300px;
+        height: 300px;
+    }
+    .title {
+        font-size: 64px;
+    }
+    .god-list li .price .money {
+        font-size: 32px;
+    }
+    .god-list li .price .return-money {
+        font-size: 32px;
+    }
+    .god-list li .price .return-money i {
+        width: 35px;
+        height: 35px;
+        line-height: 35px;
+        border-radius: 35px;
+        border: 2px solid #F96116;
+        margin-top: 11px;
+    }
+}
+
+@media screen and (max-width:1280px) and (min-width:1024px) {
+    .god-list li {
+        width: 260px;
+    }
+    .god-list li .name {
+        width: 260px;
+    }
+    .god-list li img {
+        width: 260px;
+        height: 260px;
+    }
+    .title {
+        font-size: 50px;
+        margin-top: 30px;
+    }
+    .god-list li .price .money {
+        font-size: 32px;
+    }
+    .god-list li .price .return-money {
+        font-size: 32px;
+    }
+    .god-list li .price .return-money i {
+        width: 35px;
+        height: 35px;
+        line-height: 35px;
+        border-radius: 35px;
+        border: 2px solid #F96116;
+        margin-top: 11px;
+    }
+}
+
+@media screen and (max-width:1024px) {
+    .god-list li {
+        width: 365px;
+    }
+    .god-list li .name {
+        width: 365px;
+    }
+    .god-list li img {
+        width: 365px;
+        height: 365px;
+    }
+    .title {
+        font-size: 60px;
+        margin-top: 55px;
+    }
+    .god-list li .price .money {
+        font-size: 35px;
+    }
+    .god-list li .price .return-money {
+        font-size: 35px;
+    }
+    .god-list li .price .return-money i {
+        width: 35px;
+        height: 35px;
+        line-height: 35px;
+        border-radius: 35px;
+        border: 2px solid #F96116;
+        margin-top: 11px;
+    }
+}

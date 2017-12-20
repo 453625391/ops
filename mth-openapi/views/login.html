@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="HandheldFriendly" content="true">
+	<title>每天惠账号登录</title>
+    <link type="text/css" href="/css/main.css" rel="stylesheet" />
+    <script type="text/javascript" src="/js/third-part/jquery-1.11.3.min.js"></script>
+    <script type="text/javascript" src="/js/third-part/layer/layer.js"></script>
+    <script type="text/javascript" src="/js/third-part/md5.js"></script>
+    <script type="text/javascript" src="/js/application.js"></script>
+</head>
+<body>
+    <div class="main-container">
+    	<form id="loginForm" action="/oauth/login" method="post">
+	        <p class="ti"><em></em>开放平台</p>
+	        <div>
+	            <b class="fluid-input">
+	            	<b class="fluid-input-inner">
+	            		<input type="text" name="user_account" id="ua" class="text or" placeholder="手机号/邮箱" />
+	            	</b>
+				</b>
+	        </div>
+	        <div>
+	            <b class="fluid-input">
+	            	<b class="fluid-input-inner">
+	            		<input type="password" name="password" id="pwd" placeholder="6-16位密码" class="text oy"/>
+	            	</b>
+	            </b>
+	        </div>
+	        <div>
+	            <span><label><input type="checkbox" class="check"> 记住帐号</label></span>
+	            <span class="fr"><a href="#">忘记密码？</a></span>
+	        </div>
+	        <div>
+	            <b class="fluid-input">
+	            	<b class="fluid-input-inner">
+	            		<input type="hidden" value="<%=app_id %>" id="appId" />
+	            		<input type="submit" value="登录并授权" id="st" />
+	            	</b>
+	            </b>
+	        </div>
+	        <div>
+	            <span class="lo">还没有帐号？<a target="_blank" href="http://h.meitianhui.com/user/register.html">去注册！</a></span>
+	        </div>
+        </form>
+    </div>
+</body>
+</html>

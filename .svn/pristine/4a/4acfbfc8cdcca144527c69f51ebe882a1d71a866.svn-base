@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <% include ../../commonHead.html %>
+    <title>帮助</title>
+    <style type="text/css">
+    body {
+        width: 10rem;
+        margin: 0 auto;
+    }
+    .step-ti {
+        width: 9.466667rem;
+        margin: 0.4rem auto;
+        color: #F14300;
+        text-align: center;
+        font-weight: bold;
+    }
+    [data-dpr="1"] .step-ti {
+        font-size: 18px;
+    }
+    [data-dpr="2"] .step-ti {
+        font-size: 36px;
+    }
+    [data-dpr="3"] .step-ti {
+        font-size: 54px;
+    }
+    .step-wrap {
+        width: 9.466667rem;
+        margin: 0 auto;
+    }
+    .step-wrap li {
+        margin-bottom: 0.533333rem;
+    }
+    .step-wrap li img {
+        width: 9.466667rem;
+        margin: 0 auto;
+        display: block;
+    }
+    </style>
+</head>
+
+<body>
+    <div class="step-ti">如何成为导购？</div>
+    <ul class="step-wrap">
+        <li>
+            <img src="/image/hpt/help/dg1.jpg">
+        </li>
+        <li>
+            <img src="/image/hpt/help/dg2.jpg">
+        </li>
+        <li>
+            <img src="/image/hpt/help/dg3.jpg">
+        </li>
+        <li>
+            <img src="/image/hpt/help/dg4.jpg">
+        </li>
+        <li>
+            <img src="/image/hpt/help/dg5.jpg">
+        </li>
+    </ul>
+</body>
+
+</html>

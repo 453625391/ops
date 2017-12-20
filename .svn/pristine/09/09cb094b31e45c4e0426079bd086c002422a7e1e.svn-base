@@ -1,0 +1,43 @@
+{
+  "name": "mth-community",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "start": "forever start ./bin/www",
+    "dev-start": "node ./bin/www",
+    "stop": "forever stop ./bin/www"
+  },
+  "dependencies": {
+    "body-parser": "~1.13.2",
+    "cookie-parser": "~1.3.5",
+    "debug": "~2.2.0",
+    "ejs": "~2.3.3",
+    "express": "~4.13.1",
+    "morgan": "~1.6.1",
+    "serve-favicon": "~2.3.0",
+    "request": "*",
+    "ipware": "*",
+    "express-session": "*",
+    "connect-redis": "*",
+    "connect-mongo": "*",
+    "redis": "*",
+    "promise": "*",
+    "q": "*",
+    "md5": "*",
+    "utility": "*",
+    "log4js": "*",
+    "mongoose": "*",
+    "moment": "*"
+  },
+  "devDependencies": {
+    "babel-preset-es2015": "^6.24.0",
+    "gulp": "^3.9.1",
+    "gulp-babel": "^6.1.2",
+    "gulp-concat": "^2.6.1",
+    "gulp-load-plugins": "^1.5.0",
+    "gulp-minify-css": "^1.2.4",
+    "gulp-rev": "^7.1.2",
+    "gulp-rev-collector": "^1.1.1",
+    "gulp-uglify": "^2.1.2"
+  }
+}

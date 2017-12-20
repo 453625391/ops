@@ -1,0 +1,1872 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.meitianhui.goods.dao.PsGoodsDao">
+
+	<insert id="insertPsGoods" parameterType="PsGoods">
+		INSERT INTO
+		ps_goods (
+		goods_id
+		,goods_code
+		,title
+		,desc1
+		,area_id
+		,data_source
+		,label
+		,label_promotion
+		,category
+		,display_area
+		,contact_person
+		,contact_tel
+		,pic_info
+		,pic_detail_info
+		,specification
+		,agent
+		,pack
+		,cost_price
+		,market_price
+		,discount_price
+		,ladder_price
+		,cost_allocation
+		,settled_price
+		,service_fee
+		,product_source
+		,shipping_fee
+		,producer
+		,supplier
+		,supplier_id
+		,warehouse
+		,warehouse_id
+		,manufacturer
+		,min_buy_qty
+		,max_buy_qty
+		,sale_qty
+		,stock_qty
+		,goods_unit
+		,valid_thru
+		,delivery
+		,delivery_area
+		,payment_way
+		,status
+		,created_date
+		,modified_date
+		,remark
+		,data_source_type
+		,taobao_price 
+		,voucher_link
+		,discount_end
+		,taobao_link
+		,commission_rate
+		,taobao_sales
+		)
+		VALUES (
+		#{goods_id}
+		,#{goods_code}
+		,#{title}
+		,#{desc1}
+		,#{area_id}
+		,#{data_source}  
+		,#{label}
+		,#{label_promotion}
+		,#{category}
+		,#{display_area}
+		,#{contact_person}
+		,#{contact_tel}
+		,#{pic_info}
+		,#{pic_detail_info}
+		,#{specification}
+		,#{agent}
+		,#{pack}
+		,#{cost_price}
+		,#{market_price}
+		,#{discount_price}
+		,#{ladder_price}
+		,#{cost_allocation}
+		,#{settled_price}
+		,#{service_fee}
+		,#{product_source}
+		,#{shipping_fee}
+		,#{producer}
+		,#{supplier}
+		,#{supplier_id}
+		,#{warehouse}
+		,#{warehouse_id}
+		,#{manufacturer}
+		,#{min_buy_qty}
+		,#{max_buy_qty}
+		,#{sale_qty}
+		,#{stock_qty}
+		,#{goods_unit}
+		,#{valid_thru}
+		,#{delivery}
+		,#{delivery_area}
+		,#{payment_way}
+		,#{status}
+		,#{created_date}
+		,#{modified_date}
+		,#{remark}
+		,#{data_source_type}
+		,#{taobao_price}
+		,#{voucher_link}
+		,#{discount_end}
+		,#{taobao_link}
+		,#{commission_rate}
+		,#{taobao_sales}
+		)
+	</insert>
+
+	<insert id="insertPsGoodsSku" parameterType="PsGoodsSku">
+		INSERT INTO
+		ps_goods_stock (
+		goods_stock_id
+		,goods_id
+		,sku
+		,desc1
+		,cost_price
+		,sales_price
+		,stock_qty
+		,sale_qty
+		,status
+		,created_date
+		,modified_date
+		,remark
+		)
+		VALUES (
+		#{goods_stock_id}
+		,#{goods_id}
+		,#{sku}
+		,#{desc1}
+		,#{cost_price}
+		,#{sales_price}
+		,#{stock_qty}
+		,#{sale_qty}
+		,#{status}
+		,#{created_date}
+		,#{modified_date}
+		,#{remark}
+		)
+	</insert>
+
+
+	<insert id="insertPsGoodsActivity" parameterType="PsGoodsActivity">
+		INSERT INTO
+		ps_goods_activity (
+		goods_activity_id
+		,activity_type
+		,goods_id
+		,pic_info
+		,order_no
+		,start_date
+		,end_date
+		,is_finished
+		,created_date
+		,remark
+		)
+		VALUES (
+		#{goods_activity_id}
+		,#{activity_type}
+		,#{goods_id}
+		,#{pic_info}
+		,#{order_no}
+		,#{start_date}
+		,#{end_date}
+		,#{is_finished}
+		,#{created_date}
+		,#{remark}
+		)
+	</insert>
+
+
+	<insert id="insertGoodsLog" parameterType="PsGoodsLog">
+		INSERT INTO
+		ps_goods_log (
+		log_id
+		,goods_id
+		,category
+		,tracked_date
+		,event
+		)
+		VALUES (
+		#{log_id}
+		,#{goods_id}
+		,#{category}
+		,#{tracked_date}
+		,#{event}
+		)
+	</insert>
+
+	<insert id="insertGdViewSell" parameterType="GdViewSell">
+		INSERT INTO
+		gd_view_sell_stat (
+		goods_id
+		,view
+		,sell
+		)
+		VALUES (
+		#{goods_id}
+		,#{view}
+		,#{sell}
+		)
+	</insert>
+
+
+	<select id="selectPsGoodsForTsActivity" parameterType="Map"
+		resultType="Map">
+		SELECT
+		goods_id
+		,title
+		,goods_code
+		,pic_info
+		,market_price
+		,discount_price
+		,cost_allocation
+		,ts_min_num
+		,ts_price
+		,ts_date
+		,sale_qty
+		,settled_price
+		,supplier_id
+		,supplier
+		,manufacturer
+		,max_buy_qty
+		FROM
+		ps_goods
+		<where>
+			status = 'on_shelf' AND category = '团购'
+			<if test="goods_id != null and goods_id != ''">
+				AND goods_id = #{goods_id}
+			</if>
+		</where>
+	</select>
+
+
+	<select id="selectPsGoodsForOrder" parameterType="Map"
+		resultType="Map">
+		<![CDATA[
+			SELECT
+			goods_id
+			,title
+			,desc1
+			,goods_code
+			,data_source
+			,label_promotion
+			,contact_person
+			,contact_tel
+			,product_source
+			,pic_info
+			,pic_detail_info
+			,market_price
+			,discount_price
+			,ladder_price
+			,settled_price
+			,service_fee
+			,supplier_id
+			,supplier
+			,warehouse
+			,warehouse_id
+			,manufacturer
+			,goods_unit
+			,specification
+			,valid_thru
+			,status
+			,remark
+			,data_source_type
+			,voucher_link
+			,discount_end
+			,taobao_link
+			,taobao_sales
+			FROM
+				ps_goods
+		]]>
+		<where>
+			1=1
+			<if test="goods_id != null and goods_id != ''">
+				AND goods_id = #{goods_id}
+			</if>
+			<if test="goods_code != null and goods_code != ''">
+				AND goods_code = #{goods_code}
+			</if>
+			<if test="status != null and status != ''">
+				AND status = #{status}
+			</if>
+		</where>
+	</select>
+
+	<select id="selectPsGoods" parameterType="Map" resultType="PsGoods">
+		<![CDATA[
+			SELECT
+			goods_id
+			,goods_code
+			,title
+			,desc1
+			,area_id
+			,online_date
+			,offline_date
+			,label
+			,label_promotion
+			,category
+			,data_source
+			,data_source_type
+			,display_area
+			,contact_person
+			,contact_tel
+			,pic_info
+			,pic_detail_info
+			,specification
+			,agent
+			,pack
+			,cost_price
+			,market_price
+			,taobao_price 
+			,discount_price  
+			,ladder_price
+			,ts_min_num
+			,ts_price
+			,ts_date
+			,cost_allocation
+			,product_source
+			,shipping_fee
+			,settled_price
+			,service_fee
+			,producer
+			,supplier_id
+			,supplier
+			,warehouse
+			,warehouse_id
+			,manufacturer
+			,min_buy_qty
+			,max_buy_qty
+			,sale_qty
+			,stock_qty
+			,goods_unit
+			,delivery_area
+			,valid_thru
+			,delivery
+			,delivery_id
+			,payment_way
+			,status
+			,created_date
+			,modified_date
+			,remark
+			,data_source_type
+			,voucher_link
+			,discount_end
+			,taobao_link
+			,taobao_sales
+			FROM
+				ps_goods
+		]]>
+		<where>
+			status &lt;&gt; 'delete'
+			<if test="goods_id != null and goods_id != ''">
+				AND goods_id = #{goods_id}
+			</if>
+			<if test="goods_code != null and goods_code != ''">
+				AND goods_code = #{goods_code}
+			</if>
+			<if test="category != null and category != ''">
+				AND category = #{category}
+			</if>
+			<if test="supplier_id != null and supnplier_id != ''">
+				AND supplier_id = #{supplier_id}
+			</if>
+			<if test="category_in != null">
+				AND category in
+				<foreach item="item" index="index" collection="category_in"
+					open="(" separator="," close=")">
+					#{item}
+				</foreach>
+			</if>
+			<if test="status != null and status != ''">
+				AND status = #{status}
+			</if>
+		<!-- 	<if test="data_source != null and data_source != ''">
+				AND data_source = #{data_source}
+			</if> -->
+			<if test="data_source_in != null">
+				AND data_source in
+				<foreach item="item" index="index" collection="data_source_in"
+					open="(" separator="," close=")">
+					#{item}
+				</foreach>
+			</if>
+			<if test="data_source_type != null and data_source_type != '' ">
+				AND data_source_type = #{data_source_type} 
+			</if>
+			
+			<if test="status_in != null">
+				AND status in
+				<foreach item="item" index="index" collection="status_in"
+					open="(" separator="," close=")">
+					#{item}
+				</foreach>
+			</if>
+			<if test="display_area != null and display_area != ''">
+				AND display_area like CONCAT('%',#{display_area},'%')
+			</if>
+			<if test="display_area_in != null">
+				AND
+				<foreach item="item" index="index" collection="display_area_in"
+					open="(" separator="OR" close=")">
+					display_area like
+					CONCAT('%',#{item},'%')
+				</foreach>
+			</if>
+			<if test="areaList != null">
+				AND
+				<foreach item="item" index="index" collection="areaList"
+					open="(" separator="OR" close=")">
+					delivery_area = #{item}
+				</foreach>
+			</if>
+			<if test="goods_like != null and goods_like != ''">
+				AND (title like CONCAT('%',#{goods_like},'%') or
+				goods_code like CONCAT('%',#{goods_like},'%') or
+				contact_person like
+				CONCAT('%',#{goods_like},'%') or
+				contact_tel like
+				CONCAT('%',#{goods_like},'%') or
+				manufacturer like
+				CONCAT('%',#{goods_like},'%') or
+				supplier like
+				CONCAT('%',#{goods_like},'%'))
+			</if>
+			<if test="label_promotion != null and label_promotion != ''">
+				AND label_promotion like
+				CONCAT('%',#{label_promotion},'%')
+			</if>
+			<if test="created_date_start != null and created_date_start != ''">
+				AND DATE_FORMAT(created_date, '%Y-%m-%d') &gt;=
+				DATE_FORMAT(#{created_date_start}, '%Y-%m-%d')
+			</if>
+			<if test="created_date_end != null and created_date_end != ''">
+				AND DATE_FORMAT(created_date, '%Y-%m-%d') &lt;=
+				DATE_FORMAT(#{created_date_end}, '%Y-%m-%d')
+			</if>
+			<if test="valid_thru_start != null and valid_thru_start != ''">
+				AND valid_thru &gt;= #{valid_thru_start}
+			</if>
+			<if test="valid_thru_end != null and valid_thru_end != ''">
+				AND valid_thru &lt;= #{valid_thru_end}
+			</if>
+		</where>
+		ORDER BY modified_date DESC
+	</select>
+	
+	
+	<select id="selectPsGoodsAndFiterOffDay" parameterType="Map" resultType="PsGoods">
+		<![CDATA[
+SELECT
+  gd.*,
+  CASE
+  WHEN gd.nowdiffOffline_datePro > 7
+    THEN '7+'
+  WHEN gd.nowdiffOffline_datePro <= 7 AND gd.nowdiffOffline_datePro > 1
+    THEN gd.nowdiffOffline_datePro
+  WHEN gd.nowdiffOffline_datePro >= 0 AND gd.nowdiffOffline_datePro <= 1
+    THEN '1'
+  END AS nowdiffOffline_date
+
+FROM (
+       SELECT
+         goods_id,
+         goods_code,
+         title,
+         desc1,
+         area_id,
+         online_date,
+         offline_date,
+         label,
+         label_promotion,
+         category,
+         data_source,
+         data_source_type,
+         display_area,
+         contact_person,
+         contact_tel,
+         pic_info,
+         pic_detail_info,
+         specification,
+         agent,
+         pack,
+         cost_price,
+         market_price,
+         taobao_price,
+         discount_price,
+         ladder_price,
+         ts_min_num,
+         ts_price,
+         ts_date,
+         cost_allocation,
+         product_source,
+         shipping_fee,
+         settled_price,
+         service_fee,
+         producer,
+         supplier_id,
+         supplier,
+         warehouse,
+         warehouse_id,
+         manufacturer,
+         min_buy_qty,
+         max_buy_qty,
+         sale_qty,
+         stock_qty,
+         goods_unit,
+         delivery_area,
+         valid_thru,
+         delivery,
+         delivery_id,
+         payment_way,
+         status,
+         created_date,
+         modified_date,
+         remark,
+         voucher_link,
+         discount_end,
+         to_days(now()) - to_days(offline_date) 'nowdiffOffline_datePro',
+         taobao_link
+       FROM
+         ps_goods) AS gd
+
+    ]]>
+		<where>
+			gd.status &lt;&gt; 'delete'
+			<if test="goods_id != null and goods_id != ''">
+				AND gd.goods_id = #{goods_id}
+			</if>
+			<if test="goods_code != null and goods_code != ''">
+				AND gd.goods_code = #{goods_code}
+			</if>
+			<if test="category != null and category != ''">
+				AND gd.category = #{category}
+			</if>
+			<if test="supplier_id != null and supplier_id != ''">
+				AND gd.supplier_id = #{supplier_id}
+			</if>
+			<if test="category_in != null">
+				AND gd.category in
+				<foreach item="item" index="index" collection="category_in"
+						 open="(" separator="," close=")">
+					#{item}
+				</foreach>
+			</if>
+			<if test="status != null and status != ''">
+				AND gd.status = #{status}
+			</if>
+			<!-- 	<if test="data_source != null and data_source != ''">
+                    AND gd.data_source = #{data_source}
+                </if> -->
+			<if test="data_source_in != null">
+				AND gd.data_source in
+				<foreach item="item" index="index" collection="data_source_in"
+						 open="(" separator="," close=")">
+					#{item}
+				</foreach>
+			</if>
+			<if test="data_source_type != null and data_source_type != '' ">
+				AND gd.data_source_type = #{data_source_type}
+			</if>
+
+			<if test="status_in != null">
+				AND gd.status in
+				<foreach item="item" index="index" collection="status_in"
+						 open="(" separator="," close=")">
+					#{item}
+				</foreach>
+			</if>
+			<if test="display_area != null and display_area != ''">
+				AND gd.display_area like CONCAT('%',#{display_area},'%')
+			</if>
+			<if test="display_area_in != null">
+				AND
+				<foreach item="item" index="index" collection="display_area_in"
+						 open="(" separator="OR" close=")">
+					gd.display_area like
+					CONCAT('%',#{item},'%')
+				</foreach>
+			</if>
+			<if test="areaList != null">
+				AND
+				<foreach item="item" index="index" collection="areaList"
+						 open="(" separator="OR" close=")">
+					gd.delivery_area = #{item}
+				</foreach>
+			</if>
+			<if test="goods_like != null and goods_like != ''">
+				AND (gd.title like CONCAT('%',#{goods_like},'%') or
+				gd.goods_code like CONCAT('%',#{goods_like},'%') or
+				gd.contact_person like
+				CONCAT('%',#{goods_like},'%') or
+				gd.contact_tel like
+				CONCAT('%',#{goods_like},'%') or
+				gd.manufacturer like
+				CONCAT('%',#{goods_like},'%') or
+				gd.supplier like
+				CONCAT('%',#{goods_like},'%'))
+			</if>
+			<if test="label_promotion != null and label_promotion != ''">
+				AND gd.label_promotion like
+				CONCAT('%',#{label_promotion},'%')
+			</if>
+			<if test="created_date_start != null and created_date_start != ''">
+				AND gd.DATE_FORMAT(created_date, '%Y-%m-%d') &gt;=
+				DATE_FORMAT(#{created_date_start}, '%Y-%m-%d')
+			</if>
+			<if test="created_date_end != null and created_date_end != ''">
+				AND gd.DATE_FORMAT(created_date, '%Y-%m-%d') &lt;=
+				DATE_FORMAT(#{created_date_end}, '%Y-%m-%d')
+			</if>
+			<if test="valid_thru_start != null and valid_thru_start != ''">
+				AND gd.valid_thru &gt;= #{valid_thru_start}
+			</if>
+			<if test="valid_thru_end != null and valid_thru_end != ''">
+				AND gd.valid_thru &lt;= #{valid_thru_end}
+			</if>
+		</where>
+		ORDER BY gd.modified_date DESC
+	</select>
+
+	<!-- 查询供应商“已上架的“ 所有商品总数（包括我要批、领了么、名品汇、火拼团......） -->
+	<select id="selectPsGoodsSupplyCount" parameterType="Map" resultType="Map">
+		<![CDATA[  
+			SELECT  
+			count(t.goods_id) as count_num
+			FROM
+				ps_goods t
+		]]>
+		<where>
+		1=1
+			AND t.status &lt;&gt; 'delete'
+				<!-- AND category = '试样' -->
+				AND t.supplier_id = #{supplier_id}
+				AND t.status = 'on_shelf' 
+		</where>
+		ORDER BY t.modified_date DESC
+	</select>
+
+	<select id="selectPsGoodsSku" parameterType="Map" resultType="PsGoodsSku">
+		<![CDATA[
+			SELECT
+			goods_stock_id
+			,goods_id
+			,sku
+			,desc1
+			,cost_price
+			,sales_price
+			,stock_qty
+			,sale_qty
+			,status
+			FROM
+				ps_goods_stock
+		]]>
+		<where>
+			1=1
+			<if test="goods_stock_id != null and goods_stock_id != ''">
+				AND goods_stock_id = #{goods_stock_id}
+			</if>
+			<if test="goods_id != null and goods_id != ''">
+				AND goods_id = #{goods_id}
+			</if>
+			<if test="sku != null and sku != ''">
+				AND sku = #{sku}
+			</if>
+		</where>
+		ORDER BY modified_date DESC
+	</select>
+
+
+	<select id="selectNewestPsGoodsForOp" parameterType="Map"
+		resultType="PsGoods">
+		<![CDATA[
+			SELECT
+			goods_id
+			,goods_code
+			,title
+			,desc1
+			,area_id
+			,online_date
+			,label
+			,label_promotion
+			,category
+			,data_source
+			,display_area
+			,contact_person
+			,contact_tel
+			,pic_info
+			,pic_detail_info
+			,specification
+			,agent
+			,pack
+			,cost_price
+			,market_price
+			,discount_price
+			,ladder_price
+			,product_source
+			,shipping_fee
+			,settled_price
+			,service_fee
+			,producer
+			,supplier_id
+			,supplier
+			,warehouse
+			,warehouse_id
+			,manufacturer
+			,min_buy_qty
+			,max_buy_qty
+			,sale_qty
+			,stock_qty
+			,goods_unit
+			,valid_thru
+			,delivery
+			,status
+			,created_date
+			,modified_date
+			,remark
+			,taobao_link
+			,taobao_sales
+			FROM
+				ps_goods
+		]]>
+		<where>
+			status &lt;&gt; 'delete'
+			<if test="category != null and category != ''">
+				AND category = #{category}
+			</if>
+			<if test="created_date_start != null and created_date_start != ''">
+				AND DATE_FORMAT(created_date, '%Y-%m-%d') &gt;=
+				DATE_FORMAT(#{created_date_start}, '%Y-%m-%d')
+			</if>
+			<if test="created_date_end != null and created_date_end != ''">
+				AND DATE_FORMAT(created_date, '%Y-%m-%d') &lt;=
+				DATE_FORMAT(#{created_date_end}, '%Y-%m-%d')
+			</if>
+		</where>
+		ORDER BY created_date DESC
+	</select>
+	
+	
+	<select id="selectPsGoodsForWeb" parameterType="Map" resultType="PsGoods">
+		<![CDATA[
+			SELECT
+			goods_id
+			,goods_code
+			,title
+			,area_id
+			,online_date
+			,label
+			,label_promotion
+			,category
+			,data_source
+			,display_area
+			,pic_info
+			,specification
+			,pack
+			,market_price
+			,discount_price
+			,product_source
+			,producer
+			,manufacturer
+			,min_buy_qty
+			,max_buy_qty
+			,sale_qty
+			,stock_qty
+			,goods_unit
+			,delivery_area
+			,valid_thru
+			,warehouse
+			,payment_way
+			,taobao_sales
+			FROM
+				ps_goods
+		]]>
+		<where>
+			status = 'on_shelf'
+			<if test="category != null and category != ''">
+				AND category = #{category}
+			</if>
+			<if test="category_in != null">
+				AND category in
+				<foreach item="item" index="index" collection="category_in"
+					open="(" separator="," close=")">
+					#{item}
+				</foreach>
+			</if>
+			<if test="display_area != null and display_area != ''">
+				AND display_area like CONCAT('%',#{display_area},'%')
+			</if>
+			<if test="display_area_in != null">
+				AND
+				<foreach item="item" index="index" collection="display_area_in"
+					open="(" separator="OR" close=")">
+					display_area like
+					CONCAT('%',#{item},'%')
+				</foreach>
+			</if>
+			<if test="areaList != null">
+				AND
+				<foreach item="item" index="index" collection="areaList"
+					open="(" separator="OR" close=")">
+					delivery_area = #{item}
+				</foreach>
+			</if>
+			<if test="goods_like != null and goods_like != ''">
+				AND (title like CONCAT('%',#{goods_like},'%') or
+				goods_code like CONCAT('%',#{goods_like},'%'))
+			</if>
+			<if test="label_promotion != null and label_promotion != ''">
+				AND label_promotion like
+				CONCAT('%',#{label_promotion},'%')
+			</if>
+			<if test="label_promotion_not_in != null">
+				AND
+				<foreach item="item" index="index" collection="label_promotion_not_in"
+					open="(" separator="OR" close=")">
+					(CASE ISNULL(label_promotion) when 1
+					THEN '' ELSE label_promotion END) NOT LIKE
+					CONCAT('%',#{item},'%')
+				</foreach>
+			</if>
+			<if test="online_date_start != null and online_date_start != ''">
+				AND online_date &gt;= #{online_date_start}
+			</if>
+			<if test="valid_thru_start != null and valid_thru_start != ''">
+				AND valid_thru &gt; #{valid_thru_start}
+			</if>
+			<if test="valid_thru_end != null and valid_thru_end != ''">
+				AND valid_thru &lt; #{valid_thru_end}
+			</if>
+		</where>
+		ORDER BY online_date DESC
+	</select>
+
+	<select id="selectFgGoodsListForOperate" parameterType="Map" resultType="PsGoods">
+		<![CDATA[
+		select 
+			T.goods_id
+			,T.goods_code
+			,T.title
+			,T.label_promotion
+			,T.category
+			,T.pic_info
+			,T.market_price
+			,T.discount_price
+			,T.sale_qty
+			,T.stock_qty
+			,T.valid_thru
+			,T.online_date
+			,T.taobao_price
+			,T.data_source
+			,T.status
+			,T.taobao_link
+			,T.discount_end
+			,T.commission_rate
+			,T.taobao_sales
+		from
+			ps_goods T
+		]]>
+		<where>
+			category = '试样' AND T.data_source != 'meitianhui'
+			<if test="status != null and status != ''">
+				AND T.status = #{status}
+			</if>
+			<if test="valid_thru_start != null and valid_thru_start != ''">
+				AND T.valid_thru &gt; #{valid_thru_start}
+			</if>
+			<if test="valid_thru_end != null and valid_thru_end != ''">
+				AND T.valid_thru &lt; #{valid_thru_end}
+			</if>
+			<if test="data_source != null and data_source != ''">
+				AND T.data_source = #{data_source}
+			</if>
+		</where>
+		ORDER BY online_date DESC
+	</select>
+	
+	
+	<select id="selectFgGoodsListForSmallProgram" parameterType="Map" resultType="PsGoods">
+		<![CDATA[
+		select 
+			T.goods_id
+			,T.title
+			,T.label_promotion
+			,T.category
+			,T.pic_info
+			,T.market_price
+			,T.discount_price
+			,T.sale_qty
+			,T.stock_qty
+			,T.valid_thru
+			,T.online_date
+			,T.taobao_price
+			,T.taobao_link
+			,T.taobao_sales
+			,T.data_source
+		from
+		(
+			SELECT
+				pg.goods_id
+				,pg.title
+				,pg.label_promotion
+				,pg.category
+				,pg.pic_info
+				,pg.market_price
+				,pg.discount_price
+				,pg.sale_qty
+				,pg.stock_qty
+				,pg.valid_thru
+				,pg.online_date
+				,pg.taobao_price
+				,pg.taobao_link
+				,pg.taobao_sales
+				,pg.data_source
+				,pga.order_no
+			FROM
+				ps_goods pg
+			inner join gddb.ps_goods_activity pga on pga.goods_id = pg.goods_id 
+			where status = 'on_shelf' AND category = '试样' AND pga.activity_type='HDMS_07'
+		union  
+			SELECT
+				pg.goods_id
+				,pg.title
+				,pg.label_promotion
+				,pg.category
+				,pg.pic_info
+				,pg.market_price
+				,pg.discount_price
+				,pg.sale_qty
+				,pg.stock_qty
+				,pg.valid_thru
+				,pg.online_date
+				,pg.taobao_price
+				,pg.taobao_link
+				,pg.taobao_sales
+				,pg.data_source
+				,100
+			FROM
+				ps_goods pg
+			where
+			status = 'on_shelf' AND category = '试样' AND goods_id not in (
+				select 
+					pg.goods_id 
+				from 
+					gddb.ps_goods pg  
+				inner join gddb.ps_goods_activity pga on pga.goods_id = pg.goods_id 
+				where status = 'on_shelf' AND category = '试样' AND pga.activity_type='HDMS_07'
+			)
+		) T
+		]]>
+		<where>
+		1=1 
+			<if test="label_promotion != null and label_promotion != ''">
+				AND T.label_promotion like
+				CONCAT('%',#{label_promotion},'%')
+			</if>
+		 	<if test="online_date_start != null and online_date_start != ''">
+				AND T.online_date &gt;= #{online_date_start}
+			</if> 
+			<if test="valid_thru_start != null and valid_thru_start != ''">
+				AND T.valid_thru &gt; #{valid_thru_start}
+			</if>
+			<if test="valid_thru_end != null and valid_thru_end != ''">
+				AND T.valid_thru &lt; #{valid_thru_end}
+			</if>
+		</where>
+		ORDER BY order_no ASC, online_date DESC
+	</select>
+	
+	
+	<select id="selectFgGoodsListForH5" parameterType="Map" resultType="PsGoods">
+		<![CDATA[
+		select 
+			T.goods_id
+			,T.title
+			,T.label_promotion
+			,T.category
+			,T.pic_info
+			,T.market_price
+			,T.discount_price
+			,T.sale_qty
+			,T.stock_qty
+			,T.valid_thru
+			,T.online_date
+			,T.taobao_price
+			,T.taobao_link
+			,T.taobao_sales
+			,T.data_source
+		from
+		(
+			SELECT
+				pg.goods_id
+				,pg.title
+				,pg.label_promotion
+				,pg.category
+				,pg.pic_info
+				,pg.market_price
+				,pg.discount_price
+				,pg.sale_qty
+				,pg.stock_qty
+				,pg.valid_thru
+				,pg.online_date
+				,pg.taobao_price
+				,pg.taobao_link
+				,pg.taobao_sales
+				,pg.data_source
+				,pga.order_no
+			FROM
+				ps_goods pg
+			inner join gddb.ps_goods_activity pga on pga.goods_id = pg.goods_id 
+			where status = 'on_shelf' AND category = '试样' AND pga.activity_type='HDMS_07'
+		union  
+			SELECT
+				pg.goods_id
+				,pg.title
+				,pg.label_promotion
+				,pg.category
+				,pg.pic_info
+				,pg.market_price
+				,pg.discount_price
+				,pg.sale_qty
+				,pg.stock_qty
+				,pg.valid_thru
+				,pg.online_date
+				,pg.taobao_price
+				,pg.taobao_link
+				,pg.taobao_sales
+				,pg.data_source
+				,100
+			FROM
+				ps_goods pg
+			where
+			status = 'on_shelf' AND category = '试样' AND goods_id not in (
+				select 
+					pg.goods_id 
+				from 
+					gddb.ps_goods pg  
+				inner join gddb.ps_goods_activity pga on pga.goods_id = pg.goods_id 
+				where status = 'on_shelf' AND category = '试样' AND pga.activity_type='HDMS_07'
+			)
+		) T
+		]]>
+		<where>
+		1=1 AND T.data_source != 'meitianhui'
+			<if test="label_promotion != null and label_promotion != ''">
+				AND T.label_promotion like
+				CONCAT('%',#{label_promotion},'%')
+			</if>
+		 	<if test="online_date_start != null and online_date_start != ''">
+				AND T.online_date &gt;= #{online_date_start}
+			</if> 
+			<if test="valid_thru_start != null and valid_thru_start != ''">
+				AND T.valid_thru &gt; #{valid_thru_start}
+			</if>
+			<if test="valid_thru_end != null and valid_thru_end != ''">
+				AND T.valid_thru &lt; #{valid_thru_end}
+			</if>
+		</where>
+		ORDER BY order_no ASC, online_date DESC
+	</select>
+	
+	<select id="selectfreeGetGoodsPreSaleForSmallProgram" parameterType="Map" resultType="PsGoods">
+			SELECT
+			goods_id
+			,title
+			,pic_info
+			,market_price
+			,discount_price
+			,sale_qty
+			,valid_thru
+			,taobao_link
+			,taobao_sales
+			,data_source
+			FROM
+				ps_goods
+		<where>
+			status = 'on_shelf' AND category ='试样' 
+			<if test="valid_thru_start != null and valid_thru_start != ''">
+				AND valid_thru &gt; #{valid_thru_start}
+			</if>
+		</where>
+		ORDER BY valid_thru
+	</select>
+
+
+	<select id="selectfreeGetGoodsPreSaleForH5" parameterType="Map" resultType="PsGoods">
+			SELECT
+			goods_id
+			,title
+			,pic_info
+			,market_price
+			,discount_price
+			,sale_qty
+			,valid_thru
+			,taobao_link
+			,taobao_sales
+			,data_source
+			FROM
+				ps_goods
+		<where>
+			status = 'on_shelf' AND category ='试样' AND data_source != 'meitianhui'
+			<if test="valid_thru_start != null and valid_thru_start != ''">
+				AND valid_thru &gt; #{valid_thru_start}
+			</if>
+		</where>
+		ORDER BY valid_thru
+	</select>
+	
+
+	<select id="selectPsGoodsForH5" parameterType="Map" resultType="PsGoods">
+		<![CDATA[
+			SELECT
+			g.goods_id
+			,g.title
+			,g.area_id
+			,g.online_date
+			,g.label
+			,g.label_promotion
+			,g.category
+			,g.data_source
+			,g.display_area
+			,g.pic_info
+			,g.specification
+			,g.supplier
+			,g.pack
+			,g.min_buy_qty
+			,g.max_buy_qty
+			,g.market_price
+			,g.discount_price
+			,g.sale_qty
+			,g.cost_allocation
+			,g.stock_qty
+			,g.delivery_area
+			,g.valid_thru
+			,g.ts_min_num
+			,g.ts_price
+			,g.taobao_link
+			,g.taobao_sales
+			FROM
+				ps_goods g
+		]]>
+		<where>
+			g.status = 'on_shelf'
+			<if test="category != null and category != ''">
+				AND g.category = #{category}
+			</if>
+			<if test="category_in != null">
+				AND g.category in
+				<foreach item="item" index="index" collection="category_in"
+					open="(" separator="," close=")">
+					#{item}
+				</foreach>
+			</if>
+			<if test="display_area != null and display_area != ''">
+				AND g.display_area like CONCAT('%',#{display_area},'%')
+			</if>
+			<if test="display_area_in != null">
+				AND
+				<foreach item="item" index="index" collection="display_area_in"
+					open="(" separator="OR" close=")">
+					g.display_area like
+					CONCAT('%',#{item},'%')
+				</foreach>
+			</if>
+			<if test="areaList != null">
+				AND
+				<foreach item="item" index="index" collection="areaList"
+					open="(" separator="OR" close=")">
+					delivery_area = #{item}
+				</foreach>
+			</if>
+			<if test="goods_like != null and goods_like != ''">
+				AND (g.title like CONCAT('%',#{goods_like},'%') or
+				g.goods_code like CONCAT('%',#{goods_like},'%'))
+			</if>
+			<if test="label_promotion != null and label_promotion != ''">
+				AND g.label_promotion like
+				CONCAT('%',#{label_promotion},'%')
+			</if>
+			<if test="label_promotion_not_in != null">
+				AND
+				<foreach item="item" index="index" collection="label_promotion_not_in"
+					open="(" separator="OR" close=")">
+					(CASE ISNULL(g.label_promotion) when
+					1 THEN ''
+					ELSE g.label_promotion END) NOT LIKE
+					CONCAT('%',#{item},'%')
+				</foreach>
+			</if>		
+		</where>
+		ORDER BY g.online_date DESC
+	</select>
+
+
+	<select id="selectfreeGetGoodsListByLabelForSmallProgram" parameterType="Map" resultType="PsGoods">
+		<![CDATA[
+			SELECT
+			goods_id
+			,title
+			,pic_info
+			,label_promotion
+			,market_price
+			,discount_price
+			,sale_qty
+			,stock_qty
+			,online_date
+			,valid_thru
+			,taobao_price
+			,taobao_link
+			,data_source
+			,taobao_sales
+			FROM
+				ps_goods
+		]]>
+		<where>
+			status = 'on_shelf' AND category = '试样'
+			<if test="label_promotion != null and label_promotion != ''">
+				AND label_promotion like
+				CONCAT('%',#{label_promotion},'%')
+			</if>
+			<if test="valid_thru_end != null and valid_thru_end != ''">
+				AND valid_thru &lt; #{valid_thru_end}
+			</if>
+		</where>
+		ORDER BY online_date DESC
+	</select>
+
+	<select id="selectfreeGetGoodsListByLabel" parameterType="Map" resultType="PsGoods">
+		<![CDATA[
+			SELECT
+			goods_id
+			,title
+			,pic_info
+			,label_promotion
+			,market_price
+			,discount_price
+			,sale_qty
+			,stock_qty
+			,online_date
+			,valid_thru
+			,taobao_price
+			,taobao_link
+			,data_source
+			,taobao_sales
+			FROM
+				ps_goods
+		]]>
+		<where>
+			status = 'on_shelf' AND category = '试样' AND data_source != 'meitianhui'
+			<if test="label_promotion != null and label_promotion != ''">
+				AND label_promotion like
+				CONCAT('%',#{label_promotion},'%')
+			</if>
+			<if test="valid_thru_end != null and valid_thru_end != ''">
+				AND valid_thru &lt; #{valid_thru_end}
+			</if>
+		</where>
+		ORDER BY online_date DESC
+	</select>
+
+
+	<select id="selectfreeGetGoodsListBySearchForSmallProgram" parameterType="Map" resultType="PsGoods">
+		<![CDATA[
+			SELECT
+			goods_id
+			,title
+			,pic_info
+			,label_promotion
+			,market_price
+			,discount_price
+			,sale_qty
+			,stock_qty
+			,online_date
+			,valid_thru
+			,taobao_price
+			,taobao_link
+			,taobao_sales
+			,data_source
+			FROM
+				ps_goods
+		]]>
+		<where>
+			status = 'on_shelf' AND category = '试样'
+			<if test="label_promotion != null and label_promotion != ''">
+				AND label_promotion like
+				CONCAT('%',#{label_promotion},'%')
+			</if>
+			<if test="search != null and search != ''">
+				AND title like CONCAT('%',#{search},'%')
+			</if>
+			<if test="valid_thru_end != null and valid_thru_end != ''">
+				AND valid_thru &lt; #{valid_thru_end}
+			</if>
+		</where>
+		ORDER BY online_date DESC
+	</select>
+
+	<select id="selectfreeGetGoodsListBySearch" parameterType="Map" resultType="PsGoods">
+		<![CDATA[
+			SELECT
+			goods_id
+			,title
+			,pic_info
+			,label_promotion
+			,market_price
+			,discount_price
+			,sale_qty
+			,stock_qty
+			,online_date
+			,valid_thru
+			,taobao_price
+			,taobao_link
+			,taobao_sales
+			,data_source
+			FROM
+				ps_goods
+		]]>
+		<where>
+			status = 'on_shelf' AND category = '试样' AND data_source != 'meitianhui'
+			<if test="label_promotion != null and label_promotion != ''">
+				AND label_promotion like
+				CONCAT('%',#{label_promotion},'%')
+			</if>
+			<if test="search != null and search != ''">
+				AND title like CONCAT('%',#{search},'%')
+			</if>
+			<if test="valid_thru_end != null and valid_thru_end != ''">
+				AND valid_thru &lt; #{valid_thru_end}
+			</if>
+		</where>
+		ORDER BY online_date DESC
+	</select>
+
+
+	<select id="selectPsGoodsActivityForOpList" parameterType="Map"
+		resultType="Map">
+		<![CDATA[
+		SELECT
+			g.goods_id
+			,g.goods_code
+			,g.title
+			,a.pic_info
+		FROM ps_goods_activity a
+		inner join ps_goods g on a.goods_id = g.goods_id
+		]]>
+		<where>
+			1=1
+			<if test="activity_type != null and activity_type != ''">
+				AND a.activity_type = #{activity_type}
+			</if>
+		</where>
+		ORDER BY a.order_no
+	</select>
+
+
+	<select id="selectPsGoodsActivityList" parameterType="Map"
+		resultType="Map">
+		<![CDATA[
+		SELECT
+			g.goods_id
+			,g.goods_code
+			,g.label_promotion
+			,g.title
+			,g.pic_info
+			,g.data_source
+			,g.specification
+			,g.market_price
+			,g.discount_price
+			,g.ts_price
+			,g.supplier
+			,g.sale_qty
+			,g.stock_qty
+			,g.min_buy_qty
+			,g.valid_thru
+		FROM ps_goods_activity a
+		inner join ps_goods g on a.goods_id = g.goods_id
+		]]>
+		<where>
+			g.status = 'on_shelf'
+			<if test="activity_type != null and activity_type != ''">
+				AND a.activity_type = #{activity_type}
+			</if>
+		</where>
+		ORDER BY a.order_no
+	</select>
+
+	
+	<select id="selectPsGoodsActivityHomeListForSmallProgram" parameterType="Map"
+		resultType="Map">
+		<![CDATA[
+		SELECT
+			g.goods_id
+			,g.title
+			,g.desc1
+			,a.pic_info
+			,g.market_price
+			,g.discount_price
+			,g.ts_price
+			,g.ts_min_num
+			,g.valid_thru
+			,g.data_source
+		FROM ps_goods_activity a
+		inner join ps_goods g on a.goods_id = g.goods_id
+		]]>
+		<where>
+			g.status = 'on_shelf'
+			<if test="activity_type != null and activity_type != ''">
+				AND a.activity_type = #{activity_type}
+			</if>
+		</where>
+		ORDER BY a.order_no
+	</select>
+
+
+	<select id="selectPsGoodsActivityHomeListForConsumer" parameterType="Map"
+		resultType="Map">
+		<![CDATA[
+		SELECT
+			g.goods_id
+			,g.title
+			,g.desc1
+			,a.pic_info
+			,g.market_price
+			,g.discount_price
+			,g.ts_price
+			,g.ts_min_num
+			,g.valid_thru
+		FROM ps_goods_activity a
+		inner join ps_goods g on a.goods_id = g.goods_id
+		]]>
+		<where>
+			g.status = 'on_shelf' AND g.data_source != 'meitianhui'
+			<if test="activity_type != null and activity_type != ''">
+				AND a.activity_type = #{activity_type}
+			</if>
+		</where>
+		ORDER BY a.order_no
+	</select>
+
+	<!-- 暂时不删除  石天需求  解决查询速度较慢  -->
+	<select id="selectGdViewSellDetail1" parameterType="Map"
+		resultType="Map">
+		<![CDATA[
+			SELECT
+			 g.goods_id
+			,g.goods_code
+			,g.title
+			,g.desc1
+			,g.label
+			,g.label_promotion
+			,g.category
+			,g.contact_person
+			,g.contact_tel
+			,g.pic_info
+			,g.specification
+			,g.cost_price
+			,g.market_price
+			,g.discount_price
+			,g.product_source
+			,g.shipping_fee
+			,g.supplier
+			,g.manufacturer
+			,g.min_buy_qty
+			,g.max_buy_qty
+			,g.product_source
+			,g.sale_qty
+			,g.stock_qty
+			,g.valid_thru
+			,g.payment_way
+			,g.status
+			,s.view
+			,s.sell
+			FROM
+				ps_goods g left join gd_view_sell_stat s on g.goods_id=s.goods_id
+		]]>
+		<where>
+			1=1
+			<if test="goods_id != null and goods_id != ''">
+				AND g.goods_id = #{goods_id}
+			</if>
+			<if test="goods_like != null and goods_like != ''">
+				AND (g.title like CONCAT('%',#{goods_like},'%') or
+				g.goods_code like CONCAT('%',#{goods_like},'%') or
+				g.category like
+				CONCAT('%',#{category},'%') or
+				g.contact_person like
+				CONCAT('%',#{goods_like},'%') or
+				g.contact_tel like
+				CONCAT('%',#{goods_like},'%') or
+				g.supplier like
+				CONCAT('%',#{goods_like},'%'))
+			</if>
+		</where>
+		ORDER BY s.sell DESC,s.view DESC
+	</select>
+
+	<select id="selectGdViewSellDetail" parameterType="Map"
+		resultType="Map">
+		<![CDATA[
+			SELECT
+			 g.goods_id
+			,g.goods_code
+			,g.title
+			,g.desc1
+			,g.label
+			,g.label_promotion
+			,g.category
+			,g.contact_person
+			,g.contact_tel
+			,g.pic_info
+			,g.specification
+			,g.cost_price
+			,g.market_price
+			,g.discount_price
+			,g.product_source
+			,g.shipping_fee
+			,g.supplier
+			,g.manufacturer
+			,g.min_buy_qty
+			,g.max_buy_qty
+			,g.product_source
+			,g.sale_qty
+			,g.stock_qty
+			,g.valid_thru
+			,g.payment_way
+			,g.status
+			,s.view
+			,s.sell
+			FROM
+				gd_view_sell_stat s left join ps_goods g on g.goods_id=s.goods_id
+		]]>
+		<where>
+			1=1
+			<if test="goods_id != null and goods_id != ''">
+				AND g.goods_id = #{goods_id}
+			</if>
+			<if test="goods_like != null and goods_like != ''">
+				AND (g.title like CONCAT('%',#{goods_like},'%') or
+				g.goods_code like CONCAT('%',#{goods_like},'%') or
+				g.category like
+				CONCAT('%',#{category},'%') or
+				g.contact_person like
+				CONCAT('%',#{goods_like},'%') or
+				g.contact_tel like
+				CONCAT('%',#{goods_like},'%') or
+				g.supplier like
+				CONCAT('%',#{goods_like},'%'))
+			</if>
+		</where>
+		ORDER BY s.sell DESC
+	</select>
+
+
+	<select id="selectGoodsLog" parameterType="Map" resultType="Map">
+		<![CDATA[
+			SELECT
+			 log_id
+			,goods_id
+			,category
+			,tracked_date
+			,event
+			FROM
+				ps_goods_log
+		]]>
+		<where>
+			1=1
+			<if test="goods_id != null and goods_id != ''">
+				AND goods_id = #{goods_id}
+			</if>
+			<if test="category != null and category != ''">
+				AND category = #{category}
+			</if>
+		</where>
+		ORDER BY tracked_date DESC
+	</select>
+
+
+	<update id="updatePsGoodsBottom" parameterType="Map">
+		UPDATE ps_goods a,(SELECT date_add(MIN(t.online_date),INTERVAL - 1 MINUTE) as online_date from ps_goods t where t.status='on_shelf' and t.online_date is not null	) b
+			SET a.online_date = b.online_date
+			WHERE a.goods_id=#{goods_id}
+	</update>
+	
+	<update id="updatePsGoods" parameterType="Map">
+		UPDATE ps_goods SET
+		<trim suffixOverrides=",">
+			modified_date = SYSDATE(),
+			<if test="title != null and title != ''">
+				title = #{title},
+			</if>
+			<if test="desc1 != null and desc1 != ''">
+				desc1 = #{desc1},
+			</if>
+			<if test="area_id != null and area_id != ''">
+				area_id = #{area_id},
+			</if>
+			<if test="label != null and label != ''">
+				label = #{label},
+			</if>
+			<if test="label_promotion != null">
+				label_promotion = #{label_promotion},
+			</if>
+			<if test="category != null and category != ''">
+				category = #{category},
+			</if>
+			<if test="delivery_id != null and delivery_id != ''">
+				delivery_id = #{delivery_id},
+			</if>
+			<if test="delivery != null and delivery != ''">
+				delivery = #{delivery},
+			</if>
+			<if test="display_area != null and display_area != ''">
+				display_area = #{display_area},
+			</if>
+			<if test="contact_person != null and contact_person != ''">
+				contact_person = #{contact_person},
+			</if>
+			<if test="contact_tel != null and contact_tel != ''">
+				contact_tel = #{contact_tel},
+			</if>
+			<if test="pic_info != null and pic_info != ''">
+				pic_info = #{pic_info},
+			</if>
+			<if test="pic_detail_info != null and pic_detail_info != ''">
+				pic_detail_info = #{pic_detail_info},
+			</if>
+			<if test="specification != null and specification != ''">
+				specification = #{specification},
+			</if>
+			<if test="pack != null and pack != ''">
+				pack = #{pack},
+			</if>
+			<if test="cost_price != null">
+				cost_price = #{cost_price},
+			</if>
+			<if test="market_price != null">
+				market_price = #{market_price},
+			</if>
+			<if test="discount_price != null">
+				discount_price = #{discount_price},
+			</if>
+			<if test="ladder_price != null and ladder_price != ''">
+				ladder_price = #{ladder_price},
+			</if>
+			<if test="cost_allocation != null and cost_allocation != ''">
+				cost_allocation = #{cost_allocation},
+			</if>
+			<if test="settled_price != null and settled_price != ''">
+				settled_price = #{settled_price},
+			</if>
+			<if test="service_fee != null and service_fee != ''">
+				service_fee = #{service_fee},
+			</if>
+			<if test="product_source != null">
+				product_source = #{product_source},
+			</if>
+			<if test="shipping_fee != null">
+				shipping_fee = #{shipping_fee},
+			</if>
+			<if test="producer != null">
+				producer = #{producer},
+			</if>
+			<if test="agent != null and agent != ''">
+				agent = #{agent},
+			</if>
+			<if test="supplier != null and supplier != ''">
+				supplier = #{supplier},
+			</if>
+			<if test="supplier_id != null and supplier_id != ''">
+				supplier_id = #{supplier_id},
+			</if>
+			<if test="warehouse != null and warehouse != ''">
+				warehouse = #{warehouse},
+			</if>
+			<if test="warehouse_id != null and warehouse_id != ''">
+				warehouse_id = #{warehouse_id},
+			</if>
+			<if test="manufacturer != null and manufacturer != ''">
+				manufacturer = #{manufacturer},
+			</if>
+			<if test="min_buy_qty != null">
+				min_buy_qty = #{min_buy_qty},
+			</if>
+			<if test="max_buy_qty != null">
+				max_buy_qty = #{max_buy_qty},
+			</if>
+			<if test="goods_unit != null and goods_unit != ''">
+				goods_unit = #{goods_unit},
+			</if>
+			<if test="valid_thru != null and valid_thru != ''">
+				valid_thru = #{valid_thru},
+			</if>
+			<if test="delivery_area != null and delivery_area != ''">
+				delivery_area = #{delivery_area},
+			</if>
+			<if test="payment_way != null and payment_way != ''">
+				payment_way = #{payment_way},
+			</if>
+			<if test="status != null and status != ''">
+				status = #{status},
+			</if>
+			<if test="data_source != null and data_source != ''">
+				data_source = #{data_source},
+			</if>
+			<if test="online_date != null and online_date != ''">
+				online_date = #{online_date},
+			</if>
+			<if test="offline_date != null and offline_date != ''">
+				offline_date = #{offline_date},
+			</if>
+			<if test="remark != null and remark != ''">
+				remark = #{remark},
+			</if>
+			<if test="stock_qty != null and stock_qty != ''">
+				stock_qty = #{stock_qty},
+			</if>
+			<if test="sale_qty != null and sale_qty != ''">
+				sale_qty = #{sale_qty},
+			</if>
+			<if test="ts_min_num != null and ts_min_num != ''">
+				ts_min_num = #{ts_min_num},
+			</if>
+			<if test="ts_price != null and ts_price != ''">
+				ts_price = #{ts_price },
+			</if>
+			<if test="ts_date != null and ts_date != ''">
+				ts_date = #{ts_date},
+			</if>
+			<if test="taobao_price != null">
+				taobao_price = #{taobao_price},
+			</if>
+			<if test="voucher_link != null">
+				voucher_link = #{voucher_link},
+			</if>
+			<if test="discount_end != null">
+				discount_end = #{discount_end},
+			</if>
+			<if test="taobao_link != null">
+				taobao_link = #{taobao_link},
+			</if>
+			<if test="commission_rate != null">
+				commission_rate = #{commission_rate},
+			</if>
+			<if test="taobao_sales != null and taobao_sales != ''">
+				taobao_sales = #{taobao_sales},
+			</if>
+		</trim>
+		<where>
+			goods_id=#{goods_id}
+			<if test="modified_date != null and modified_date != ''">
+				AND modified_date=#{modified_date}
+			</if>
+		</where>
+	</update>
+
+	<update id="updateGdViewSell" parameterType="Map">
+		UPDATE
+		gd_view_sell_stat
+		SET
+		<trim suffixOverrides=",">
+			<if test="view != null">
+				view = view+1 ,
+			</if>
+			<if test="sell_qty != null">
+				sell = sell + #{sell_qty},
+			</if>
+		</trim>
+		WHERE
+		goods_id = #{goods_id}
+	</update>
+
+
+	<update id="updatePsGoodsSku" parameterType="Map">
+		UPDATE ps_goods_stock SET
+		<trim suffixOverrides=",">
+			modified_date = SYSDATE(),
+			<if test="sku != null and sku != ''">
+				sku = #{sku},
+			</if>
+			<if test="desc1 != null and desc1 != ''">
+				desc1 = #{desc1},
+			</if>
+			<if test="cost_price != null and cost_price != ''">
+				cost_price = #{cost_price},
+			</if>
+			<if test="sales_price != null and sales_price != ''">
+				sales_price = #{sales_price},
+			</if>
+			<if test="stock_qty_modify != null">
+				stock_qty = stock_qty + #{stock_qty_modify},
+			</if>
+			<if test="sale_qty_modify != null">
+				sale_qty = sale_qty + #{sale_qty_modify},
+			</if>
+			<if test="status != null and status != ''">
+				status = #{status},
+			</if>
+		</trim>
+		<where>
+			goods_stock_id=#{goods_stock_id}
+			<if test="modified_date != null and modified_date != ''">
+				AND modified_date=#{modified_date}
+			</if>
+		</where>
+	</update>
+	
+		<update id="updatePsGoodsStatus" parameterType="Map">
+		UPDATE ps_goods SET status = 'delete' where status !='on_shelf'   and  goods_id=#{goods_id}
+	</update>
+
+	<update id="updatePsGoodsSaleQtyRestore" parameterType="Map">
+		UPDATE
+		ps_goods SET
+		sale_qty = sale_qty+#{restore_qty}
+		WHERE
+		goods_id=#{goods_id}
+	</update>
+
+	<update id="updatePsGoodsSaleQtyDeduction" parameterType="Map">
+		UPDATE
+		ps_goods SET
+		sale_qty = sale_qty-#{sell_qty}
+		WHERE goods_id=#{goods_id}
+		AND (sale_qty-#{sell_qty}) &gt;= 0
+	</update>
+
+	<update id="updateWypGoodsSkuSaleQtyDeduction" parameterType="Map">
+		UPDATE
+		ps_goods_stock SET
+		sale_qty = sale_qty-#{sell_qty}
+		WHERE
+		goods_id=#{goods_id} AND goods_stock_id=#{goods_stock_id}
+	</update>
+
+	<update id="updateWypGoodsSaleQtyDeduction" parameterType="Map">
+		UPDATE
+		ps_goods SET
+		sale_qty = sale_qty-#{sell_qty}
+		WHERE
+		goods_id=#{goods_id}
+	</update>
+
+	<update id="updateWypGoodsSkuSaleQtyRestore" parameterType="Map">
+		UPDATE
+		ps_goods_stock SET
+		sale_qty = sale_qty+#{restore_qty}
+		WHERE
+		goods_id=#{goods_id} AND goods_stock_id=#{goods_stock_id}
+	</update>
+
+	<update id="updateWypGoodsSaleQtyRestore" parameterType="Map">
+		UPDATE
+		ps_goods SET
+		sale_qty = sale_qty+#{restore_qty}
+		WHERE
+		goods_id=#{goods_id}
+	</update>
+
+
+	<delete id="deletePsGoodsActivity" parameterType="String">
+		DELETE FROM
+		ps_goods_activity WHERE activity_type=#{activity_type}
+	</delete>
+
+</mapper>

@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <% include ../../commonHead.html %>
+    <title>我要批</title>
+    <link rel="stylesheet" type="text/css" href="/css/wholesale/main.css?v20161229">
+</head>
+<body>
+    <div class="banner">
+        <div id="slider" class="swipe">
+            <div class="swipe-wrap">
+                <% for(var i in goods.picUrlArr) { %>
+                    <div>
+                        <img src="<%=goods.picUrlArr[i] %>" />
+                    </div>
+                <% } %>
+            </div>
+        </div>
+        <nav>
+            <ul id="position">
+                <% for(var i in goods.picUrlArr) { %>
+                    <% if(i == 0) { %>
+                        <li class="on"></li>
+                    <% } else { %>
+                        <li></li>
+                    <% } %>    
+                <% } %>
+            </ul>
+        </nav>
+    </div>
+    <div class="cnt-box">
+        <p class="tit"><%=goods.title %></p>
+        <div class="sub-tit">
+            <ul>
+                <%if(goods.min_buy_qty){%><li>起订：<%=goods.min_buy_qty %></li><%}%>
+                <%if(goods.sale_qty){%><li>库存：<%=goods.sale_qty %></li><%}%>
+                <%if(goods.specification){%><li>规格：<%=goods.specification %></li><%}%>
+                <%if(goods.max_buy_qty && goods.max_buy_qty!=0){%><li>限购：<%=goods.max_buy_qty %></li><%}%>
+                <li>建议零售价：¥<%=goods.market_price %></li>
+            </ul>
+        </div>
+        <div class="price-box">
+            <span class="price">¥<em><%=goods.discount_price %></em></span>
+        </div>
+    </div>
+    <p class="delivery"><%=goods.supplier %><%if(goods.warehouse){%>（<%=goods.warehouse %>）<%}%></p>
+    <p class="delivery">配送范围：<%=goods.delivery_desc %></p>
+    <% if(goods.remark) { %>
+    <p class="delivery">特殊说明：<%=goods.remark %></p>
+    <% } %>
+    <% if(goods.desc1) { %>
+    <p class="delivery desc">商品描述：<%=goods.desc1 %></p>
+    <% } %>
+    <% if(goods.picDetailArr) { %>
+    <div class="detail-wrap">
+    <% for(var i=0; i<goods.picDetailArr.length; i++) { %>
+        <p><%=goods.picDetailArr[i].title %></p>
+        <div class="detail-img-wrap">
+            <img src="<%=goods.picDetailArr[i].url %>" />
+        </div>
+    <% } %>
+    </div>
+    <% } %>
+</body>
+<script type="text/javascript">
+$(function() {
+    M.initSwipe();
+});
+</script>
+</html>

@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <% include ../../commonHead.html %>
+    <title>商品详情</title>
+    <link rel="stylesheet" type="text/css" href="/css/hpt/detail.css?v20170607">
+</head>
+
+<body>
+    <div class="banner">
+        <div id="slider" class="swipe">
+            <div class="swipe-wrap">
+                <% for(var i in goods.picUrlArr) { %>
+                    <div>
+                        <img src="<%=goods.picUrlArr[i] %>" />
+                    </div>
+                <% } %>
+            </div>
+        </div>
+        <nav>
+            <ul id="position">
+                <% for(var i in goods.picUrlArr) { %>
+                    <% if(i == 0) { %>
+                        <li class="on"></li>
+                    <% } else { %>
+                        <li></li>
+                    <% } %>    
+                <% } %>
+            </ul>
+        </nav>
+    </div>
+    <div class="cnt-box">
+        <p class="tit"><%=goods.title %></p>
+        <div class="num-wrap">
+            <span>库存：<em><%=goods.sale_qty %></em></span>
+            <span>规格：<em><%=goods.specification %></em></span>
+            <span>已售：<em><%=parseInt(orderNum)+1%></em></span>
+            <p class="desc"><%=goods.desc1%></p>
+        </div>
+    </div>
+    <div class="rule-box">
+        <div class="box-bar">
+            <span class="mid-text">拼团领玩法</span>
+            <a href="/static-html/hptPlayRules.html" class="link">查看详情</a>
+        </div>
+        <div class="rule">
+            <img src="/image/hpt/rule.png?v2" />
+        </div>
+    </div>
+    <div class="group-box">
+        <div class="box-bar">
+            <span class="mid-text">以下小伙伴正在拼团，您可以直接参与</span>
+        </div>
+        <% if(groupList && groupList.length > 0) { %>
+        <ul class="group-list">
+            <% for(var i=0; i<groupList.length; i++) { %>
+            <% if(groupList[i].difftime > 0) { %>
+            <li class="group">
+                <div class="store-icon">
+                <% if(groupList[i].neighbor_pic_path) { %>
+                    <img src="<%=groupList[i].neighbor_pic_path%>" />
+                <% } %>
+                </div>
+                <div class="left-box">
+                    <p class="store-name"><%=groupList[i].stores_name%></p>
+                    <p class="loc"><em class="addr"><%=groupList[i].address%></em><em class="distance"><%=groupList[i].distance%></em></p>
+                </div>
+                <% if(goods.sale_qty > 0 && requestParams.v) { %>
+                <a href="/openapi/h5/c/hpt/joinGroupRules?member_id=<%=requestParams.member_id%>&activity_id=<%=groupList[i].activity_id%>&goods_id=<%=goods.goods_id%>" class="join-group">参团</a>
+                <% } else { %>
+                <a href="javascript: void(0);" class="join-group" style="background-color: #999">参团</a>
+                <% } %>
+                <div class="right-box">
+                    <p class="joined-num">还差<%=goods.ts_min_num-groupList[i].order_qty%>人</p>
+                    <p class="countdown" id="countdownWrap<%=i%>" data-seconds="<%=groupList[i].difftime%>">剩余<em class="hour">--</em>:<em class="minute">--</em>:<em class="second">--</em></p>
+                </div>
+            </li>
+            <% } %>
+            <% } %>
+        <% } else { %>
+        <div class="no-group">附近2km暂无此商品的团购活动，快去开团吧！</div>
+        <% } %>
+        </ul>
+    </div>
+    <% if(goods.picDetailArr && goods.picDetailArr.length > 0) { %>
+    <div class="detail-wrap">
+        <div class="box-bar">
+            <span class="mid-text">图文详情</span>
+        </div>
+    <% for(var i=0; i<goods.picDetailArr.length; i++) { %>
+        <p class="tit"><%=goods.picDetailArr[i].title%></p>
+        <img src="<%=goods.picDetailArr[i].url %>" />
+    <% } %>
+    </div>
+    <% } %>
+    <% if(requestParams.s) { %>
+    <div style="width: 10rem; margin: 0 auto; margin-top: 0.666667rem;">
+        <img src="/image/fan/qr.gif?v2" style="width: 100%;" />
+    </div>
+    <img src="/image/common/qrcode_bdsh.png" style="width: 100%; height: 100%; position: fixed; top: 0; left: 0; opacity: 0;" />
+    <% } %>
+    <div class="footer-bar">
+        <div class="footer-wrap">
+            <div class="opt-box">
+                <a href="javascript: void(0);" class="opt customer-service" onclick="getChatData();">客服</a>
+                <a href="javascript: collectGoods();" class="opt collect">收藏</a>
+            </div>
+            <div class="buy-box buy-alone">
+                <div class="price">¥<%=parseFloat(goods.discount_price)%></div>
+                <div class="txt">单独购买</div>
+            </div>
+            <% if(goods.sale_qty > 0) { %>
+            <div class="buy-box createGroup" id="<%if(requestParams.s){%>download<%}else{%>createGroup<%}%>">
+                <div class="price">¥<%=parseFloat(goods.ts_price)%></div>
+                <div class="txt">一键开团</div>
+            </div>
+            <% } else { %>
+            <div class="buy-box createGroup" style="background-color: #999;">
+                <div class="price">¥<%=parseFloat(goods.ts_price)%></div>
+                <div class="txt">已抢光</div>
+            </div>
+            <% } %>
+        </div>
+    </div>
+    <!-- <div class="valid-wrap">
+        <div class="valid-panel">
+            <h1 class="tit">资格验证</h1>
+            <ul id="optionUl" style="display: none;"></ul>
+            <a href="#" class="btn-result">验证不通过，查看帮助</a>
+            <a href="#" class="close"></a>
+        </div>
+    </div> -->
+</body>
+<script type="text/javascript">
+var isShare = '<%=requestParams.s%>';
+var member_id = '<%=requestParams.member_id%>';
+var chatData = {
+    // 聊天id
+    chat_id: 'hptcustomerserviceagent',
+    // 聊天界面标题
+    title: '官方客服',
+    // 客服头像
+    head_pic_path: 'https://oss-img.meitianhui.com/communityDocs/kefu.jpg',
+    // 当前商品id
+    goods_id: '<%=goods.goods_id %>',
+    // 聊天来源
+    from: 'hpt'
+};
+var goodsData = {
+    goods_id: '<%=goods.goods_id%>',
+    title: '<%=parseFloat(goods.ts_price)%>元 <%=goods.title.replace(/\r\n/g, '') %>',
+    desc: '<%=goods.desc1.replace(/\r\n/g, '') %>',
+    imgPath: '<%=goods.picUrlArr[0] %>',
+    url: window.location.protocol + '//' + window.location.host + '/openapi/h5/c/hpt/detail?goods_id=<%=goods.goods_id%>&s=1'
+}
+$(function() {
+    M.initSwipe();
+
+    $('.countdown').each(function() {
+        var difftime = parseInt($(this).attr('data-seconds'));
+        var wrapper = $(this).attr('id');
+        if(difftime > 0) {
+            timer(difftime, wrapper);
+        }
+    });
+
+    // 分享链接，直接跳转下载
+    $('#download').click(function() {
+        window.location.href = 'http://mps-static.meitianhui.com/application/bdsh.html';
+    });
+
+    // 一键开团
+    $('#createGroup').click(function() {
+        if(!member_id) return;
+        $.ajax({
+            type: 'POST',
+            url: '/openapi/h5/c/hpt/joinGroupAuth',
+            data: {
+                member_id: member_id,
+                goods_id: '<%=goods.goods_id%>'
+            },
+            beforeSend: function() {
+                M.maskLayer.start();
+            },
+            success: function(data) {
+                var jsonData = typeof data == 'string' ? JSON.parse(data) : data;
+                if(jsonData.rsp_code == 'succ') {
+                    if(window.jsObj) {
+                        window.jsObj.createHptGroup(JSON.stringify(goodsData));
+                    } else {
+                        setupWebViewJavascriptBridge(function(bridge) {
+                            bridge.callHandler('createHptGroup', goodsData);
+                        });
+                    }
+                } else {
+                    M.Toast.warn(jsonData.error_msg);
+                }
+            },
+            complete: function() {
+                M.maskLayer.stop();
+            },
+            error: function() {
+                M.Toast.warn('网络异常');
+            }
+        });
+    });
+
+    // $('#createGroup').click(function() {
+    //     if(!member_id) return;
+    //     $.ajax({
+    //         type: 'POST',
+    //         url: '/openapi/h5/c/hpt/createGroupAuth',
+    //         data: {
+    //             consumer_id: '<%=requestParams.member_id%>'
+    //         },
+    //         beforeSend: function() {
+    //             $('.valid-wrap').show();
+    //             $('#optionUl').hide().empty();
+    //             $('.btn-result').text('验证中……');
+    //         },
+    //         success: function(data) {
+    //             var jsonData = typeof data == 'string' ? JSON.parse(data) : data;
+    //             if(jsonData.rsp_code == 'fail') {
+    //                 $('.btn-result').text('抱歉，系统繁忙！');
+    //                 return;
+    //             }
+    //             var fianlResult = true;
+    //             for(var i=0; i<jsonData.data.length; i++) {
+    //                 $('#optionUl').append('<li class="option"><em>'+(jsonData.data[i].flag=='true'?'✓':'✕')+'</em>'+jsonData.data[i].title+'</li>');
+    //                 if(jsonData.data[i].flag == 'false') fianlResult = false;
+    //             }
+    //             $('#optionUl').slideDown();
+    //             if(fianlResult) {
+    //                 $('.btn-result').text('验证通过，马上开团').attr('href', '/openapi/h5/c/hpt/createGroupRules?goods_id=<%=goods.goods_id%>');
+    //             } else {
+    //                 $('.btn-result').text('验证不通过，查看帮助').attr('href', '/openapi/h5/c/hpt/help');
+    //             }
+    //         },
+    //         error: function() {
+    //             $('.btn-result').text('网络异常');
+    //         }
+    //     });
+    // });
+
+    // $('.valid-wrap .close').click(function() {
+    //     $('.valid-wrap').hide();
+    // });
+
+    if(!isShare) {
+        var shareData = {
+            title: '<%=parseFloat(goods.ts_price)%>元 <%=goods.title.replace(/\r\n/g, '') %>',
+            desc: '<%=goods.desc1.replace(/\r\n/g, '') %>',
+            imgPath: '<%=goods.picUrlArr[0] %>',
+            url: window.location.protocol + '//' + window.location.host + '/openapi/h5/c/hpt/detail?goods_id=<%=goods.goods_id%>&s=1'
+        }
+        if(window.jsObj) {
+            // 传递分享数据
+            if(window.jsObj.share) {
+                window.jsObj.share(JSON.stringify(shareData));
+            }
+        } else {
+            setupWebViewJavascriptBridge(function(bridge) {
+                // 传递分享数据
+                bridge.callHandler('share', shareData);
+            });
+        }
+    }
+});
+
+// 收藏商品
+function collectGoods() {
+    $.ajax({
+        type: 'POST',
+        url: '/openapi/h5/c/collectGoods',
+        data: {
+            favorites_type: 'hpt',
+            member_id: '<%=requestParams.member_id%>',
+            goods_id: '<%=goods.goods_id%>',
+        },
+        beforeSend: function() {
+            M.maskLayer.start();
+        },
+        success: function(data) {
+            if(typeof data == 'string') data = JSON.parse(data);
+            if(data.rsp_code == 'succ') {
+                M.Toast.succ('收藏成功');
+            }
+        },
+        complete: function() {
+            M.maskLayer.stop();
+        }
+    });
+}
+
+// 获取聊天id
+function getChatData() {
+    if(!member_id) {
+        callNativeToChat();
+        return;
+    }
+    $.ajax({
+        type: 'POST',
+        url: '/openapi/h5/c/getChatIdOfDefaultStoreByConsumerId',
+        data: {
+            consumer_id: member_id,
+            chat_id: 'hptcustomerserviceagent',
+            title: '官方客服'
+        },
+        beforeSend:function() {
+            M.maskLayer.start();
+        },
+        success: function(data) {
+            data = typeof data == 'string' ? JSON.parse(data) : data;
+            if(data.rsp_code == 'succ') {
+                chatData.chat_id = data.data.chatId;
+                chatData.title = data.data.title;
+            }
+        },
+        complete: function() {
+            M.maskLayer.stop();
+            callNativeToChat();
+        }
+    });
+}
+
+// 调Native方法聊天
+function callNativeToChat() {
+    if(window.jsObj) {
+        window.jsObj.chatWithCustomerServiceAgent(JSON.stringify(chatData));
+    } else {
+        setupWebViewJavascriptBridge(function(bridge) {
+            bridge.callHandler('chatWithCustomerServiceAgent', chatData);
+        });
+    }
+}
+
+function timer(difftime, wrapper){
+    var id = setInterval(function(){
+        if(difftime <= 0) {
+            clearInterval(id);
+            $('#'+wrapper).closest('.group').remove();
+            if($('.group-box .group').length <= 0) $('.group-box').remove();
+        }
+        var day=0, hour=0, minute=0, second=0;//时间默认值
+        if(difftime > 0){
+            hour = Math.floor(difftime / (60 * 60));
+            minute = Math.floor(difftime / 60) - (hour * 60);
+            second = Math.floor(difftime) - (hour * 60 * 60) - (minute * 60);
+        }
+        if (hour <= 9) hour = '0' + hour;
+        if (minute <= 9) minute = '0' + minute;
+        if (second <= 9) second = '0' + second;
+        $('#'+wrapper).find('.hour').text(hour);
+        $('#'+wrapper).find('.minute').text(minute);
+        $('#'+wrapper).find('.second').text(second);
+        difftime--;
+    }, 1000);
+}
+</script>
+</html>

@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.meitianhui.community.dao.IMLiveroomMapper">
+	
+	<!-- 创建一个直播室 -->
+	<insert id="createLiveroom" parameterType="IMLiveroom">
+		INSERT INTO md_im_liveroom
+			(id, name, description, cover, url, label, affiliations, visited_count, 
+			gift_count, comment_count, owner, status, created, modified, remark)
+		VALUES
+			(#{id}, #{name}, #{description}, #{cover}, #{url}, #{label}, #{affiliations}, #{visited_count}, 
+			#{gift_count}, #{comment_count}, #{owner}, #{status}, #{created}, #{modified}, #{remark})
+	</insert>
+	
+	<!-- 查询直播室详情 -->
+	<select id="queryLiveroomDetail" parameterType="String" resultType="IMLiveroom">
+		select id, name, description, cover, url, label, affiliations, visited_count,gift_count, comment_count, owner, status, created, modified, remark from md_im_liveroom
+		 where id=#{id}
+	</select>
+	
+	<!-- 根据URL与状态查询对应的直播室信息 -->
+	<select id="queryLiveroomByUrl" parameterType="String" resultType="hashmap">
+		select id, name, url, owner, status, created, modified, remark from md_im_liveroom
+		 where status = #{status} and url like concat('%', #{url}, '%') LIMIT 1
+	</select>
+	
+	<!-- 更新直播室成员列表 -->
+	<update id="updateLiveroomUsers" parameterType="String">
+		update md_im_liveroom set affiliations = #{affiliations} where id = #{room_id} and affiliations = #{old_affiliations}
+	</update>
+	
+	<!-- 查询直播室列表 -->
+	<select id="queryLiveroomList" resultType="hashmap">
+		select id, name, description, cover, url, label,owner,CAST(created as CHAR) created from md_im_liveroom
+		<where>
+			<if test="status != null and status != ''">
+				and status = #{status}
+			</if>
+			<if test="owner != null and owner != ''">
+				and owner = #{owner}
+			</if>
+		</where>
+		order by created desc
+	</select>
+	
+	<!-- 更新直播室状态 -->
+	<update id="updateLiveRoomStatus" parameterType="hashmap">
+		update md_im_liveroom set status = #{status} where id = #{room_id}
+	</update>
+	
+	<!-- 查询正在直播中的门店列表 -->
+	<select id="queryLiveStoresList" parameterType="hashmap" resultType="hashmap">
+		<![CDATA[
+			SELECT b.stores_id, b.stores_name, b.neighbor_pic_path ,b.stores_type_key,b.business_type_key,b.distance 
+			FROM
+			(select 
+			stores_id, stores_name, neighbor_pic_path ,stores_type_key,business_type_key,
+			round(6378.138 * 2 * asin(
+			sqrt(pow(sin((latitude * pi() / 180 - #{latitude} * pi() / 180) / 2),	2) + 
+				cos(latitude * pi() / 180) * cos(#{latitude} * pi()/180)* pow(sin((longitude * pi()/180 - #{longitude} * pi()/180)/2),2))) * 1000) as distance
+			from md_stores where business_status_key <> 'TDJD_04' and latitude > #{latitude_gt} and latitude < #{latitude_lt} and longitude > #{longitude_gt} and longitude < #{longitude_lt}) b
+			INNER JOIN md_im_user_member ium ON b.stores_id=ium.member_id
+				INNER JOIN	md_im_liveroom mil on mil.`owner` = ium.im_user_id AND mil.status=#{live_status}
+		]]>
+		ORDER BY b.distance LIMIT 20
+	</select>
+</mapper>

@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="HandheldFriendly" content="true">
+	<title>测试</title>
+    <link type="text/css" href="/css/main.css" rel="stylesheet" />
+    <script type="text/javascript" src="/js/third-part/jquery-1.11.3.min.js"></script>
+</head>
+<body>
+    <div class="main-container">
+    	<form id="oauthForm" method="post">
+	        <p class="ti"><em></em>开放平台</p>
+	        <div>
+	            <b class="fluid-input">
+	            	<b class="fluid-input-inner">
+	            		<input type="text" id="url" class="text or" placeholder="URL" value="https://127.0.0.1:3001/openapi/app/info" />
+	            	</b>
+				</b>
+	        </div>
+	        <div>
+	            <b class="fluid-input">
+	            	<b class="fluid-input-inner">
+	            		<input type="text" name="app_id" class="text or" placeholder="app_id" value="04fefd7e-ad6b-11e5-9ba7-fcaa1490ccaf" />
+	            	</b>
+				</b>
+	        </div>
+	        <div>
+	            <b class="fluid-input">
+	            	<b class="fluid-input-inner">
+	            		<input type="text" name="private_key" class="text or" placeholder="private_key" value="meitianhui" />
+	            	</b>
+				</b>
+	        </div>
+	        <div>
+	            <b class="fluid-input">
+	            	<b class="fluid-input-inner">
+	            		<input type="text" name="app_token" class="text or" placeholder="app_token" value="a04075a4a33e1462aefcf6a6c54131b3676ca1292564cca12517c5fa566f5e6945e02a703f62ce916402a49fee33095a6cf2f5d3d472eefb" />
+	            	</b>
+				</b>
+	        </div>
+	        <div>
+	            <b class="fluid-input">
+	            	<b class="fluid-input-inner">
+	            		<input type="text" name="user_token" class="text or" placeholder="user_token" value="" />
+	            	</b>
+				</b>
+	        </div>
+	        <div>
+	            <b class="fluid-input">
+	            	<b class="fluid-input-inner">
+	            		<input type="text" name="service" class="text or" placeholder="service" />
+	            	</b>
+				</b>
+	        </div>
+	        <div>
+	            <b class="fluid-input">
+	            	<b class="fluid-input-inner">
+	            		<input type="text" name="params" class="text or" placeholder="params" />
+	            	</b>
+				</b>
+	        </div>
+	        <div>
+	            <b class="fluid-input">
+	            	<b class="fluid-input-inner">
+	            		<input type="text" name="sign" class="text or" placeholder="sign" />
+	            	</b>
+				</b>
+	        </div>
+	        <div>
+	            <b class="fluid-input">
+	            	<b class="fluid-input-inner">
+	            		<input type="submit" id="submitBtn" value="调用" />
+	            	</b>
+	            </b>
+	        </div>
+	        <div>
+	        	<p id="result"></p>
+	        </div>
+        </form>
+    </div>
+</body>
+<script type="text/javascript">
+var return_url = '<%=params.return_url %>';
+$(function() {
+	$('#submitBtn').click(function() {
+		$('#oauthForm').attr('action', $('#url').val());
+
+		/*$.ajax({
+	        type: 'POST',
+	        url: $('#url').val(),
+	        data: $('#params').val(),
+	        timeout: 20000,
+	        success: function(data) {
+	            $('#result').text(data);
+	        },
+	        error: function(data) {
+	            $('#result').text(data);
+	        }
+	    });
+		return false;*/
+	});
+});
+</script>
+</html>

@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <!-- 删除苹果默认的工具栏和菜单栏 -->
+    <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+    <!-- 设置苹果工具栏颜色 -->
+    <meta name="format-detection" content="telphone=no, email=no" />
+    <!-- 忽略页面中的数字识别为电话，忽略email识别 -->
+    <!-- 启用360浏览器的极速模式(webkit) -->
+    <meta name="renderer" content="webkit">
+    <!-- 避免IE使用兼容模式 -->
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <!-- 针对手持设备优化，主要是针对一些老的不识别viewport的浏览器，比如黑莓 -->
+    <meta name="HandheldFriendly" content="true">
+    <!-- 微软的老式浏览器 -->
+    <meta name="MobileOptimized" content="320">
+    <!-- uc强制竖屏 -->
+    <meta name="screen-orientation" content="portrait">
+    <!-- QQ强制竖屏 -->
+    <meta name="x5-orientation" content="portrait">
+    <!-- UC强制全屏 -->
+    <meta name="full-screen" content="yes">
+    <!-- QQ强制全屏 -->
+    <meta name="x5-fullscreen" content="true">
+    <!-- UC应用模式 -->
+    <meta name="browsermode" content="application">
+    <!-- QQ应用模式 -->
+    <meta name="x5-page-mode" content="app">
+    <!-- windows phone 点击无高光 -->
+    <meta name="msapplication-tap-highlight" content="no">
+    <!-- 禁用iPhone手机浏览器上给电话号码自动加上的link样式 -->
+    <meta name="format-detection" content="telephone=no">
+    <title>提示</title>
+    <link rel="stylesheet" type="text/css" href="/css/reset.css">
+    <script type="text/javascript" src="/js/third-part/flexible.js"></script>
+    <style type="text/css">
+    body {
+        font-weight: 300;
+    }
+    .msg-wrap {
+        margin-top: 2.666667rem;
+        padding: 4.133333rem 0.266667rem 0 0.266667rem;
+        background: url(/image/common/error.png) no-repeat center top;
+        background-size: 5.533333rem 3.373333rem;
+        text-align: center;
+    }
+    .msg-wrap .msg {
+        color: #999;
+        font-size: 0.4rem;
+        line-height: 0.64rem;
+    }
+    .msg-wrap .reload {
+        display: inline-block;
+        padding: 0 0.933333rem;
+        height: 1.173333rem;
+        line-height: 1.173333rem;
+        color: #eb6132;
+        font-size: 0.4rem;
+        border: 2px solid #eb6132;
+        border-radius: 10000px;
+        margin-top: 1.866667rem;
+        font-weight: normal;
+    }
+    [data-dpr="1"] .msg-wrap .reload {
+        border: 1px solid #eb6132;
+    }
+    [data-dpr="3"] .msg-wrap .reload {
+        border: 3px solid #eb6132;
+    }
+    </style>
+</head>
+
+<body>
+    <div class="msg-wrap">
+        <p class="msg"><%= message %></p>
+        <div>
+            <a href="javascript: window.location.reload();" class="reload">点我再试试</a>
+        </div>
+    </div>
+</body>
+
+</html>

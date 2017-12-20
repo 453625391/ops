@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.meitianhui.member.dao.MemberExternalAccountDao">
+
+	<insert id="insertMemberExternalAccount" parameterType="MDMemberExternalAccount">
+		INSERT	INTO
+		md_member_external_account(
+		account_id
+		,user_id
+		,member_type_key
+		,member_id
+		,mobile
+		,account_type_key
+		,account_no
+		,created_date
+		,modified_date
+		,remark
+		)
+		VALUES(
+		#{account_id}
+		,#{user_id}
+		,#{member_type_key}
+		,#{member_id}
+		,#{mobile}
+		,#{account_type_key}
+		,#{account_no}
+		,#{created_date}
+		,#{modified_date}
+		,#{remark}
+		)
+	</insert>
+
+	<select id="selectMemberExternalAccount" parameterType="Map"
+		resultType="MDMemberExternalAccount">
+		SELECT
+			account_id
+			,user_id
+			,member_type_key
+			,member_id
+			,mobile
+			,account_type_key
+			,account_no
+		FROM md_member_external_account
+		<where>
+			account_id=#{account_id}
+		</where>
+	</select>
+
+
+	<select id="selectMemberExternalAccountList" parameterType="Map"
+		resultType="Map">
+		SELECT
+			account_id
+			,user_id
+			,member_type_key
+			,member_id
+			,mobile
+			,account_type_key
+			,account_no
+		FROM md_member_external_account
+		<where>
+			<if test="member_type_key != null and member_type_key != ''">
+				AND member_type_key=#{member_type_key}
+			</if>
+			<if test="member_id != null and member_id != ''">
+				AND member_id=#{member_id}
+			</if>
+			<if test="account_no != null and account_no != ''">
+				AND account_no=#{account_no}
+			</if>
+			<if test="account_type_key != null and account_type_key != ''">
+				AND account_type_key=#{account_type_key}
+			</if>
+			<if test="mobile != null and mobile != ''">
+				AND mobile=#{mobile}
+			</if>
+		</where>
+	</select>
+
+	<update id="updateMemberExternalAccount" parameterType="Map">
+		UPDATE md_member_external_account SET
+		<trim suffixOverrides=",">
+			modified_date=SYSDATE(),
+			<if test="account_no != null and account_no != ''">
+				account_no = #{account_no},
+			</if>
+			<if test="user_id != null and user_id != ''">
+				user_id = #{user_id},
+			</if>
+			<if test="mobile != null and mobile != ''">
+				mobile = #{mobile},
+			</if>
+		</trim>
+		<where>
+			account_id=#{account_id} AND account_type_key =	#{account_type_key}
+		</where>
+	</update>
+
+	<delete id="deleteMemberExternalAccount" parameterType="Map">
+		DELETE FROM
+		md_member_external_account WHERE account_id=#{account_id}
+	</delete>
+
+
+</mapper>

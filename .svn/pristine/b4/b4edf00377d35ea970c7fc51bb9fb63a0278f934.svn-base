@@ -1,0 +1,634 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.meitianhui.member.dao.MemberDao">
+
+
+
+	<insert id="insertMDUserMember" parameterType="MDUserMember">
+		INSERT INTO
+		md_user_member
+		(
+		user_id
+		,member_type_key
+		,member_id
+		,is_admin
+		)
+		VALUES (
+		#{user_id}
+		,#{member_type_key}
+		,#{member_id}
+		,#{is_admin}
+		)
+	</insert>
+
+
+	<insert id="insertMDStoresActivityPromotion" parameterType="MDStoresActivityPromotion">
+		INSERT INTO
+		md_stores_activity_promotion
+		(
+		activity_id
+		,activity
+		,stores_id
+		,amount
+		,promotion
+		,status
+		,created_date
+		,remark
+		)
+		VALUES (
+		#{activity_id}
+		,#{activity}
+		,#{stores_id}
+		,#{amount}
+		,#{promotion}
+		,#{status}
+		,#{created_date}
+		,#{remark}
+		)
+	</insert>
+
+
+	<insert id="insertMDStoreFeedback" parameterType="Map">
+		INSERT INTO
+		md_store_feedback
+		(
+		feedback_id
+		,device_type
+		,stores_name
+		,contact_person
+		,mobile
+		,old_account
+		,device_no
+		,cardholder
+		,publishing_institutions
+		,capital_account
+		,created_date
+		)
+		VALUES
+		(
+		#{feedback_id}
+		,#{device_type}
+		,#{stores_name}
+		,#{contact_person}
+		,#{mobile}
+		,#{old_account}
+		,#{device_no}
+		,#{cardholder}
+		,#{publishing_institutions}
+		,#{capital_account}
+		,#{created_date}
+		)
+	</insert>
+
+	<insert id="insertMDMemberRecommend" parameterType="MDMemberRecommend">
+		INSERT INTO
+		md_member_recommend
+		(
+		recommend_id
+		,reference_type_key
+		,reference_id
+		,member_type_key
+		,member_id
+		,member_mobile
+		,member_user_id
+		,created_date
+		,remark
+		)
+		VALUES (
+		#{recommend_id}
+		,#{reference_type_key}
+		,#{reference_id}
+		,#{member_type_key}
+		,#{member_id}
+		,#{member_mobile}
+		,#{member_user_id}
+		,#{created_date}
+		,#{remark}
+		)
+	</insert>
+
+
+	<insert id="insertMDMerchant" parameterType="Map">
+		INSERT INTO
+		md_merchant
+		(
+		merchant_id
+		,member_type_key
+		,member_id
+		,merchant_type
+		,zone
+		,area_id
+		,status
+		,created_date
+		,modified_date
+		,remark
+		)
+		VALUES (
+		#{merchant_id}
+		,#{member_type_key}
+		,#{member_id}
+		,#{merchant_type}
+		,#{zone}
+		,#{area_id}
+		,#{status}
+		,#{created_date}
+		,#{modified_date}
+		,#{remark}
+		)
+	</insert>
+
+	<insert id="insertMDMerchantLog" parameterType="Map">
+		INSERT INTO
+		md_merchant_log
+		(
+		log_id
+		,merchant_id
+		,category
+		,tracked_date
+		,event
+		)
+		VALUES
+		(
+		#{log_id}
+		,#{merchant_id}
+		,#{category}
+		,#{tracked_date}
+		,#{event}
+		)
+	</insert>
+
+
+	<insert id="insertMDStoresServiceFee" parameterType="MDStoresServiceFee">
+		INSERT INTO
+		md_stores_service_fee
+		(
+		date_id
+		,stores_id
+		,cash
+		,gold
+		,created_date
+		,remark
+		)
+		VALUES (
+		#{date_id}
+		,#{stores_id}
+		,#{cash}
+		,#{gold}
+		,#{created_date}
+		,#{remark}
+		)
+	</insert>
+
+	<insert id="insertMDStoresScheduleLog" parameterType="Map">
+		INSERT INTO
+		md_stores_schedule_log (
+		log_id
+		,stores_id
+		,category
+		,tracked_date
+		,event
+		)
+		VALUES (
+		#{log_id}
+		,#{stores_id}
+		,#{category}
+		,#{tracked_date}
+		,#{event}
+		)
+	</insert>
+
+
+	<insert id="insertMDAssistantEvaluation" parameterType="MDAssistantEvaluation">
+		INSERT
+		INTO
+		md_assistant_evaluation (
+		evaluation_id
+		,assistant_id
+		,stores_id
+		,evaluation_by
+		,evaluation_date
+		,criteria_item1
+		,criteria_val1
+		,criteria_item2
+		,criteria_val2
+		,criteria_item3
+		,criteria_val3
+		,criteria_item4
+		,criteria_val4
+		,criteria_item5
+		,criteria_val5
+		,total_numeric_val
+		,created_date
+		,modified_date
+		,remark
+		)
+		VALUES (
+		#{evaluation_id}
+		,#{assistant_id}
+		,#{stores_id}
+		,#{evaluation_by}
+		,#{evaluation_date}
+		,#{criteria_item1}
+		,#{criteria_val1}
+		,#{criteria_item2}
+		,#{criteria_val2}
+		,#{criteria_item3}
+		,#{criteria_val3}
+		,#{criteria_item4}
+		,#{criteria_val4}
+		,#{criteria_item5}
+		,#{criteria_val5}
+		,#{total_numeric_val}
+		,#{created_date}
+		,#{modified_date}
+		,#{remark}
+		)
+	</insert>
+
+
+	<select id="selectMDArea" parameterType="Map" resultType="Map">
+		<![CDATA[
+			SELECT
+				longitude
+				,latitude
+			FROM
+				md_area
+		]]>
+		<where>
+			1=1
+			<if test="area_code != null and area_code != ''">
+				AND area_code=#{area_code}
+			</if>
+		</where>
+	</select>
+
+	<select id="selectMDAreaCode" parameterType="Map" resultType="Map">
+		<![CDATA[
+			SELECT
+				area_id
+				,area_code
+				,area_name
+			FROM
+				md_area
+		]]>
+		<where>
+			1=1
+			<if test="area_code != null and area_code != ''">
+				AND area_code=#{area_code}
+			</if>
+			<if test="parent_id != null and parent_id != ''">
+				AND parent_id=#{parent_id}
+			</if>
+			<if test="type_key != null and type_key != ''">
+				AND type_key=#{type_key}
+			</if>
+		</where>
+	</select>
+
+	<select id="selectMDAreaMapping" parameterType="Map" resultType="Map">
+		<![CDATA[
+			SELECT
+				mth_code
+			FROM
+				md_area_mapping
+		]]>
+		<where>
+			1=1
+			<if test="code != null and code != ''">
+				AND code=#{code}
+			</if>
+		</where>
+	</select>
+
+	<select id="selectMDUserMember" parameterType="Map" resultType="MDUserMember">
+		<![CDATA[
+			SELECT
+				user_id 
+				,member_type_key
+				,member_id
+				,is_admin
+			FROM
+				md_user_member
+		]]>
+		<where>
+			1=1
+			<if test="user_id != null and user_id != ''">
+				AND user_id=#{user_id}
+			</if>
+			<if test="member_id != null and member_id != ''">
+				AND member_id=#{member_id}
+			</if>
+			<if test="member_type_key != null and member_type_key != ''">
+				AND member_type_key=#{member_type_key}
+			</if>
+			<if test="is_admin != null and is_admin != ''">
+				AND is_admin=#{is_admin}
+			</if>
+		</where>
+	</select>
+
+	<select id="selectMDStoresActivityPromotion" parameterType="Map"
+		resultType="MDStoresActivityPromotion">
+		<![CDATA[
+			SELECT
+				activity_id 
+				,activity
+				,amount
+				,promotion
+				,status
+				,remark
+			FROM
+				md_stores_activity_promotion
+		]]>
+		<where>
+			1=1
+			<if test="stores_id != null and stores_id != ''">
+				AND stores_id=#{stores_id}
+			</if>
+			<if test="activity != null and activity != ''">
+				AND activity=#{activity}
+			</if>
+			<if test="status != null and status != ''">
+				AND status=#{status}
+			</if>
+		</where>
+	</select>
+
+	<select id="selectMDMemberRecommend" parameterType="Map"
+		resultType="Map">
+		<![CDATA[
+			SELECT
+				recommend_id
+				,reference_type_key
+				,reference_id
+				,member_type_key
+				,member_id
+				,member_mobile
+				,member_user_id
+				,created_date
+				,remark
+			FROM
+				md_member_recommend
+		]]>
+		<where>
+			1=1
+			<if test="reference_type_key != null and reference_type_key != ''">
+				AND reference_type_key=#{reference_type_key}
+			</if>
+			<if test="reference_id != null and reference_id != ''">
+				AND reference_id=#{reference_id}
+			</if>
+			<if test="member_id != null and member_id != ''">
+				AND member_id=#{member_id}
+			</if>
+		</where>
+		ORDER BY created_date DESC
+	</select>
+	
+		<select id="selectMDMemberRecommendByPhone" parameterType="Map"
+		resultType="Map">
+		<![CDATA[
+			SELECT
+				recommend_id
+				,reference_type_key
+				,reference_id
+				,member_type_key
+				,member_id
+				,member_mobile
+				,member_user_id
+				,created_date
+				,remark
+			FROM
+				md_member_recommend
+		]]>
+		<where>
+			1=1
+				AND member_mobile=#{member_mobile}
+		</where>
+	</select>
+
+	<select id="selectMDMemberRecommendCount" parameterType="Map"
+		resultType="Map">
+		<![CDATA[
+			SELECT
+				count(1) as count_num
+			FROM
+				md_member_recommend
+		]]>
+		<where>
+			1=1
+			<if test="reference_type_key != null and reference_type_key != ''">
+				AND reference_type_key=#{reference_type_key}
+			</if>
+			<if test="reference_id != null and reference_id != ''">
+				AND reference_id=#{reference_id}
+			</if>
+		</where>
+	</select>
+
+	<select id="selectMDStoresServiceFee" parameterType="Map"
+		resultType="MDStoresServiceFee">
+		<![CDATA[
+			SELECT
+				date_id 
+				,stores_id 
+				,cash 
+				,gold
+				,created_date
+				,remark
+			FROM
+				md_stores_service_fee
+		]]>
+		<where>
+			1=1
+			<if test="stores_id != null and stores_id != ''">
+				AND stores_id=#{stores_id}
+			</if>
+			<if test="created_date != null and created_date != ''">
+				AND DATE_FORMAT(created_date, '%Y-%m-%d') =
+				DATE_FORMAT(#{created_date}, '%Y-%m-%d')
+			</if>
+		</where>
+		ORDER BY created_date DESC
+	</select>
+
+	<select id="selectMDStoresScheduleLog" parameterType="Map"
+		resultType="Map">
+		<![CDATA[
+			SELECT
+				stores_id 
+				,tracked_date
+				,category
+			FROM
+				md_stores_schedule_log
+		]]>
+		<where>
+			1=1
+			<if test="stores_id != null and stores_id != ''">
+				AND stores_id=#{stores_id}
+			</if>
+			<if test="category != null and category != ''">
+				AND category=#{category}
+			</if>
+			<if test="tracked_date != null and tracked_date != ''">
+				AND DATE_FORMAT(tracked_date, '%Y-%m') =
+				DATE_FORMAT(#{tracked_date}, '%Y-%m')
+			</if>
+		</where>
+	</select>
+
+	<select id="selectMDAssistantEvaluation" parameterType="Map"
+		resultType="MDAssistantEvaluation">
+		<![CDATA[
+			SELECT
+				 evaluation_id
+				  ,assistant_id
+				  ,stores_id
+				  ,evaluation_by
+				  ,evaluation_date
+				  ,criteria_item1
+				  ,criteria_val1
+				  ,criteria_item2
+				  ,criteria_val2
+				  ,criteria_item3
+				  ,criteria_val3
+				  ,criteria_item4
+				  ,criteria_val4
+				  ,criteria_item5
+				  ,criteria_val5
+				  ,total_numeric_val
+			FROM
+				md_assistant_evaluation
+		]]>
+		<where>
+			1=1
+			<if test="stores_id != null and stores_id != ''">
+				AND stores_id=#{stores_id}
+			</if>
+			<if test="assistant_id != null and assistant_id != ''">
+				AND assistant_id=#{assistant_id}
+			</if>
+			<if test="evaluation_id != null and evaluation_id != ''">
+				AND evaluation_id=#{evaluation_id}
+			</if>
+			<if test="evaluation_date != null and evaluation_date != ''">
+				AND DATE_FORMAT(evaluation_date, '%Y-%m') =
+				#{evaluation_date}
+			</if>
+		</where>
+	</select>
+
+
+	<select id="selectMDAssistantEvaluationCount" parameterType="Map"
+		resultType="Map">
+		<![CDATA[
+			SELECT
+				assistant_id
+				,count(evaluation_id) AS cou_num
+			    ,criteria_item1
+				,sum(criteria_val1) AS criteria_val1_sum
+			    ,criteria_item2
+				,sum(criteria_val2) AS criteria_val2_sum
+			    ,criteria_item3
+				,sum(criteria_val3) AS criteria_val3_sum
+			    ,criteria_item4
+				,sum(criteria_val4) AS criteria_val4_sum
+			    ,criteria_item5
+				,sum(criteria_val5) AS criteria_val5_sum
+			FROM
+				md_assistant_evaluation
+		]]>
+		<where>
+			1=1
+			<if test="assistant_id != null and assistant_id != ''">
+				AND assistant_id=#{assistant_id}
+			</if>
+			<if test="evaluation_date != null and evaluation_date != ''">
+				AND DATE_FORMAT(evaluation_date, '%Y-%m') =
+				#{evaluation_date}
+			</if>
+		</where>
+		GROUP BY assistant_id
+	</select>
+
+
+
+	<update id="updateMDStoresActivityPromotion" parameterType="MDStoresActivityPromotion">
+		UPDATE md_stores_activity_promotion SET
+		<trim suffixOverrides=",">
+			<if test="amount != null and amount != ''">
+				amount = #{amount},
+			</if>
+			<if test="promotion != null and promotion != ''">
+				promotion = #{promotion},
+			</if>
+			<if test="status != null and status != ''">
+				status = #{status},
+			</if>
+			<if test="remark != null and remark != ''">
+				remark = #{remark},
+			</if>
+		</trim>
+		<where>
+			1=1
+			<if test="stores_id != null and stores_id != ''">
+				AND stores_id=#{stores_id}
+			</if>
+			<if test="activity != null and activity != ''">
+				AND activity=#{activity}
+			</if>
+		</where>
+	</update>
+
+	<update id="updateMDMerchant" parameterType="Map">
+		UPDATE md_merchant SET
+		<trim suffixOverrides=",">
+			<if test="merchant_type != null and merchant_type != ''">
+				merchant_type = #{merchant_type},
+			</if>
+			<if test="zone_id != null and zone_id != ''">
+				zone_id = #{zone_id},
+			</if>
+			<if test="status != null and status != ''">
+				status = #{status},
+			</if>
+			<if test="modified_date != null and mobile != ''">
+				mobile = #{mobile},
+			</if>
+		</trim>
+		<where>
+			1=1
+			<if test="address_id != null and address_id != ''">
+				AND address_id = #{address_id}
+			</if>
+			<if test="consumer_id != null and consumer_id != ''">
+				AND consumer_id = #{consumer_id}
+			</if>
+		</where>
+	</update>
+
+
+	<delete id="deleteMDUserMember" parameterType="Map">
+		DELETE FROM md_user_member
+		<where>
+			1=1
+			<if test="member_type_key != null and member_type_key != ''">
+				AND member_type_key=#{member_type_key}
+			</if>
+			<if test="member_id != null and member_id != ''">
+				AND member_id=#{member_id}
+			</if>
+			<if test="user_id != null and user_id != ''">
+				AND user_id=#{user_id}
+			</if>
+		</where>
+	</delete>
+
+
+	<select id="callQueryMemberInfoByMobile" parameterType="Map"
+		resultType="Map">
+		<![CDATA[
+			{CALL usp_query_member_info_by_mobile(#{member_type_key},#{mobile})}
+		]]>
+	</select>
+</mapper>

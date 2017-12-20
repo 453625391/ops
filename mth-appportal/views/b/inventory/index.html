@@ -1,0 +1,592 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes" /><!-- 删除苹果默认的工具栏和菜单栏 -->
+    <meta name="apple-mobile-web-app-status-bar-style" content="black" /><!-- 设置苹果工具栏颜色 -->
+    <meta name="format-detection" content="telphone=no, email=no" /><!-- 忽略页面中的数字识别为电话，忽略email识别 -->
+    <!-- 启用360浏览器的极速模式(webkit) -->
+    <meta name="renderer" content="webkit">
+    <!-- 避免IE使用兼容模式 -->
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <!-- 针对手持设备优化，主要是针对一些老的不识别viewport的浏览器，比如黑莓 -->
+    <meta name="HandheldFriendly" content="true">
+    <!-- 微软的老式浏览器 -->
+    <meta name="MobileOptimized" content="320">
+    <!-- uc强制竖屏 -->
+    <meta name="screen-orientation" content="portrait">
+    <!-- QQ强制竖屏 -->
+    <meta name="x5-orientation" content="portrait">
+    <!-- UC强制全屏 -->
+    <meta name="full-screen" content="yes">
+    <!-- QQ强制全屏 -->
+    <meta name="x5-fullscreen" content="true">
+    <!-- UC应用模式 -->
+    <meta name="browsermode" content="application">
+    <!-- QQ应用模式 -->
+    <meta name="x5-page-mode" content="app">
+    <!-- windows phone 点击无高光 -->
+    <meta name="msapplication-tap-highlight" content="no">
+    <!-- 禁用iPhone手机浏览器上给电话号码自动加上的link样式 -->
+    <meta name="format-detection" content="telephone=no">
+    <title>盘点设计</title>
+    <link rel="stylesheet" type="text/css" href="/css/inventory/index.css">
+    <script type="text/javascript" src="/js/third-part/zepto.min.js"></script>
+    <script type="text/javascript" src="/js/third-part/flexible.js"></script>
+    <script type="text/javascript" src="/js/third-part/echarts.min.js"></script>
+    <script type="text/javascript" src="/js/third-part/theme/vintage.js"></script>
+</head>
+<body>
+    <a class="refresh"></a>
+    
+    <ul class="title">
+        <li><a href="javascript: void(0);" class="sel" data-target="storage">库存分析</a></li>
+        <li><a href="javascript: void(0);" data-target="sale">销售分析</a></li>
+        <li><a href="javascript: void(0);" data-target="consumption">消费分析</a></li>
+    </ul>
+    
+    <div class="main">
+        <div class="hint">
+            <p>请点刷新</p>
+            您的商品库和收银记录还不完善<br/>系统暂时分析不出结果！
+            
+        </div>
+        <div class="cutover-detail storage" style="display: none;">
+            <ul class="sum">
+                <li>
+                    <div class="number">0</div>
+                    <div>库存（件）</div>
+                </li>
+                <li>
+                    <div class="number">0</div>
+                    <div>告警（件）</div>
+                </li>
+                <li>
+                    <div class="number">0</div>
+                    <div>过期（件）</div>
+                </li>
+            </ul>
+            <div class="option-title">品类占比</div>
+            <div id="option-sort2"></div>
+            <div class="option-title">存货成本</div>
+            <div id="option-cost"></div>
+            <div class="option-title">库存深度</div>
+            <div id="option-reserve"></div>
+        </div>
+        <div class="cutover-detail sale" style="display: none;">
+            <ul class="sum">
+                <li>
+                    <div class="number">0</div>
+                    <div>流水（笔）</div>
+                </li>
+                <li>
+                    <div class="number">0</div>
+                    <div>收入（元）</div>
+                </li>
+                <li>
+                    <div class="number">0</div>
+                    <div>利润（元）</div>
+                </li>
+            </ul>
+            <div class="option-title">品类占比</div>
+            <div id="option-sort"></div>
+            <div id="option-Stacking"></div>
+            <div class="option-title">畅销商品</div>
+            <div id="option-sellWell"></div>
+        </div>
+        <div class="cutover-detail consumption" style="display: none;">
+            
+            <div class="option-title">消费时段</div>
+            <div id="option-consume"></div>
+            <div id="option-consumeTwo"></div>
+            <div class="option-title">会员占比</div>
+            <div id="option-Member"></div>
+            <div class="option-title">支付方式</div>
+            <div id="option-defray"></div>
+            <div class="option-title">客单价</div>
+            <div id="option-CustomerPrice"></div>
+        </div>
+    </div>
+</body>
+</html>
+<script type="text/javascript" >
+
+$(function(){
+    //点击刷新
+    $('.refresh').tap(function(){
+        $('.hint').hide();
+        $('.cutover-detail').hide();
+        $('.'+$('.title .sel').attr('data-target')).show();
+        $('body').css('background-color','#ffffff');
+    });
+    //切换
+    $('.title li').tap(function(){
+        $('.title li a').removeClass('sel');
+        $(this).children('a').addClass('sel');
+        if($('.main .hint').css('display') == 'none') {
+            $('.cutover-detail').hide();
+            $('.'+$(this).find('a').attr('data-target')).show();
+            $('body').css('background-color','#ffffff');
+        }
+    });
+});
+
+//品类占比
+var myChartsort = echarts.init(document.getElementById('option-sort'),'macarons');
+//品类占比
+var myChartsort2 = echarts.init(document.getElementById('option-sort2'),'macarons');
+//存货成本
+var myChartCost = echarts.init(document.getElementById('option-cost'),'macarons');
+//存货成本
+var myChartReserve = echarts.init(document.getElementById('option-reserve'),'macarons');
+//无标题
+var myChartStacking = echarts.init(document.getElementById('option-Stacking'),'macarons');
+//畅销商品
+var myChartsellWell = echarts.init(document.getElementById('option-sellWell'),'macarons');
+//消费时段
+var myChartConsume = echarts.init(document.getElementById('option-consume'),'macarons');
+//消费时段2
+var myChartConsumeTwo = echarts.init(document.getElementById('option-consumeTwo'),'macarons');
+//会员占比
+var myChartMember = echarts.init(document.getElementById('option-Member'),'macarons');
+//支付方式
+var myChartDefray = echarts.init(document.getElementById('option-defray'),'macarons');
+//客单价
+var myChartCustomerPrice = echarts.init(document.getElementById('option-CustomerPrice'),'macarons');
+
+var optionSort = {
+
+series : [
+    {
+        name: '访问来源',
+        type: 'pie',
+        radius : '80%',
+        center: ['50%', '50%'],
+        
+        data:[
+            {value:335, name:'饮料酒水'},
+            {value:310, name:'零食'},
+            {value:234, name:'家庭家具'},
+            {value:135, name:'美容洗护'},
+            {value:1548, name:'粮油副食'},
+            {value:1548, name:'家用电器'},
+            {value:200, name:'其它'}
+        ],
+
+        itemStyle: {
+            emphasis: {
+                shadowBlur: 10,
+                shadowOffsetX: 0,
+                shadowColor: 'rgba(0, 0, 0, 0.5)'
+            }
+        }
+    }
+]
+};
+
+var optionSort2 = {
+
+    series : [
+        {
+            name: '访问来源',
+            type: 'pie',
+            radius : '80%',
+            center: ['50%', '50%'],
+            
+            data:[
+                {value:335, name:'饮料酒水'},
+                {value:310, name:'零食'},
+                {value:234, name:'家庭家具'},
+                {value:135, name:'美容洗护'},
+                {value:1548, name:'粮油副食'},
+                {value:1548, name:'家用电器'},
+                {value:200, name:'其它'}
+                ],
+            itemStyle: {
+                 
+                emphasis: {
+                    shadowBlur: 10,
+                    shadowOffsetX: 0,
+                    shadowColor: 'rgba(0, 0, 0, 0.5)'
+                }
+            }
+        }
+    ]
+};
+
+
+ 
+     
+  var optionCost = {
+    
+    calculable : true,
+        xAxis: {
+        type: 'category',
+        boundaryGap: false,
+        data: ['2016/4/1','2016/4/2','2016/4/3','2016/4/4','2016/4/5','2016/4/6','2016/4/7','2016/4/8','2016/4/9']
+    },
+    yAxis: {
+        type: 'value'
+    },
+    series: [
+        {
+            name:'总体收入',
+            type:'line',
+            stack: '总量',
+            label: {
+                normal: {
+                    show: true,
+                    position: 'top'
+                }
+            },
+            data:[120, 132, 101, 134, 90, 230, 210,300,200]
+        }
+    ]
+    
+};
+var optionReserve = {
+
+    radar: {
+        // shape: 'circle',
+        indicator: [
+           { name: '3天', max: 6500},
+           { name: '7天', max: 16000},
+           { name: '15天', max: 30000},
+           { name: '30天', max: 38000},
+           { name: '60天', max: 52000},
+           { name: '80天', max: 25000}
+        ]
+    },
+    series: [{
+        name: '预算 vs 开销（Budget vs spending）',
+        type: 'radar',
+        label: {
+                normal: {
+                    show: true,
+                    position: 'top'
+                }
+            },
+        // areaStyle: {normal: {}},
+        data : [
+            {
+                value : [4300, 10000, 28000, 35000, 50000, 19000],
+                name : '预算分配（Allocated Budget）'
+            }
+        ]
+    }]
+};
+
+var optionStacking = {
+
+    legend: {
+        data:['总体收入','商品成本','促销支出']
+    },
+    grid: {
+        left: '3%',
+        right: '4%',
+        bottom: '3%',
+        containLabel: true
+    },
+
+    xAxis: {
+        type: 'category',
+        boundaryGap: false,
+        data: ['2016/4/1','2016/4/2','2016/4/3','2016/4/4','2016/4/5','2016/4/6','2016/4/7']
+    },
+    yAxis: {
+        type: 'value'
+    },
+    series: [
+        {
+            name:'总体收入',
+            type:'line',
+            stack: '总量',
+            label: {
+                normal: {
+                    show: true,
+                    position: 'top'
+                }
+            },
+            data:[120, 132, 101, 134, 90, 230, 210]
+        },
+        {
+            name:'商品成本',
+            type:'line',
+            stack: '总量',
+            label: {
+                normal: {
+                    show: true,
+                    position: 'top'
+                }
+            },
+            data:[220, 182, 191, 234, 290, 330, 310]
+        },
+        {
+            name:'促销支出',
+            type:'line',
+            stack: '总量',
+            label: {
+                normal: {
+                    show: true,
+                    position: 'top'
+                }
+            },
+            data:[150, 232, 201, 154, 190, 330, 410]
+        }
+    ]
+};
+var optionsellWell = {
+
+    grid: {
+        left: '3%',
+        right: '4%',
+        bottom: '3%',
+        containLabel: true
+    },
+    xAxis: {
+        type: 'value',
+        boundaryGap: [0, 0.01]
+    },
+    yAxis: {
+        type: 'category',
+        data: ['商品','商品','商品','商品','商品','商品']
+    },
+    series: [
+        {
+            name: '2011年',
+            type: 'bar',
+            label: {
+                normal: {
+                    show: true,
+                    position: 'insideRight'
+                }
+            },
+            data: [200, 400, 600, 800, 1000, 1200]
+        }
+    ]
+};
+
+
+var optionConsume = {
+
+    grid: {
+        left: '3%',
+        right: '4%',
+        bottom: '3%',
+        containLabel: true
+    },
+    xAxis : [
+        {
+            type : 'category',
+            boundaryGap : false,
+            data : ['0:00:00','1:00:00','2:00:00','3:00:00','4:00:00','5:00:00','6:00:00']
+        }
+    ],
+    yAxis : [
+        {
+            type : 'value'
+        }
+    ],
+    series : [
+        
+        {
+            type:'line',
+            stack: '总量',
+            areaStyle: {normal: {}},
+            itemStyle:{
+                    normal:{
+                        label:{
+                            show:true,
+                            textStyle: {
+                               color: "#6DD8D9"
+                            }
+                        }
+                    },
+                },
+
+            data:[320, 332, 301, 334, 390, 330, 320]
+        }
+    ]
+};
+
+
+var optionConsumeTwo = {
+
+    calculable : true,
+    xAxis : [
+        {
+            type : 'category',
+            data : ['星期日','星期一','星期二','星期三','星期四','星期五','星期六']
+        }
+    ],
+    yAxis : [
+        {
+            type : 'value'
+        }
+    ],
+    series : [
+        {
+            name:'蒸发量',
+            type:'bar',
+            data:[2.0, 4.9, 7.0, 23.2, 25.6, 76.7, 135.6],
+            label: {
+                normal: {
+                    show: true,
+                    position: 'insideRight'
+                }
+            },
+            markPoint : {
+                data : [
+                    {type : 'max', name: '最大值'},
+                    {type : 'min', name: '最小值'}
+                ]
+            }
+        }
+    ]
+};
+var optionMember = {
+    legend: {
+        orient : 'vertical',
+        x : 'right',
+        data:['会员','非会员','未知']
+    },
+    tooltip : {
+        trigger: 'item',
+        formatter: "{a} <br/>{b} : {c} ({d}%)"
+    },
+
+    series : [
+        {
+            name:'访问来源',
+            type:'pie',
+            radius : '80%',
+            center: ['40%', '50%'],
+            data:[
+                {value:335, name:'会员'},
+                {value:310, name:'非会员'},
+                {value:274, name:'未知'}
+            ].sort(function (a, b) { return a.value - b.value}),
+            roseType: 'angle',
+            label: {
+                normal: {
+                    textStyle: {
+                        color: '#fff'
+                    }
+                }
+            },
+            itemStyle: {
+                normal: {
+                   label : {
+                        position : 'inner',
+                        formatter : function (params) {                         
+                          return (params.percent - 0).toFixed(0) + '%'
+                        }
+                    },
+                    shadowBlur: 200
+                }
+            }
+        }
+    ]
+};
+
+var optionDefray = {
+legend: {
+        orient : 'vertical',
+        x : 'right',
+        data:['现金','微信','支付宝','翼支付','其它']
+    },
+    series : [
+        {
+            name: '访问来源',
+            type: 'pie',
+            radius : '75%',
+            center: ['40%', '50%'],
+            data:[
+                {value:335, name:'现金'},
+                {value:310, name:'微信'},
+                {value:234, name:'支付宝'},
+                {value:135, name:'翼支付'},
+                {value:1548, name:'其它'}
+            ],
+            itemStyle: {
+                 normal: {
+                   label : {
+                        position : 'inner',
+                        formatter : function (params) {                         
+                          return (params.percent - 0).toFixed(0) + '%'
+                        }
+                    },
+                    shadowBlur: 200
+                   
+                }
+            }
+        }
+    ]
+};
+var optionCustomerPrice = {
+legend: {
+        orient : 'vertical',
+        x : 'right',
+        data:['0~50元','100元','50~100元']
+    },
+    series: [
+        {
+            name:'访问来源',
+            type:'pie',
+            selectedMode: 'single',
+            radius: [0, '80%'],
+            center: ['40%', '55%'],
+            label: {
+                normal: {
+                    position: 'inner'
+                }
+            },
+            labelLine: {
+                normal: {
+                    show: false
+                }
+            },
+            data:[
+                {value:335, name:'0~50元', selected:true},
+                {value:679, name:'100元'},
+                {value:1548, name:'50~100元'}
+            ],
+            itemStyle: {
+                 normal: {
+                   label : {
+                        position : 'inner',
+                        formatter : function (params) {                         
+                          return (params.percent - 0).toFixed(0) + '%'
+                        }
+                    },
+                    shadowBlur: 200
+                   
+                }
+            }
+        }
+    ]
+};
+//品类占比
+ myChartsort.setOption(optionSort);
+ //品类占比
+ myChartsort2.setOption(optionSort2);
+ //存货成本
+ myChartCost.setOption(optionCost); 
+ //库存深度
+ myChartReserve.setOption(optionReserve); 
+ //无标题
+ myChartStacking.setOption(optionStacking); 
+ //畅销商品
+ myChartsellWell.setOption(optionsellWell);
+  //消费时段
+ myChartConsume.setOption(optionConsume); 
+  //消费时段2
+ myChartConsumeTwo.setOption(optionConsumeTwo);   
+  //会员占比
+ myChartMember.setOption(optionMember); 
+ //支付方式
+ myChartDefray.setOption(optionDefray); 
+  //客单价
+ myChartCustomerPrice.setOption(optionCustomerPrice);                        
+</script>

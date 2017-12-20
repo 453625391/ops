@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <% include ../../commonHead.html %>
+    <title>品牌领</title>
+    <link rel="stylesheet" type="text/css" href="/css/gold-exchange/list.css">
+</head>
+
+<body>
+    <div class="banner">
+        <img src="/image/gold-exchange/brand/<%=requestParams.brand%>.png" />
+    </div>
+    <% if(goodsList && goodsList.length > 0) { %>
+    <div class="list-wrap">
+        <ul id="freeList" class="list">
+        <% for(var i=0; i<goodsList.length; i++) { %>
+            <% if(i%2 == 0) { %>
+                <li>
+            <% } %>
+                <a href="/openapi/h5/c/gold-exchange/detail?goods_id=<%=goodsList[i].goods_id %>" class="box">
+                    <img src="<%=goodsList[i].picUrlArr[0]%>" />
+                    <div class="txt-wrap">
+                        <h3 class="tit"><%=goodsList[i].title%></h3>
+                        <p class="sub-tit">
+                            <span class="gold"><em><%=Math.ceil(goodsList[i].market_price-goodsList[i].discount_price) %></em>金币</span>
+                            <em class="plus">+</em>
+                            <span class="money"><em><%=goodsList[i].discount_price %></em>元</span>
+                        </p>
+                    </div>
+                </a>
+            <% if(i%2 != 0) { %>
+                </li>
+            <% } %>
+        <% } %>
+        </ul>
+    </div>
+    <% } else { %>
+    <div class="no-record">
+        <img src="/image/common/no-record.png" />
+        <p>暂无相关商品</p>
+    </div>
+    <% } %>
+</body>
+</html>
